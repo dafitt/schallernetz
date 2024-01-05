@@ -6,5 +6,7 @@
     ../../users/admin.nix
 
     ../../common/nix.nix
+
+    ../../services/DavidSYNC.nix
   ];
 }
