@@ -8,5 +8,6 @@
     ../../common/nix.nix
 
     ../../services/DavidSYNC.nix
+    ../../services/pihole.nix
   ];
 }
