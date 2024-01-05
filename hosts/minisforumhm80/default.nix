@@ -9,5 +9,6 @@
 
     ../../services/DavidSYNC.nix
     ../../services/pihole.nix
+    ../../services/unbound.nix
   ];
 }
