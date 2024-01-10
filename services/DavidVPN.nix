@@ -9,9 +9,8 @@
     hostBridge = "br0";
     localAddress = "***REMOVED_IPv4***/23";
 
-    config = { lib, pkgs, ... }: {
-
-      #boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
+    specialArgs = { hostconfig = config; };
+    config = { hostconfig, lib, pkgs, ... }: {
 
       environment.systemPackages = with pkgs; [ wireguard-tools ];
 
@@ -26,7 +25,7 @@
           allowedUDPPorts = [ 51820 ];
         };
 
-        defaultGateway.address = "***REMOVED_IPv4***";
+        defaultGateway.address = hostconfig.networking.defaultGateway.address;
 
         # Wireguard Network
         wireguard.interfaces."wg0" = {
@@ -42,24 +41,12 @@
             ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s ***REMOVED_IPv4***/24 -o eth0 -j MASQUERADE
           '';
 
-          # Generate with
           generatePrivateKeyFile = true;
-          # or manually
-          # ```shell
-          # umask 077
-          # mkdir /var/lib/wireguard/
-          # wg genkey > /var/lib/wireguard/private.key
-          # wg pubkey < /var/lib/wireguard/private.key > /var/lib/wireguard/public.key
-          # ```
           privateKeyFile = "/var/lib/wireguard/private.key";
+          #$ wg pubkey < /var/lib/wireguard/private.key > /var/lib/wireguard/public.key
           # public.key ***REMOVED_WIREGUARD-KEY***
 
           peers = [
-            #{
-            #  publicKey = "{client public key}";
-            #  # List of IPs assigned to this peer within the tunnel subnet. Used to configure routing.
-            #  allowedIPs = [ "***REMOVED_IPv4***/32" ];
-            #}
             {
               # DavidLEGION
               publicKey = "***REMOVED_WIREGUARD-KEY***";
