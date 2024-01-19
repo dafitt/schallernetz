@@ -20,10 +20,12 @@
     extraOptions = [
       "--network=ipvlan"
       "--ip=***REMOVED_IPv4***"
+      "--ip6=***REMOVED_IPv6***"
     ];
 
+    # https://github.com/pi-hole/docker-pi-hole/#environment-variables
     environment = {
-      PIHOLE_DNS_ = "***REMOVED_IPv4***;***REMOVED_IPv4***";
+      PIHOLE_DNS_ = "***REMOVED_IPv4***;***REMOVED_IPv6***";
       TZ = config.time.timeZone;
       # TODO sops
       WEBPASSWORD = "pi";
@@ -32,10 +34,11 @@
       FTLCONF_LOCAL_IPV4 = "***REMOVED_IPv4***";
       # Enable DNS conditional forwarding for device name resolution
       REV_SERVER = "true";
+      REV_SERVER_DOMAIN = "fritz.box";
       REV_SERVER_TARGET = "***REMOVED_IPv4***"; # Router IP.
       REV_SERVER_CIDR = "***REMOVED_IPv4***/23";
       # Hostname/IP allows you to make changes in addition to the default 'http://.../admin/'
-      VIRTUAL_HOST = "pihole.schallernetz.local";
+      VIRTUAL_HOST = "pihole.${config.networking.domain}";
     };
   };
 
@@ -52,7 +55,7 @@
       preStart = ''
         mkdir -p /etc/pihole/pihole
         mkdir -p /etc/pihole/dnsmasq.d
-        ${dockerBin} pull ${config.virtualisation.oci-containers.containers."pihole".image}
+        #${dockerBin} pull ${config.virtualisation.oci-containers.containers."pihole".image}
       '';
 
       #postStart =

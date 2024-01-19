@@ -23,8 +23,9 @@
       ${dockerBin} network create \
         --driver ipvlan \
         --opt parent=br0 \
-        --subnet ***REMOVED_IPv4***/23 \
-        --gateway ***REMOVED_IPv4*** \
+        --ipv6 \
+        --subnet ***REMOVED_IPv4***/23 --subnet ***REMOVED_IPv6***::/64 \
+        --gateway ***REMOVED_IPv4*** --gateway ***REMOVED_IPv6*** \
         ipvlan
     '';
 }

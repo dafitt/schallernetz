@@ -1,4 +1,4 @@
-{
+{ config, ... }: {
   #$ sudo nixos-container start DavidVPN
   #$ sudo nixos-container root-login DavidVPN
 
@@ -8,6 +8,7 @@
     privateNetwork = true;
     hostBridge = "br0";
     localAddress = "***REMOVED_IPv4***/23";
+    localAddress6 = "***REMOVED_IPv6***/64";
 
     specialArgs = { hostconfig = config; };
     config = { hostconfig, lib, pkgs, ... }: {
@@ -29,16 +30,18 @@
 
         # Wireguard Network
         wireguard.interfaces."wg0" = {
-          ips = [ "***REMOVED_IPv4***/24" ];
+          ips = [ "***REMOVED_IPv4***/24" "***REMOVED_IPv6***/64" ];
           listenPort = 51820;
 
           # This allows the wireguard server to route your traffic to the internet and hence be like a VPN
           # For this to work you have to set the dnsserver IP of your router (or dnsserver of choice) in your clients
           postSetup = ''
             ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s ***REMOVED_IPv4***/24 -o eth0 -j MASQUERADE
+            ${pkgs.iptables}/bin/ip6tables -t nat -A POSTROUTING -s ***REMOVED_IPv6***::/64 -o eth0 -j MASQUERADE
           '';
           postShutdown = ''
             ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s ***REMOVED_IPv4***/24 -o eth0 -j MASQUERADE
+            ${pkgs.iptables}/bin/ip6tables -t nat -D POSTROUTING -s ***REMOVED_IPv6***::/64 -o eth0 -j MASQUERADE
           '';
 
           generatePrivateKeyFile = true;
@@ -50,12 +53,12 @@
             {
               # DavidLEGION
               publicKey = "***REMOVED_WIREGUARD-KEY***";
-              allowedIPs = [ "***REMOVED_IPv4***/32" ];
+              allowedIPs = [ "***REMOVED_IPv4***/32" "***REMOVED_IPv6***/128" ];
             }
             {
               # DavidPIXEL
               publicKey = "***REMOVED_WIREGUARD-KEY***";
-              allowedIPs = [ "***REMOVED_IPv4***/32" ];
+              allowedIPs = [ "***REMOVED_IPv4***/32" "***REMOVED_IPv6***/128" ];
             }
           ];
         };
