@@ -13,6 +13,7 @@
 
   networking = {
     hostName = "minisforumhm80";
+    domain = "***REMOVED_DOMAIN***";
 
     # Gets in the way of static IP adressing
     networkmanager.enable = false;
@@ -24,21 +25,26 @@
         address = "***REMOVED_IPv4***";
         prefixLength = 23;
       }];
+      ipv6.addresses = [{
+        address = "***REMOVED_IPv6***";
+        prefixLength = 64;
+      }];
     };
-
-    #interfaces."enp4s0" = {
-    #  ipv4.addresses = [{
-    #    address = "***REMOVED_IPv4***";
-    #    prefixLength = 23;
-    #  }];
-    #};
 
     defaultGateway = {
       address = "***REMOVED_IPv4***";
       interface = "br0";
     };
+    defaultGateway6 = {
+      address = "***REMOVED_IPv6***";
+      interface = "br0";
+    };
 
-    nameservers = [ "***REMOVED_IPv4***" ];
+    # for local updates
+    nameservers = [
+      config.networking.defaultGateway.address
+      config.networking.defaultGateway6.address
+    ];
   };
 
 

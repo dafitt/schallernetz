@@ -8,6 +8,7 @@
     privateNetwork = true;
     hostBridge = "br0";
     localAddress = "***REMOVED_IPv4***/23";
+    localAddress6 = "***REMOVED_IPv6***/64";
 
     config = { config, lib, ... }: {
 
@@ -18,8 +19,8 @@
         openDefaultPorts = true;
         guiAddress = "0.0.0.***REMOVED_IPv6***"; # remote access
 
-        #overrideDevices = false; # whether to override devices manually added or deleted through the WebUI
-        #overrideFolders = false; # whether to override folders manually added or deleted through the WebUI
+        #overrideDevices = false; # whether to override devices, manually added or deleted through the WebUI
+        #overrideFolders = false; # whether to override folders, manually added or deleted through the WebUI
 
         settings = {
           # https://192.168.19.***REMOVED_IPv6***/rest/config with X-API-Key
@@ -86,8 +87,15 @@
         };
       };
 
-      networking.firewall.interfaces."eth0" = {
-        allowedTCPPorts = [ 8080 ];
+      networking = {
+
+        # automatically get IP and default gateway
+        useDHCP = lib.mkForce true;
+        enableIPv6 = true;
+
+        firewall.interfaces."eth0" = {
+          allowedTCPPorts = [ 8080 ];
+        };
       };
 
       # Use systemd-resolved inside the container
