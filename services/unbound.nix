@@ -1,6 +1,6 @@
 { config, ... }: {
-  #$ sudo nixos-container start DavidVPN
-  #$ sudo nixos-container root-login DavidVPN
+  #$ sudo nixos-container start unbound
+  #$ sudo nixos-container root-login undbound
 
   containers."unbound" = {
     autoStart = true;
@@ -43,6 +43,8 @@
             ''"minisforumhm80.${hostconfig.networking.domain}. IN AAAA ***REMOVED_IPv6***"''
             ''"pihole.${hostconfig.networking.domain}. IN AAAA ***REMOVED_IPv6***"''
             ''"unbound.${hostconfig.networking.domain}. IN AAAA ***REMOVED_IPv6***"''
+            ''"searx.${hostconfig.networking.domain}. IN A ***REMOVED_IPv4***"''
+            #''"searx.${hostconfig.networking.domain}. IN AAAA ***REMOVED_IPv6***"''
             ''"davidcal.${hostconfig.networking.domain}. IN AAAA ***REMOVED_IPv6***"''
           ];
         };
@@ -52,7 +54,7 @@
             name = "fritz.box";
             forward-addr = [
               "${hostconfig.networking.defaultGateway.address}"
-              #"${hostconfig.networking.defaultGateway6.address}" # fe80::
+              #"${hostconfig.networking.defaultGateway6.address}" #! fe80::
             ];
           }
         ];

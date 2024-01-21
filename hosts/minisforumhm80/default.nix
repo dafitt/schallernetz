@@ -11,6 +11,7 @@
     ../../services/DavidVPN.nix
     ../../services/MichiSHARE.nix
     ../../services/pihole.nix
+    ../../services/searx.nix
     ../../services/unbound.nix
   ];
 }
