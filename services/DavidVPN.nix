@@ -7,62 +7,76 @@
 
     privateNetwork = true;
     hostBridge = "br0";
-    localAddress = "***REMOVED_IPv4***/23";
-    localAddress6 = "***REMOVED_IPv6***/64";
 
     specialArgs = { hostconfig = config; };
     config = { hostconfig, lib, pkgs, ... }: {
+
+      boot.kernel.sysctl."net.ipv6.conf.wg0.forwarding" = 1;
+      boot.kernel.sysctl."net.ipv4.conf.wg0.forwarding" = 1;
 
       environment.systemPackages = with pkgs; [ wireguard-tools ];
 
       networking = {
 
-        # Enable NAT
-        nat.enable = true;
-        nat.externalInterface = "eth0";
-        nat.internalInterfaces = [ "wg0" ];
+        # Log in to the network like a normal client
+        useDHCP = lib.mkForce true;
+        enableIPv6 = true;
 
-        firewall.interfaces."eth0" = {
-          allowedUDPPorts = [ 51820 ];
+        # use ramdom IPv6 addresses (privacy extensions)
+        interfaces."eth0".tempAddress = "default";
+
+        # Enable NAT
+        nat = {
+          enable = true;
+          enableIPv6 = true;
+          externalInterface = "eth0";
+          internalInterfaces = [ "wg0" ];
         };
 
-        defaultGateway.address = hostconfig.networking.defaultGateway.address;
+        firewall.interfaces."eth0" = {
+          allowedUDPPorts = [ 123 ];
+        };
 
         # Wireguard Network
         wireguard.interfaces."wg0" = {
-          ips = [ "***REMOVED_IPv4***/24" "***REMOVED_IPv6***/64" ];
-          listenPort = 51820;
+          ips = [ "***REMOVED_IPv6***/64" "***REMOVED_IPv4***/24" ];
+          listenPort = 123;
 
           # This allows the wireguard server to route your traffic to the internet and hence be like a VPN
           # For this to work you have to set the dnsserver IP of your router (or dnsserver of choice) in your clients
           postSetup = ''
+            ${pkgs.iptables}/bin/ip6tables -t nat -A POSTROUTING -s fc07::/64 -o eth0 -j MASQUERADE
             ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s ***REMOVED_IPv4***/24 -o eth0 -j MASQUERADE
-            ${pkgs.iptables}/bin/ip6tables -t nat -A POSTROUTING -s ***REMOVED_IPv6***::/64 -o eth0 -j MASQUERADE
           '';
           postShutdown = ''
+            ${pkgs.iptables}/bin/ip6tables -t nat -D POSTROUTING -s fc07::/64 -o eth0 -j MASQUERADE
             ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s ***REMOVED_IPv4***/24 -o eth0 -j MASQUERADE
-            ${pkgs.iptables}/bin/ip6tables -t nat -D POSTROUTING -s ***REMOVED_IPv6***::/64 -o eth0 -j MASQUERADE
           '';
 
-          generatePrivateKeyFile = true;
+          #$ (umask 0077; wg genkey > /var/lib/wireguard/private.key)
           privateKeyFile = "/var/lib/wireguard/private.key";
-          #$ wg pubkey < /var/lib/wireguard/private.key > /var/lib/wireguard/public.key
-          # public.key ***REMOVED_WIREGUARD-KEY***
+          #generatePrivateKeyFile = true;
+
+          #$ wg pubkey < /var/lib/wireguard/private.key
+          # ***REMOVED_WIREGUARD-KEY***
 
           peers = [
             {
               # DavidLEGION
               publicKey = "***REMOVED_WIREGUARD-KEY***";
-              allowedIPs = [ "***REMOVED_IPv4***/32" "***REMOVED_IPv6***/128" ];
+              allowedIPs = [ "***REMOVED_IPv6***/128" "***REMOVED_IPv4***/32" ];
             }
             {
               # DavidPIXEL
               publicKey = "***REMOVED_WIREGUARD-KEY***";
-              allowedIPs = [ "***REMOVED_IPv4***/32" "***REMOVED_IPv6***/128" ];
+              allowedIPs = [ "***REMOVED_IPv6***/128" "***REMOVED_IPv4***/32" ];
             }
           ];
         };
       };
+
+      ## Workaround for bug https://github.com/NixOS/nixpkgs/issues/162686
+      networking.useHostResolvConf = lib.mkForce false;
 
       system.stateVersion = "23.11";
     };
