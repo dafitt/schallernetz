@@ -33,19 +33,20 @@
           local-zone = [
             "${hostconfig.networking.domain} static"
           ];
-          local-data = [
-            ''"michishare.${hostconfig.networking.domain}. IN A ***REMOVED_IPv4***"''
-            ''"michishare.${hostconfig.networking.domain}. IN AAAA ***REMOVED_IPv6***"''
-            ''"nas1.${hostconfig.networking.domain}. IN A ***REMOVED_IPv4***"''
-            ''"nas2.${hostconfig.networking.domain}. IN A ***REMOVED_IPv4***"''
+          local-data = with hostconfig.networking; [
+            ''"fritzbox.${domain}. IN AAAA ***REMOVED_IPv6***"''
+            ''"pihole.${domain}. IN AAAA ***REMOVED_IPv6***"''
+            ''"unbound.${domain}. IN AAAA ***REMOVED_IPv6***"''
+            ''"searx.${domain}. IN A ***REMOVED_IPv4***"''
+            #''"searx.${domain}. IN AAAA ***REMOVED_IPv6***"''
+            ''"minisforumhm80.${domain}. IN AAAA ***REMOVED_IPv6***"''
+            ''"DavidSYNC.${domain}. IN AAAA ***REMOVED_IPv6***"''
+            ''"DavidCAL.${domain}. IN AAAA ***REMOVED_IPv6***"''
 
-            ''"fritzbox.${hostconfig.networking.domain}. IN AAAA ***REMOVED_IPv6***"''
-            ''"minisforumhm80.${hostconfig.networking.domain}. IN AAAA ***REMOVED_IPv6***"''
-            ''"pihole.${hostconfig.networking.domain}. IN AAAA ***REMOVED_IPv6***"''
-            ''"unbound.${hostconfig.networking.domain}. IN AAAA ***REMOVED_IPv6***"''
-            ''"searx.${hostconfig.networking.domain}. IN A ***REMOVED_IPv4***"''
-            #''"searx.${hostconfig.networking.domain}. IN AAAA ***REMOVED_IPv6***"''
-            ''"davidcal.${hostconfig.networking.domain}. IN AAAA ***REMOVED_IPv6***"''
+            ''"MichiSHARE.${domain}. IN A ***REMOVED_IPv4***"''
+            ''"MichiSHARE.${domain}. IN AAAA ***REMOVED_IPv6***"''
+            ''"nas1.${domain}. IN A ***REMOVED_IPv4***"''
+            ''"nas2.${domain}. IN A ***REMOVED_IPv4***"''
           ];
         };
 
