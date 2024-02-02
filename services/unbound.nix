@@ -38,7 +38,8 @@
             ''"pihole.${domain}. IN AAAA ***REMOVED_IPv6***"''
             ''"unbound.${domain}. IN AAAA ***REMOVED_IPv6***"''
             ''"searx.${domain}. IN A ***REMOVED_IPv4***"''
-            #''"searx.${domain}. IN AAAA ***REMOVED_IPv6***"''
+            ''"searx.${domain}. IN AAAA ***REMOVED_IPv6***"''
+
             ''"minisforumhm80.${domain}. IN AAAA ***REMOVED_IPv6***"''
             ''"DavidSYNC.${domain}. IN AAAA ***REMOVED_IPv6***"''
             ''"DavidCAL.${domain}. IN AAAA ***REMOVED_IPv6***"''
