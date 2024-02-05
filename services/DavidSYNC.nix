@@ -1,6 +1,14 @@
-{
+{ config, lib, ... }: {
   #$ sudo nixos-container start DavidSYNC
   #$ sudo nixos-container root-login DavidSYNC
+
+  services.haproxy = {
+    frontends.www.extraConfig = [ "use_backend DavidSYNC if { req.hdr(host) -i DavidSYNC.${config.networking.domain} }" ];
+    config = lib.mkAfter ''
+      backend DavidSYNC
+        server _0 [***REMOVED_IPv6***]:8384 maxconn 32 check
+    '';
+  };
 
   containers."DavidSYNC" = {
     autoStart = true;
@@ -17,7 +25,7 @@
         enable = true;
 
         openDefaultPorts = true;
-        guiAddress = "0.0.0.***REMOVED_IPv6***"; # remote access
+        guiAddress = "[::]:8384"; # remote access
 
         #overrideDevices = false; # whether to override devices, manually added or deleted through the WebUI
         #overrideFolders = false; # whether to override folders, manually added or deleted through the WebUI
@@ -94,7 +102,7 @@
         enableIPv6 = true;
 
         firewall.interfaces."eth0" = {
-          allowedTCPPorts = [ 8080 ];
+          allowedTCPPorts = [ 8384 ];
         };
       };
 

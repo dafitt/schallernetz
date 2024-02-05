@@ -1,6 +1,15 @@
-{ config, ... }: {
+{ config, lib, ... }: {
   #$ sudo nixos-container start searx
   #$ sudo nixos-container root-login searx
+
+  # Entry for the main reverse proxy
+  services.haproxy = {
+    frontends.www.extraConfig = [ "use_backend searx if { req.hdr(host) -i searx.${config.networking.domain} }" ];
+    config = lib.mkAfter ''
+      backend searx
+        server _0 [***REMOVED_IPv6***]:80 maxconn 32 check
+    '';
+  };
 
   containers."searx" = {
     autoStart = true;
@@ -12,8 +21,6 @@
 
     specialArgs = { hostconfig = config; };
     config = { hostconfig, lib, ... }: {
-
-      #* http://192.168.19.***REMOVED_IPv6***
 
       # SearXNG is a free internet metasearch engine which aggregates results from various search services and databases. Users are neither tracked nor profiled.
       # https://github.com/searxng/searxng

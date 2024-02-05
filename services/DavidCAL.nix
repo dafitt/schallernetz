@@ -1,6 +1,14 @@
-{
+{ config, lib, ... }: {
   #$ sudo nixos-container start DavidCAL
   #$ sudo nixos-container root-login DavidCAL
+
+  services.haproxy = {
+    frontends.www.extraConfig = [ "use_backend DavidCAL if { req.hdr(host) -i DavidCAL.${config.networking.domain} }" ];
+    config = lib.mkAfter ''
+      backend DavidCAL
+        server _0 [***REMOVED_IPv6***]:5232 maxconn 32 check
+    '';
+  };
 
   containers."DavidCAL" = {
     autoStart = true;
@@ -25,7 +33,7 @@
             htpasswd_encryption = "bcrypt";
           };
           server = {
-            hosts = [ "0.0.0.***REMOVED_IPv6***" "[::]:5323" ];
+            hosts = [ "[::]:5232" ];
             # TODO ssl
             #ssl = true;
             #certificate = "/path/to/server_cert.pem";
@@ -55,8 +63,8 @@
         '';
 
       networking.firewall.interfaces."eth0" = {
-        allowedTCPPorts = [ 5323 ];
-        allowedUDPPorts = [ 5323 ];
+        allowedTCPPorts = [ 5232 ];
+        allowedUDPPorts = [ 5232 ];
       };
 
       # Workaround for bug https://github.com/NixOS/nixpkgs/issues/162686

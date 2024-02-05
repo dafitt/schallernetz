@@ -1,4 +1,4 @@
-{ config, ... }: {
+{ config, lib, ... }: {
   #$ sudo nixos-container start unbound
   #$ sudo nixos-container root-login undbound
 
@@ -33,25 +33,30 @@
           local-zone = [
             "${hostconfig.networking.domain} static"
           ];
-          local-data = with hostconfig.networking; [
-            ''"${domain}. IN NS unbound.${domain}"''
-            ''"${domain}. IN SOA ${domain}. nobody.email. 1 3600 1200 604800 10800"''
+          local-data =
+            with hostconfig.networking; # .domain
+            let
+              minisforumhm80 = "***REMOVED_IPv6***"; # Workaround for CNAME
+            in
+            [
+              ''"${domain}. IN NS unbound.${domain}"''
+              ''"${domain}. IN SOA ${domain}. nobody.email. 1 3600 1200 604800 10800"''
 
-            ''"fritzbox.${domain}. IN AAAA ***REMOVED_IPv6***"''
-            ''"pihole.${domain}. IN AAAA ***REMOVED_IPv6***"''
-            ''"unbound.${domain}. IN AAAA ***REMOVED_IPv6***"''
-            ''"searx.${domain}. IN A ***REMOVED_IPv4***"''
-            ''"searx.${domain}. IN AAAA ***REMOVED_IPv6***"''
+              ''"fritzbox.${domain}. IN AAAA ***REMOVED_IPv6***"''
+              ''"pihole.${domain}. IN AAAA ***REMOVED_IPv6***"''
+              ''"unbound.${domain}. IN AAAA ***REMOVED_IPv6***"''
+              ''"searx.${domain}. IN AAAA ${minisforumhm80}"''
 
-            ''"minisforumhm80.${domain}. IN AAAA ***REMOVED_IPv6***"''
-            ''"DavidSYNC.${domain}. IN AAAA ***REMOVED_IPv6***"''
-            ''"DavidCAL.${domain}. IN AAAA ***REMOVED_IPv6***"''
+              ''"minisforumhm80.${domain}. IN AAAA ${minisforumhm80}"''
+              ''"minisforumhm80.${domain}. IN A ***REMOVED_IPv4***"''
+              ''"DavidSYNC.${domain}. IN AAAA ${minisforumhm80}"''
+              ''"DavidCAL.${domain}. IN AAAA ${minisforumhm80}"''
 
-            ''"MichiSHARE.${domain}. IN A ***REMOVED_IPv4***"''
-            ''"MichiSHARE.${domain}. IN AAAA ***REMOVED_IPv6***"''
-            ''"nas1.${domain}. IN A ***REMOVED_IPv4***"''
-            ''"nas2.${domain}. IN A ***REMOVED_IPv4***"''
-          ];
+              ''"MichiSHARE.${domain}. IN A ***REMOVED_IPv4***"''
+              ''"MichiSHARE.${domain}. IN AAAA ***REMOVED_IPv6***"''
+              ''"nas1.${domain}. IN A ***REMOVED_IPv4***"''
+              ''"nas2.${domain}. IN A ***REMOVED_IPv4***"''
+            ];
         };
 
         settings.forward-zone = [
@@ -59,7 +64,7 @@
             name = "fritz.box";
             forward-addr = [
               "${hostconfig.networking.defaultGateway.address}"
-              #"${hostconfig.networking.defaultGateway6.address}" #! fe80::
+              "${hostconfig.networking.defaultGateway6.address}" #! fe80:: (link-local)
             ];
           }
         ];
