@@ -34,6 +34,9 @@
             "${hostconfig.networking.domain} static"
           ];
           local-data = with hostconfig.networking; [
+            ''"${domain}. IN NS unbound.${domain}"''
+            ''"${domain}. IN SOA ${domain}. nobody.email. 1 3600 1200 604800 10800"''
+
             ''"fritzbox.${domain}. IN AAAA ***REMOVED_IPv6***"''
             ''"pihole.${domain}. IN AAAA ***REMOVED_IPv6***"''
             ''"unbound.${domain}. IN AAAA ***REMOVED_IPv6***"''
