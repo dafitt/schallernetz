@@ -1,6 +1,7 @@
 { config, lib, ... }: {
-  #$ sudo nixos-container start searx
-  #$ sudo nixos-container root-login searx
+
+  # Get secret file
+  age.secrets."searx".file = ../secrets/searx.age;
 
   # Entry for the main reverse proxy
   services.haproxy = {
@@ -11,6 +12,8 @@
     '';
   };
 
+  #$ sudo nixos-container start searx
+  #$ sudo nixos-container root-login searx
   containers."searx" = {
     autoStart = true;
 
@@ -18,6 +21,9 @@
     hostBridge = "br0";
     localAddress = "***REMOVED_IPv4***/23";
     localAddress6 = "***REMOVED_IPv6***/64";
+
+    # Mount secret environmentFile `/run/agenix.d/3/searx`
+    bindMounts."${config.age.secrets."searx".path}".isReadOnly = true;
 
     specialArgs = { hostconfig = config; };
     config = { hostconfig, lib, ... }: {
@@ -42,14 +48,15 @@
             #base_url = "searx.***REMOVED_DOMAIN***";
             #port = 8888;
             bind_address = "***REMOVED_IPv4***";
-            secret_key = "f3c0447c2640e7e75813118a3bc3634b"; # TODO sops
+            secret_key = "@SEARX_SECRET_KEY@";
             method = "GET";
             infinite_scroll = true;
           };
         };
+        environmentFile = hostconfig.age.secrets."searx".path; # SEARX_SECRET_KEY=...
       };
 
-      # Reverse proxy for IPv6 and ssl
+      # Local reverse proxy for IPv6
       # TODO security: https & secret_key
       services.haproxy = {
         enable = true;
@@ -84,7 +91,7 @@
         #defaultGateway6 = hostconfig.networking.defaultGateway6.address;
 
         firewall.interfaces."eth0" = {
-          allowedTCPPorts = [ 80 8888 ];
+          allowedTCPPorts = [ 80 ];
         };
       };
 

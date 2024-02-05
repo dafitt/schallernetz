@@ -6,10 +6,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
 
-    flake-utils.url = "github:numtide/flake-utils";
-
-    nixos-hardware.url = "github:nixos/nixos-hardware"; # Hardware snippets <https://github.com/NixOS/nixos-hardware>
-
+    agenix.url = "github:ryantm/agenix";
   };
 
   outputs = { nixpkgs, ... }@inputs: # pass @inputs for futher configuration
