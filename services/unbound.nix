@@ -64,7 +64,7 @@
             name = "fritz.box";
             forward-addr = [
               "${hostconfig.networking.defaultGateway.address}"
-              "${hostconfig.networking.defaultGateway6.address}" #! fe80:: (link-local)
+              "${hostconfig.networking.defaultGateway6.address}" #! [fe80::]:53 (link-local) is refused
             ];
           }
         ];
