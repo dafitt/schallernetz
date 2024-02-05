@@ -7,9 +7,10 @@
 
     ../../common/nix.nix
 
+    ../../services/DavidCAL.nix
     ../../services/DavidSYNC.nix
     ../../services/DavidVPN.nix
-    ../../services/DavidCAL.nix
+    ../../services/haproxy.nix
     ../../services/MichiSHARE.nix
     ../../services/pihole.nix
     ../../services/searx.nix
