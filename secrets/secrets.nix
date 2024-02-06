@@ -17,5 +17,6 @@ in
   # 3. Import to your NixOS configuration `age.secrets."secret1".file = ../secrets/secret1.age;`
   # 4. Use it with `config.age.secrets."secret1".path;`
 
+  "minisforumhm80_proxy.pem.age".publicKeys = keys;
   "searx.age".publicKeys = keys;
 }
