@@ -14,8 +14,8 @@ let cfg = config.services.haproxy; in
 
   config = {
 
-    age.secrets."minisforumhm80_proxy.pem" = {
-      file = ../secrets/minisforumhm80_proxy.pem.age;
+    age.secrets."haproxy-www-ssl.pem" = {
+      file = ../secrets/haproxy-www-ssl.pem.age;
       owner = "haproxy";
       group = "haproxy";
     };
@@ -40,7 +40,7 @@ let cfg = config.services.haproxy; in
 
         frontend www
           bind [::]:80 v4v6
-          bind [::]:443 v4v6 ssl crt ${config.age.secrets."minisforumhm80_proxy.pem".path}
+          bind [::]:443 v4v6 ssl crt ${config.age.secrets."haproxy-www-ssl.pem".path}
           http-request redirect scheme https unless { ssl_fc }
 
           ${builtins.concatStringsSep "\n  " cfg.frontends.www.extraConfig}
