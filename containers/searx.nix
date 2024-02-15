@@ -1,7 +1,7 @@
-{ config, lib, ... }: {
+{ config, lib, path, ... }: {
 
   # Get secret file
-  age.secrets."searx".file = ../secrets/searx.age;
+  age.secrets."searx".file = "${path.secretsDir}/searx.age";
 
   # Entry for the main reverse proxy
   services.haproxy = lib.mkIf config.services.haproxy.enable {

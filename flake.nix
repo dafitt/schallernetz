@@ -10,6 +10,16 @@
   };
 
   outputs = { nixpkgs, ... }@inputs: # pass @inputs for futher configuration
+    let
+      path = {
+        rootDir = ./.;
+        commonDir = ./common;
+        containersDir = ./containers;
+        secretsDir = ./secrets;
+        servicesDir = ./services;
+        usersDir = ./users;
+      };
+    in
     {
       # NixOS configuration entrypoint
       # Available through `nixos-rebuild --flake .#your-hostname`
@@ -17,7 +27,7 @@
 
         "minisforumhm80" = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          specialArgs = inputs;
+          specialArgs = { inherit inputs path; };
           modules = [ ./hosts/minisforumhm80 ];
         };
       };
