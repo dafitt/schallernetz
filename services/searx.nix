@@ -4,7 +4,7 @@
   age.secrets."searx".file = ../secrets/searx.age;
 
   # Entry for the main reverse proxy
-  services.haproxy = {
+  services.haproxy = lib.mkIf config.services.haproxy.enable {
     frontends.www.extraConfig = [ "use_backend searx if { req.hdr(host) -i searx.${config.networking.domain} }" ];
     config = lib.mkAfter ''
       backend searx
@@ -32,28 +32,84 @@
       # https://github.com/searxng/searxng
       services.searx = {
         enable = true;
+        environmentFile = hostconfig.age.secrets."searx".path; # SEARX_SECRET_KEY=...
 
         settings = {
+          # https://docs.searxng.org/admin/settings/index.html
           general = {
             debug = false;
-            instance_name = "SearXNG";
-          };
-          ui = {
-            default_theme = "simple";
-            theme_args = {
-              simple_style = "dark";
-            };
+            instance_name = "searx";
           };
           server = {
-            #base_url = "searx.***REMOVED_DOMAIN***";
-            #port = 8888;
-            bind_address = "***REMOVED_IPv4***";
+            base_url = "https://searx.***REMOVED_DOMAIN***/";
             secret_key = "@SEARX_SECRET_KEY@";
             method = "GET";
-            infinite_scroll = true;
+            image_proxy = false;
+          };
+          ui.default_theme = "simple";
+          ui.infinite_scroll = true;
+          ui.query_in_title = true;
+          search.autocomplete = "qwant";
+          engines = lib.mapAttrsToList (name: value: { inherit name; } // value) {
+            "1337x".disabled = false;
+            "1x".disabled = false;
+            "alexandria".disabled = false;
+            "annas archive".disabled = false;
+            "bing".disabled = false;
+            "bitbucket".disabled = false;
+            "ccc-tv".disabled = false;
+            "codeberg".disabled = false;
+            "crowdview".disabled = false;
+            "curlie".disabled = false;
+            "ddg definitions".disabled = false;
+            "deezer".disabled = false;
+            "duckduckgo images".disabled = false;
+            "duckduckgo".disabled = false;
+            "duden".disabled = false;
+            "emojipedia".disabled = false;
+            "erowid".disabled = false;
+            "framalibre".disabled = false;
+            "free software directory".disabled = false;
+            "gitlab".disabled = false;
+            "habrahabr".disabled = false;
+            "hackernews".disabled = false;
+            "hoodle".disabled = true;
+            "imigur".disabled = false;
+            "lib.rs".disabled = false;
+            "library genesis".disabled = false;
+            "lobste.rs".disabled = false;
+            "material icons".disabled = false;
+            "mediathekviewweb".disabled = false;
+            "metacpan".disabled = false;
+            "mixcloud".disabled = true;
+            "mwmbl".disabled = false;
+            "npm".disabled = false;
+            "nyaa".disabled = false;
+            "openrepos".disabled = false;
+            "packagist".disabled = false;
+            "peertube".disabled = false;
+            "pkg.go.dev".disabled = false;
+            "pypi".disabled = false;
+            "reddit".disabled = false;
+            "searchcode code".disabled = false;
+            "sepiasearch".disabled = false;
+            "sourcehut".disabled = false;
+            "tagesschau".disabled = false;
+            "vimeo".disabled = false;
+            "wiby".disabled = false;
+            "wikibooks".disabled = false;
+            "wikimini".disabled = false;
+            "wikinews".disabled = false;
+            "wikiquote".disabled = false;
+            "wikisource".disabled = false;
+            "wikispecies".disabled = false;
+            "wikiversity".disabled = false;
+            "wikivoyage".disabled = false;
+            "wiktionary".disabled = false;
+            "yahoo".disabled = false;
+            "yep".disabled = false;
           };
         };
-        environmentFile = hostconfig.age.secrets."searx".path; # SEARX_SECRET_KEY=...
       };
 
       # Local reverse proxy for IPv6
