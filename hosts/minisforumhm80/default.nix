@@ -1,19 +1,19 @@
-{ agenix, ... }: {
+{ inputs, path, ... }: {
   imports = [
     ./configuration.nix
     ./hardware-configuration.nix
-    agenix.nixosModules.default
+    inputs.agenix.nixosModules.default
 
-    ../../users/admin.nix
+    "${path.usersDir}/admin.nix"
 
-    ../../common/nix.nix
+    "${path.commonDir}/nix.nix"
 
-    ../../containers/DavidCAL.nix
-    ../../containers/DavidSYNC.nix
-    ../../containers/DavidVPN.nix
-    ../../containers/MichiSHARE.nix
-    ../../containers/searx.nix
-    ../../containers/unbound.nix
-    ../../services/haproxy.nix
+    "${path.containersDir}/DavidCAL.nix"
+    "${path.containersDir}/DavidSYNC.nix"
+    "${path.containersDir}/DavidVPN.nix"
+    "${path.containersDir}/MichiSHARE.nix"
+    "${path.containersDir}/searx.nix"
+    "${path.containersDir}/unbound.nix"
+    "${path.servicesDir}/haproxy.nix"
   ];
 }

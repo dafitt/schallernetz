@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, path, ... }:
 
 let cfg = config.services.haproxy; in
 {
@@ -15,7 +15,7 @@ let cfg = config.services.haproxy; in
   config = {
 
     age.secrets."haproxy-www-ssl.pem" = {
-      file = ../secrets/haproxy-www-ssl.pem.age;
+      file = "${path.secretsDir}/haproxy-www-ssl.pem.age";
       owner = "haproxy";
       group = "haproxy";
     };

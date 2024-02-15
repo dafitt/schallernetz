@@ -1,4 +1,4 @@
-{ config, lib, agenix, ... }: {
+{ config, lib, inputs, path, ... }: {
 
   services.haproxy = lib.mkIf config.services.haproxy.enable {
     frontends.www.extraConfig = [ "use_backend DavidCAL if { req.hdr(host) -i DavidCAL.${config.networking.domain} }" ];
@@ -22,11 +22,11 @@
 
     config = { config, lib, pkgs, ... }: {
 
-      imports = [ agenix.nixosModules.default ];
+      imports = [ inputs.agenix.nixosModules.default ];
 
-      age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+      age.identitypath = [ "/etc/ssh/ssh_host_ed25519_key" ];
       age.secrets."DavidCAL-users" = {
-        file = ../secrets/DavidCAL-users.age;
+        file = "${path.secretsDir}/DavidCAL-users.age";
         owner = "radicale";
       };
 
