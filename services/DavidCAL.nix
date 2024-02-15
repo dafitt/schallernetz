@@ -1,6 +1,4 @@
-{ config, lib, ... }: {
-  #$ sudo nixos-container start DavidCAL
-  #$ sudo nixos-container root-login DavidCAL
+{ config, lib, agenix, ... }: {
 
   services.haproxy = {
     frontends.www.extraConfig = [ "use_backend DavidCAL if { req.hdr(host) -i DavidCAL.${config.networking.domain} }" ];
@@ -10,6 +8,8 @@
     '';
   };
 
+  #$ sudo nixos-container start DavidCAL
+  #$ sudo nixos-container root-login DavidCAL
   containers."DavidCAL" = {
     autoStart = true;
 
@@ -18,7 +18,18 @@
     localAddress = "***REMOVED_IPv4***/23";
     localAddress6 = "***REMOVED_IPv6***/56";
 
+    bindMounts."/etc/ssh/ssh_host_ed25519_key".isReadOnly = true;
+
     config = { config, lib, pkgs, ... }: {
+
+      imports = [ agenix.nixosModules.default ];
+
+      age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+      age.secrets."DavidCAL-users" = {
+        file = ../secrets/DavidCAL-users.age;
+        owner = "radicale";
+      };
+
       environment.systemPackages = with pkgs; [ apacheHttpd ];
 
       # [Radicale Documentation](https://radicale.org/v3.html#basic-configuration)
@@ -27,10 +38,12 @@
 
         settings = {
           auth = {
-            #$ htpasswd -BC7 -c /var/lib/radicale/users <user>
+            # plain "USER:PASSWORD"
+            # bcrypt #$ htpasswd -BC7 -c /var/lib/radicale/users <user>
+            #$ nix shell nixpkgs#apacheHttpd
             type = "htpasswd";
-            htpasswd_filename = "/var/lib/radicale/users";
-            htpasswd_encryption = "bcrypt";
+            htpasswd_filename = config.age.secrets."DavidCAL-users".path;
+            htpasswd_encryption = "plain";
           };
           server = {
             hosts = [ "[::]:5232" ];
