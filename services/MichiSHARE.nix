@@ -14,6 +14,7 @@
 
       users.users."michi" = {
         isNormalUser = true;
+        hashedPassword = "***REMOVED_HASH***";
         useDefaultShell = false;
         shell = null;
       };
