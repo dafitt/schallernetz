@@ -1,7 +1,6 @@
 {
   #$ sudo nixos-container start MichiSHARE
   #$ sudo nixos-container root-login MichiSHARE
-
   containers."MichiSHARE" = {
     autoStart = true;
 

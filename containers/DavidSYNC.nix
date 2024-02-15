@@ -2,7 +2,7 @@
   #$ sudo nixos-container start DavidSYNC
   #$ sudo nixos-container root-login DavidSYNC
 
-  services.haproxy = {
+  services.haproxy = lib.mkIf config.services.haproxy.enable {
     frontends.www.extraConfig = [ "use_backend DavidSYNC if { req.hdr(host) -i DavidSYNC.${config.networking.domain} }" ];
     config = lib.mkAfter ''
       backend DavidSYNC
