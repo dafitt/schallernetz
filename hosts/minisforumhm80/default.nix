@@ -8,13 +8,12 @@
 
     ../../common/nix.nix
 
-    ../../services/DavidCAL.nix
-    ../../services/DavidSYNC.nix
-    ../../services/DavidVPN.nix
+    ../../containers/DavidCAL.nix
+    ../../containers/DavidSYNC.nix
+    ../../containers/DavidVPN.nix
+    ../../containers/MichiSHARE.nix
+    ../../containers/searx.nix
+    ../../containers/unbound.nix
     ../../services/haproxy.nix
-    ../../services/MichiSHARE.nix
-    #../../services/pihole.nix
-    ../../services/searx.nix
-    ../../services/unbound.nix
   ];
 }

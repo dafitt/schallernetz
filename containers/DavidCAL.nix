@@ -1,6 +1,6 @@
 { config, lib, agenix, ... }: {
 
-  services.haproxy = {
+  services.haproxy = lib.mkIf config.services.haproxy.enable {
     frontends.www.extraConfig = [ "use_backend DavidCAL if { req.hdr(host) -i DavidCAL.${config.networking.domain} }" ];
     config = lib.mkAfter ''
       backend DavidCAL
