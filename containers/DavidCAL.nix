@@ -24,7 +24,8 @@
 
       imports = [ inputs.agenix.nixosModules.default ];
 
-      age.identitypath = [ "/etc/ssh/ssh_host_ed25519_key" ];
+      age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+      age.secrets."DavidCAL-backup".file = "${path.secretsDir}/DavidCAL-backup.age";
       age.secrets."DavidCAL-users" = {
         file = "${path.secretsDir}/DavidCAL-users.age";
         owner = "radicale";
@@ -74,6 +75,22 @@
             fi
           fi
         '';
+
+      # Backup radicale data
+      services.borgbackup.jobs."localBackup" = {
+        repo = "/borgbackup";
+        paths = [ "${toString config.services.radicale.settings.storage.filesystem_folder}" ];
+
+        encryption.mode = "repokey-blake2";
+        encryption.passCommand = "cat ${config.age.secrets."DavidCAL-backup".path}";
+        compression = "auto,zstd";
+        prune.keep = {
+          within = "1d"; # Keep all archives from the last day
+          daily = 7;
+          weekly = 4;
+          monthly = -1; # Keep at least one archive for each month
+        };
+      };
 
       networking.firewall.interfaces."eth0" = {
         allowedTCPPorts = [ 5232 ];

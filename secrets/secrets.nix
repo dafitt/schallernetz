@@ -19,6 +19,7 @@ in
   # 4. Use it with `config.age.secrets."FILE".path;`
 
   "haproxy-www-ssl.pem.age".publicKeys = [ david minisforumhm80 ];
+  "DavidCAL-backup.age".publicKeys = [ david minisforumhm80 ];
   "DavidCAL-users.age".publicKeys = [ david minisforumhm80 ];
   "searx.age".publicKeys = [ david minisforumhm80 ];
 
