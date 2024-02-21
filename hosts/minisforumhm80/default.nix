@@ -8,6 +8,7 @@
 
     "${path.commonDir}/nix.nix"
 
+    "${path.containersDir}/adguard.nix"
     "${path.containersDir}/DavidCAL.nix"
     "${path.containersDir}/DavidSYNC.nix"
     "${path.containersDir}/DavidVPN.nix"
