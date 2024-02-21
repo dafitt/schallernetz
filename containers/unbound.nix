@@ -43,7 +43,7 @@
               ''"${domain}. IN SOA ${domain}. nobody.email. 1 3600 1200 604800 10800"''
 
               ''"fritzbox.${domain}. IN AAAA ***REMOVED_IPv6***"''
-              ''"pihole.${domain}. IN AAAA ***REMOVED_IPv6***"''
+              ''"adguard.${domain}. IN AAAA ${minisforumhm80}"''
               ''"unbound.${domain}. IN AAAA ***REMOVED_IPv6***"''
               ''"searx.${domain}. IN AAAA ${minisforumhm80}"''
 
