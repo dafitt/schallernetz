@@ -1,21 +1,26 @@
-{ config, lib, pkgs, path, ... }:
+{ options, config, lib, pkgs, ... }:
 
-let cfg = config.services.haproxy; in
+with lib;
+with lib.schallernetz;
+let
+  cfg = config.schallernetz.services.haproxy;
+in
 {
-  options.services.haproxy.frontends.www.extraConfig = lib.mkOption {
-    type = with lib.types;
-      listOf str;
-    default = [ ];
-    description = lib.mdDoc ''
-      List of strings containing additional configuration for the frontend www.
-      Intended for additional backends: "use_backend <backend> if { req.hdr(host) -i <domain> }"
-    '';
+  options.schallernetz.services.haproxy = with types; {
+    enable = mkBoolOpt false "Enable haproxy";
+    frontends.www.extraConfig = mkOption {
+      type = listOf str;
+      default = [ ];
+      description = mdDoc ''
+        List of strings containing additional configuration for the frontend www.
+        Intended for additional backends: "use_backend <backend> if { req.hdr(host) -i <domain> }"
+      '';
+    };
   };
 
-  config = {
-
+  config = mkIf cfg.enable {
     age.secrets."haproxy-www-ssl.pem" = {
-      file = "${path.secretsDir}/haproxy-www-ssl.pem.age";
+      file = ./haproxy-www-ssl.pem.age;
       owner = "haproxy";
       group = "haproxy";
     };
@@ -43,7 +48,7 @@ let cfg = config.services.haproxy; in
           bind [::]:443 v4v6 ssl crt ${config.age.secrets."haproxy-www-ssl.pem".path}
           http-request redirect scheme https unless { ssl_fc }
 
-          ${builtins.concatStringsSep "\n  " cfg.frontends.www.extraConfig}
+          ${concatStringsSep "\n  " cfg.frontends.www.extraConfig}
       '';
     };
 
