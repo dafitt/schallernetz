@@ -1,35 +1,42 @@
-# install flakes: <https://nix-community.github.io/home-manager/index.html#ch-nix-flakes>
-
 {
   description = "Schallernetz Servers";
 
+  #$ flake update [input]
+  #$ nix flake update [--commit-lock-file]
+  #$ nix flake lock --update-input [input]
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
+
+    snowfall-lib = { url = "github:snowfallorg/lib/dev"; inputs.nixpkgs.follows = "nixpkgs"; };
 
     agenix.url = "github:ryantm/agenix";
   };
 
-  outputs = { nixpkgs, ... }@inputs: # pass @inputs for futher configuration
-    let
-      path = {
-        rootDir = ./.;
-        commonDir = ./common;
-        containersDir = ./containers;
-        secretsDir = ./secrets;
-        servicesDir = ./services;
-        usersDir = ./users;
-      };
-    in
-    {
-      # NixOS configuration entrypoint
-      # Available through `nixos-rebuild --flake .#your-hostname`
-      nixosConfigurations = {
+  # [Snowfall framework](https://snowfall.org/guides/lib/quickstart/)
+  #$ nix flake check --keep-going
+  outputs = inputs: inputs.snowfall-lib.mkFlake {
+    inherit inputs;
+    src = ./.;
 
-        "minisforumhm80" = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          specialArgs = { inherit inputs path; };
-          modules = [ ./hosts/minisforumhm80 ];
-        };
+    snowfall = {
+      namespace = "schallernetz";
+      meta = {
+        name = "schallernetz";
+        title = "Schallernetz Servers";
       };
     };
+
+    channels-config = {
+      allowUnfree = true;
+    };
+
+    overlays = with inputs; [
+    ];
+
+    systems.modules.nixos = with inputs; [
+      agenix.nixosModules.default
+    ];
+
+    templates = import ./templates { };
+  };
 }
