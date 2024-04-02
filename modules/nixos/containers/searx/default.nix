@@ -36,14 +36,14 @@ in
       # Mount secret environmentFile `/run/agenix.d/3/searx`
       bindMounts.${config.age.secrets."searx".path}.isReadOnly = true;
 
-      specialArgs = { hostconfig = config; };
-      config = { hostconfig, lib, ... }: {
+      specialArgs = { hostConfig = config; };
+      config = { hostConfig, lib, ... }: {
 
         # SearXNG is a free internet metasearch engine which aggregates results from various search services and databases. Users are neither tracked nor profiled.
         # https://github.com/searxng/searxng
         services.searx = {
           enable = true;
-          environmentFile = hostconfig.age.secrets."searx".path; # SEARX_SECRET_KEY=...
+          environmentFile = hostConfig.age.secrets."searx".path; # SEARX_SECRET_KEY=...
 
           settings = {
             # https://docs.searxng.org/admin/settings/index.html
@@ -154,8 +154,8 @@ in
           useDHCP = mkForce true;
           enableIPv6 = true;
 
-          #defaultGateway = hostconfig.networking.defaultGateway.address;
-          #defaultGateway6 = hostconfig.networking.defaultGateway6.address;
+          #defaultGateway = hostConfig.networking.defaultGateway.address;
+          #defaultGateway6 = hostConfig.networking.defaultGateway6.address;
 
           firewall.interfaces."eth0" = {
             allowedTCPPorts = [ 80 ];

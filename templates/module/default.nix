@@ -3,11 +3,11 @@
 with lib;
 with lib.schallernetz;
 let
-  cfg = config.schallernetz.module;
+  cfg = config.schallernetz.MODULE;
 in
 {
-  options.schallernetz.module = with types; {
-    enable = mkBoolOpt false "Enable module";
+  options.schallernetz.MODULE = with types; {
+    enable = mkBoolOpt false "Enable MODULE";
   };
 
   config = mkIf cfg.enable { };

@@ -10,4 +10,6 @@
   imports = [ ./hardware-configuration.nix ];
 
   schallernetz = { };
+
+  system.stateVersion = "23.11";
 }
