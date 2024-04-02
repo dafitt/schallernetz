@@ -3,17 +3,24 @@
 with lib;
 with lib.schallernetz;
 let
-  cfg = config.schallernetz.containers.containermodule;
+  cfg = config.schallernetz.containers.CONTAINERMODULE;
 in
 {
-  options.schallernetz.containers.containermodule = with types; {
-    enable = mkBoolOpt false "Enable container containermodule";
-    name = mkOpt str "containermodule" "The name of the container";
+  options.schallernetz.containers.CONTAINERMODULE = with types; {
+    enable = mkBoolOpt false "Enable container CONTAINERMODULE";
+    name = mkOpt str "CONTAINERMODULE" "The name of the container";
   };
 
   config = mkIf cfg.enable {
-    #$ sudo nixos-container start containermodule
-    #$ sudo nixos-container root-login containermodule
-    containers.${cfg.name} = { };
+    #$ sudo nixos-container start CONTAINERMODULE
+    #$ sudo nixos-container root-login CONTAINERMODULE
+    containers.${cfg.name} = {
+
+      specialArgs = { hostConfig = config; };
+      config = { hostConfig, lib, ... }: {
+
+        system.stateVersion = hostConfig.system.stateVersion;
+      };
+    };
   };
 }

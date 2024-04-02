@@ -23,8 +23,8 @@ in
       localAddress = "***REMOVED_IPv4***/23";
       localAddress6 = "***REMOVED_IPv6***/64";
 
-      specialArgs = { hostconfig = config; };
-      config = { hostconfig, lib, ... }: {
+      specialArgs = { hostConfig = config; };
+      config = { hostConfig, lib, ... }: {
 
         # Unbound is a validating, recursive, caching DNS resolver (like ***REMOVED_IPv4***).
         # It is designed to be fast and lean and incorporates modern features based on open standards.
@@ -44,10 +44,10 @@ in
 
             # DNS-Zones that unbound can resolve
             local-zone = [
-              "${hostconfig.networking.domain} static"
+              "${hostConfig.networking.domain} static"
             ];
             local-data =
-              with hostconfig.networking; # .domain
+              with hostConfig.networking; # .domain
               let
                 minisforumhm80 = "***REMOVED_IPv6***"; # Workaround for CNAME
               in
@@ -76,8 +76,8 @@ in
             {
               name = "fritz.box";
               forward-addr = [
-                "${hostconfig.networking.defaultGateway.address}"
-                "${hostconfig.networking.defaultGateway6.address}" #! [fe80::]:53 (link-local) is refused
+                "${hostConfig.networking.defaultGateway.address}"
+                "${hostConfig.networking.defaultGateway6.address}" #! [fe80::]:53 (link-local) is refused
               ];
             }
           ];
@@ -89,8 +89,8 @@ in
           useDHCP = mkForce true;
           enableIPv6 = true;
 
-          #defaultGateway = hostconfig.networking.defaultGateway.address;
-          #defaultGateway6 = hostconfig.networking.defaultGateway6.address;
+          #defaultGateway = hostConfig.networking.defaultGateway.address;
+          #defaultGateway6 = hostConfig.networking.defaultGateway6.address;
 
           firewall.interfaces."eth0" = {
             allowedTCPPorts = [ 53 ];

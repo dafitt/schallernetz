@@ -21,8 +21,8 @@ in
       privateNetwork = true;
       hostBridge = "br0";
 
-      specialArgs = { hostconfig = config; };
-      config = { hostconfig, lib, pkgs, ... }: {
+      specialArgs = { hostConfig = config; };
+      config = { hostConfig, lib, pkgs, ... }: {
 
         boot.kernel.sysctl."net.ipv6.conf.wg0.forwarding" = 1;
         boot.kernel.sysctl."net.ipv4.conf.wg0.forwarding" = 1;

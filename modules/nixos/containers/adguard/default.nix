@@ -29,8 +29,8 @@ in
       localAddress = "***REMOVED_IPv4***/23";
       localAddress6 = "***REMOVED_IPv6***/56";
 
-      specialArgs = { hostconfig = config; };
-      config = { hostconfig, ... }: {
+      specialArgs = { hostConfig = config; };
+      config = { hostConfig, ... }: {
 
         services.adguardhome = {
           enable = true;
