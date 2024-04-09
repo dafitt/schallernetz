@@ -31,7 +31,8 @@ in
 
       bindMounts."/etc/ssh/ssh_host_ed25519_key".isReadOnly = true;
 
-      config = { config, lib, pkgs, ... }: {
+      specialArgs = { hostConfig = config; };
+      config = { hostConfig, config, lib, pkgs, ... }: {
 
         imports = [ inputs.agenix.nixosModules.default ];
 
@@ -108,7 +109,7 @@ in
         # Workaround for bug https://github.com/NixOS/nixpkgs/issues/162686
         networking.useHostResolvConf = mkForce false;
 
-        system.stateVersion = "23.11";
+        system.stateVersion = hostConfig.system.stateVersion;
       };
     };
   };

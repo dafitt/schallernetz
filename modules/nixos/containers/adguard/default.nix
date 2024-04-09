@@ -30,7 +30,7 @@ in
       localAddress6 = "***REMOVED_IPv6***/56";
 
       specialArgs = { hostConfig = config; };
-      config = { hostConfig, ... }: {
+      config = { hostConfig, config, lib, pkgs, ... }: {
 
         services.adguardhome = {
           enable = true;
@@ -62,7 +62,7 @@ in
         # Workaround for bug https://github.com/NixOS/nixpkgs/issues/162686
         networking.useHostResolvConf = mkForce false;
 
-        system.stateVersion = "23.11";
+        system.stateVersion = hostConfig.system.stateVersion;
       };
     };
   };

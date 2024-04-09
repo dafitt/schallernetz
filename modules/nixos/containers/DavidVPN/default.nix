@@ -22,7 +22,7 @@ in
       hostBridge = "br0";
 
       specialArgs = { hostConfig = config; };
-      config = { hostConfig, lib, pkgs, ... }: {
+      config = { hostConfig, config, lib, pkgs, ... }: {
 
         boot.kernel.sysctl."net.ipv6.conf.wg0.forwarding" = 1;
         boot.kernel.sysctl."net.ipv4.conf.wg0.forwarding" = 1;
@@ -91,7 +91,7 @@ in
         ## Workaround for bug https://github.com/NixOS/nixpkgs/issues/162686
         networking.useHostResolvConf = mkForce false;
 
-        system.stateVersion = "23.11";
+        system.stateVersion = hostConfig.system.stateVersion;
       };
     };
   };

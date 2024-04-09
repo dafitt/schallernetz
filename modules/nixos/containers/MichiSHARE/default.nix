@@ -23,7 +23,8 @@ in
       localAddress = "***REMOVED_IPv4***/23";
       localAddress6 = "***REMOVED_IPv6***/64";
 
-      config = { config, lib, ... }: {
+      specialArgs = { hostConfig = config; };
+      config = { hostConfig, config, lib, pkgs, ... }: {
 
         users.users."michi" = {
           isNormalUser = true;
@@ -68,7 +69,7 @@ in
           #$ smbclient --list localhost
         };
 
-        system.stateVersion = "23.11";
+        system.stateVersion = hostConfig.system.stateVersion;
       };
     };
   };

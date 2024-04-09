@@ -24,7 +24,7 @@ in
       localAddress6 = "***REMOVED_IPv6***/64";
 
       specialArgs = { hostConfig = config; };
-      config = { hostConfig, lib, ... }: {
+      config = { hostConfig, config, lib, pkgs, ... }: {
 
         # Unbound is a validating, recursive, caching DNS resolver (like ***REMOVED_IPv4***).
         # It is designed to be fast and lean and incorporates modern features based on open standards.
@@ -101,7 +101,7 @@ in
         # Workaround for bug https://github.com/NixOS/nixpkgs/issues/162686
         networking.useHostResolvConf = mkForce false;
 
-        system.stateVersion = "23.11";
+        system.stateVersion = hostConfig.system.stateVersion;
       };
     };
   };
