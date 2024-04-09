@@ -29,7 +29,8 @@ in
       localAddress = "***REMOVED_IPv4***/23";
       localAddress6 = "***REMOVED_IPv6***/64";
 
-      config = { config, lib, ... }: {
+      specialArgs = { hostConfig = config; };
+      config = { hostConfig, config, lib, pkgs, ... }: {
 
         services.syncthing = {
           # <https://nixos.wiki/wiki/Syncthing>
@@ -122,7 +123,7 @@ in
         networking.useHostResolvConf = mkForce false;
         #services.resolved.enable = true;
 
-        system.stateVersion = "23.11";
+        system.stateVersion = hostConfig.system.stateVersion;
       };
     };
   };

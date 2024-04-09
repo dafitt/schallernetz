@@ -37,7 +37,7 @@ in
       bindMounts.${config.age.secrets."searx".path}.isReadOnly = true;
 
       specialArgs = { hostConfig = config; };
-      config = { hostConfig, lib, ... }: {
+      config = { hostConfig, config, lib, pkgs, ... }: {
 
         # SearXNG is a free internet metasearch engine which aggregates results from various search services and databases. Users are neither tracked nor profiled.
         # https://github.com/searxng/searxng
@@ -165,7 +165,7 @@ in
         # Workaround for bug https://github.com/NixOS/nixpkgs/issues/162686
         networking.useHostResolvConf = mkForce false;
 
-        system.stateVersion = "23.11";
+        system.stateVersion = hostConfig.system.stateVersion;
       };
     };
   };

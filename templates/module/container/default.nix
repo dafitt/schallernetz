@@ -17,7 +17,7 @@ in
     containers.${cfg.name} = {
 
       specialArgs = { hostConfig = config; };
-      config = { hostConfig, lib, ... }: {
+      config = { hostConfig, config, lib, pkgs, ... }: {
 
         system.stateVersion = hostConfig.system.stateVersion;
       };
