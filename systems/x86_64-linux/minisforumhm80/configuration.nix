@@ -61,6 +61,4 @@
   users.users.root.openssh.authorizedKeys.keys = [
     "***REMOVED_SSH-PUBLICKEY*** david@DavidDESKTOP"
   ];
-
-  system.stateVersion = "23.11";
 }
