@@ -21,6 +21,4 @@
     };
     services.haproxy.enable = true;
   };
-
-  system.stateVersion = "23.11";
 }
