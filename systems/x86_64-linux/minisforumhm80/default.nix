@@ -1,6 +1,8 @@
 { ... }: {
-  #$ nix flake check --keep-going
-  #$ nixos-rebuild build --flake .#minisforumhm80
+  #$ nix repl .#nixosConfigurations.minisforumhm80
+  #$ nix build .#nixosConfigurations.minisforumhm80.config.system.build.toplevel
+  #$ nixos-rebuild build --flake .#minisforumhm80 --show-trace
+  #$ sudo nixos-rebuild <test|switch|boot> --flake .#minisforumhm80
 
   imports = [
     ./hardware-configuration.nix

@@ -1,4 +1,3 @@
-# HPE Microserver Gen10
 { config, pkgs, ... }: {
 
   boot.loader = {
