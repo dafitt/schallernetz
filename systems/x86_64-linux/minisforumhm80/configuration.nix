@@ -44,10 +44,6 @@
     ];
   };
 
-  environment.systemPackages = with pkgs; [
-    micro
-  ];
-
   users.users.root.openssh.authorizedKeys.keys = [
     "***REMOVED_SSH-PUBLICKEY*** david@DavidDESKTOP"
   ];
