@@ -1,8 +1,7 @@
 {
   description = "Schallernetz Servers";
 
-  #$ flake update [input]
-  #$ nix flake update [--commit-lock-file]
+  #$ nix flake update --commit-lock-file
   #$ nix flake lock --update-input [input]
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
