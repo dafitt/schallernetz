@@ -3,11 +3,11 @@
 with lib;
 with lib.schallernetz;
 let
-  cfg = config.schallernetz.module;
+  cfg = config.schallernetz.users.admin;
 in
 {
-  options.schallernetz.module = with types; {
-    enable = mkBoolOpt false "Enable the user 'admin'";
+  options.schallernetz.users.admin = with types; {
+    enable = mkBoolOpt true "Enable the user 'admin'";
   };
 
   config = mkIf cfg.enable {
