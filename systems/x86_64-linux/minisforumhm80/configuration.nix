@@ -48,16 +48,6 @@
     micro
   ];
 
-  services.openssh = {
-    enable = true;
-    settings = {
-      # require public key authentication for better security
-      #PasswordAuthentication = false;
-      #KbdInteractiveAuthentication = false;
-      PermitRootLogin = "yes";
-    };
-  };
-
   users.users.root.openssh.authorizedKeys.keys = [
     "***REMOVED_SSH-PUBLICKEY*** david@DavidDESKTOP"
   ];

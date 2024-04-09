@@ -3,20 +3,15 @@
 with lib;
 with lib.schallernetz;
 let
-  cfg = config.schallernetz.users.admin;
+  cfg = config.schallernetz.users.root;
 in
 {
-  options.schallernetz.users.admin = with types; {
-    enable = mkBoolOpt true "Enable the user 'admin'";
+  options.schallernetz.users.root = with types; {
+    enable = mkBoolOpt false "Weather or not to enable additional configuration for the user 'root'";
   };
 
   config = mkIf cfg.enable {
-    users.users."admin" = {
-      isNormalUser = true;
-      description = "Administrator";
-
-      extraGroups = [ "wheel" ];
-
+    users.users."root" = {
       packages = with pkgs; [ ];
 
       openssh.authorizedKeys.keys = [
