@@ -4,11 +4,11 @@
   #$ nix flake update --commit-lock-file
   #$ nix flake lock --update-input [input]
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11"; # https://github.com/nixos/nixpkgs
 
-    snowfall-lib = { url = "github:snowfallorg/lib/dev"; inputs.nixpkgs.follows = "nixpkgs"; };
+    snowfall-lib = { url = "github:snowfallorg/lib/dev"; inputs.nixpkgs.follows = "nixpkgs"; }; # https://github.com/snowfallorg/lib
 
-    agenix.url = "github:ryantm/agenix";
+    agenix.url = "github:ryantm/agenix"; # https://github.com/ryantm/agenix
   };
 
   # [Snowfall framework](https://snowfall.org/guides/lib/quickstart/)
