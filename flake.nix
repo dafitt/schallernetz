@@ -1,6 +1,4 @@
 {
-  description = "Schallernetz Servers";
-
   #$ nix flake update --commit-lock-file
   #$ nix flake lock --update-input [input]
   inputs = {
@@ -38,4 +36,6 @@
 
     templates = import ./templates { };
   };
+
+  description = "The schallernetz servers";
 }
