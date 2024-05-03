@@ -26,10 +26,6 @@ with lib;
     channel.enable = false;
   };
 
-  # Make `nix repl '<nixpkgs>'` use the same nixpkgs as the one used by this flake.
-  environment.etc."nix/inputs/nixpkgs".source = "${inputs.nixpkgs}";
-  nix.nixPath = [ "/etc/nix/inputs" ];
-
   # Multitheaded building (make)
   environment.variables.MAKEFLAGS = "-j$(expr $(nproc) \+ 1)";
 }
