@@ -18,10 +18,10 @@ in
   # 3. Import to your NixOS configuration `age.secrets."FILE".file = ../secrets/FILE.age;`
   # 4. Use it with `config.age.secrets."FILE".path;`
 
-  "haproxy-www-ssl.pem.age".publicKeys = [ david minisforumhm80 ];
-  "DavidCAL-backup.age".publicKeys = [ david minisforumhm80 ];
-  "DavidCAL-users.age".publicKeys = [ david minisforumhm80 ];
-  "searx.age".publicKeys = [ david minisforumhm80 ];
+  "modules/nixos/services/haproxy/haproxy-www-ssl.pem.age".publicKeys = [ david minisforumhm80 ];
+  "modules/nixos/containers/DavidCAL/DavidCAL-backup.age".publicKeys = [ david minisforumhm80 ];
+  "modules/nixos/containers/DavidCAL/DavidCAL-users.age".publicKeys = [ david minisforumhm80 ];
+  "modules/nixos/containers/searx/searx.age".publicKeys = [ david minisforumhm80 ];
 
   # Edit #$ nix run github:ryantm/agenix -- -e FILE -i PRIVATE_KEY
   # Rekey #$ nix run github:ryantm/agenix -- -r -i PRIVATE_KEY
