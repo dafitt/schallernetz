@@ -3,10 +3,10 @@
 with lib;
 with lib.schallernetz;
 let
-  cfg = config.schallernetz.time;
+  cfg = config.schallernetz.environment;
 in
 {
-  options.schallernetz.time = with types; {
+  options.schallernetz.environment = with types; {
     enable = mkBoolOpt true "Enable custom environment";
   };
 

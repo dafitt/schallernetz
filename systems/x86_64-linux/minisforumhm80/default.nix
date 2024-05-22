@@ -1,7 +1,7 @@
 #$ nix repl .#nixosConfigurations.minisforumhm80
 #$ nix build .#nixosConfigurations.minisforumhm80.config.system.build.toplevel
 #$ nixos-rebuild build --fast --flake .#minisforumhm80 --show-trace
-#$ ssh-add ~/.ssh/minisforumhm80 && nixos-rebuild --flake .#minisforumhm80 --target-host admin@minisforumhm80 --use-remote-sudo <test|boot|switch>
+#$ ssh-add ~/.ssh/minisforumhm80 && nixos-rebuild --flake .#minisforumhm80 --target-host admin@minisforumhm80.***REMOVED_DOMAIN*** --use-remote-sudo <test|boot|switch>
 
 { lib, ... }: with lib.schallernetz; {
   imports = [
