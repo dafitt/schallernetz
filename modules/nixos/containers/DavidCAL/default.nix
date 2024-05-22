@@ -9,6 +9,8 @@ in
   options.schallernetz.containers.DavidCAL = with types; {
     enable = mkBoolOpt false "Enable container DavidCAL";
     name = mkOpt str "DavidCAL" "The name of the container";
+
+    remoteBackups = mkBoolOpt true "Whether or not to enable remote backups";
   };
 
   config = mkIf cfg.enable {
@@ -40,7 +42,7 @@ in
         age.secrets."DavidCAL-backup".file = ./DavidCAL-backup.age;
         age.secrets."DavidCAL-users" = { file = ./DavidCAL-users.age; owner = "radicale"; };
 
-        environment.systemPackages = with pkgs; [ apacheHttpd ];
+        environment.systemPackages = with pkgs; [ apacheHttpd nfs-utils ];
 
         # [Radicale Documentation](https://radicale.org/v3.html#basic-configuration)
         services.radicale = {
@@ -69,7 +71,6 @@ in
             };
           };
         };
-
         systemd.services."radicale".preStart =
           let cfg = config.services.radicale.settings; in
           # Initialize Git
@@ -88,16 +89,50 @@ in
         # Backup radicale data
         services.borgbackup.jobs."localBackup" = {
           repo = "/borgbackup";
-          paths = [ "${toString config.services.radicale.settings.storage.filesystem_folder}" ];
-
           encryption.mode = "repokey-blake2";
           encryption.passCommand = "cat ${config.age.secrets."DavidCAL-backup".path}";
           compression = "auto,zstd";
+
+          paths = [ "${toString config.services.radicale.settings.storage.filesystem_folder}" ];
+          startAt = "daily";
           prune.keep = {
-            within = "1d"; # Keep all archives from the last day
+            within = "1d"; # everything
             daily = 7;
             weekly = 4;
-            monthly = -1; # Keep at least one archive for each month
+            monthly = -1; # - means at least
+          };
+        };
+
+
+        services.rpcbind.enable = mkIf cfg.remoteBackups true; # needed for NFS
+        systemd.mounts = mkIf cfg.remoteBackups [{
+          type = "nfs";
+          mountConfig = {
+            Options = "noatime";
+          };
+          what = "***REMOVED_IPv4***:/SchallernetzBACKUP";
+          where = "/mnt/SchallernetzBACKUP_NAS4";
+          partOf = [ "borgbackup-job-SchallernetzBACKUP.service" ];
+        }];
+        systemd.services."borgbackup-job-SchallernetzBACKUP" = mkIf cfg.remoteBackups {
+          after = [ "mnt-SchallernetzBACKUP_NAS4.mount" ];
+          requires = [ "mnt-SchallernetzBACKUP_NAS4.mount" ];
+        };
+        services.borgbackup.jobs."SchallernetzBACKUP" = mkIf cfg.remoteBackups {
+          repo = "/mnt/SchallernetzBACKUP_NAS4/DavidCAL";
+          removableDevice = true;
+          encryption.mode = "repokey-blake2";
+          encryption.passCommand = "cat ${config.age.secrets."DavidCAL-backup".path}";
+          compression = "auto,zstd";
+
+          paths = [ "${toString config.services.radicale.settings.storage.filesystem_folder}" ];
+          preHook = "mkdir -p /mnt/SchallernetzBACKUP_NAS4/DavidCAL";
+          startAt = "Mon *-*-* ***REMOVED_IPv6***";
+          prune.keep = {
+            within = "1w"; # everything
+            daily = 7;
+            weekly = 4;
+            monthly = -1; # - means at least
           };
         };
 
