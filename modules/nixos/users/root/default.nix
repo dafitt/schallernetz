@@ -7,7 +7,7 @@ let
 in
 {
   options.schallernetz.users.root = with types; {
-    enable = mkBoolOpt false "Weather or not to enable additional configuration for the user 'root'";
+    enable = mkBoolOpt false "Weather or not to enable additional configuration for the user 'root'.";
   };
 
   config = mkIf cfg.enable {

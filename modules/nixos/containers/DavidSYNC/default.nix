@@ -7,8 +7,8 @@ let
 in
 {
   options.schallernetz.containers.DavidSYNC = with types; {
-    enable = mkBoolOpt false "Enable container DavidSYNC";
-    name = mkOpt str "DavidSYNC" "The name of the container";
+    enable = mkBoolOpt false "Enable container DavidSYNC.";
+    name = mkOpt str "DavidSYNC" "The name of the container.";
   };
 
   config = mkIf cfg.enable {

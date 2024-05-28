@@ -7,7 +7,7 @@ let
 in
 {
   options.schallernetz.users.admin = with types; {
-    enable = mkBoolOpt true "Enable the user 'admin'";
+    enable = mkBoolOpt true "Enable the user 'admin'.";
   };
 
   config = mkIf cfg.enable {

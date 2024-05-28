@@ -7,8 +7,8 @@ let
 in
 {
   options.schallernetz.containers.MichiSHARE = with types; {
-    enable = mkBoolOpt false "Enable container MichiSHARE";
-    name = mkOpt str "MichiSHARE" "The name of the container";
+    enable = mkBoolOpt false "Enable container MichiSHARE.";
+    name = mkOpt str "MichiSHARE" "The name of the container.";
   };
 
   config = mkIf cfg.enable {

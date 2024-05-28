@@ -7,7 +7,7 @@ let
 in
 {
   options.schallernetz.services.ssh = with types; {
-    enable = mkBoolOpt true "Enable ssh (access)";
+    enable = mkBoolOpt true "Enable ssh (access).";
   };
 
   config = mkIf cfg.enable {

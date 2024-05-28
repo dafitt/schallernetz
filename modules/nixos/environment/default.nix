@@ -7,7 +7,7 @@ let
 in
 {
   options.schallernetz.environment = with types; {
-    enable = mkBoolOpt true "Enable custom environment";
+    enable = mkBoolOpt true "Enable custom environment.";
   };
 
   config = mkIf cfg.enable {
