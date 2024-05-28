@@ -7,8 +7,8 @@ let
 in
 {
   options.schallernetz.containers.DavidVPN = with types; {
-    enable = mkBoolOpt false "Enable container DavidVPN";
-    name = mkOpt str "DavidVPN" "The name of the container";
+    enable = mkBoolOpt false "Enable container DavidVPN.";
+    name = mkOpt str "DavidVPN" "The name of the container.";
   };
 
   config = mkIf cfg.enable {

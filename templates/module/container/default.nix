@@ -7,8 +7,8 @@ let
 in
 {
   options.schallernetz.containers.CONTAINERMODULE = with types; {
-    enable = mkBoolOpt false "Enable container CONTAINERMODULE";
-    name = mkOpt str "CONTAINERMODULE" "The name of the container";
+    enable = mkBoolOpt false "Enable container CONTAINERMODULE.";
+    name = mkOpt str "CONTAINERMODULE" "The name of the container.";
   };
 
   config = mkIf cfg.enable {

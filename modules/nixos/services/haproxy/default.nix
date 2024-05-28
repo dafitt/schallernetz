@@ -7,7 +7,7 @@ let
 in
 {
   options.schallernetz.services.haproxy = with types; {
-    enable = mkBoolOpt false "Enable haproxy";
+    enable = mkBoolOpt false "Enable haproxy.";
     frontends.www.extraConfig = mkOption {
       type = listOf str;
       default = [ ];

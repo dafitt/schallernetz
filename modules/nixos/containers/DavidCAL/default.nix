@@ -7,10 +7,10 @@ let
 in
 {
   options.schallernetz.containers.DavidCAL = with types; {
-    enable = mkBoolOpt false "Enable container DavidCAL";
-    name = mkOpt str "DavidCAL" "The name of the container";
+    enable = mkBoolOpt false "Enable container DavidCAL.";
+    name = mkOpt str "DavidCAL" "The name of the container.";
 
-    remoteBackups = mkBoolOpt true "Whether or not to enable remote backups";
+    remoteBackups = mkBoolOpt true "Whether or not to enable remote backups.";
   };
 
   config = mkIf cfg.enable {

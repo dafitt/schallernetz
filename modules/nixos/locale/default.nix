@@ -7,7 +7,7 @@ let
 in
 {
   options.schallernetz.locale = {
-    enable = mkBoolOpt true "Whether or not to manage locale settings";
+    enable = mkBoolOpt true "Whether or not to manage locale settings.";
   };
 
   config = mkIf cfg.enable {

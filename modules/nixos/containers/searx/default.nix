@@ -7,8 +7,8 @@ let
 in
 {
   options.schallernetz.containers.searx = with types; {
-    enable = mkBoolOpt false "Enable container searx";
-    name = mkOpt str "searx" "The name of the container";
+    enable = mkBoolOpt false "Enable container searx.";
+    name = mkOpt str "searx" "The name of the container.";
   };
 
   config = mkIf cfg.enable {

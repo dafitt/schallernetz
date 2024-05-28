@@ -7,8 +7,8 @@ let
 in
 {
   options.schallernetz.containers.unbound = with types; {
-    enable = mkBoolOpt false "Enable container unbound";
-    name = mkOpt str "unbound" "The name of the container";
+    enable = mkBoolOpt false "Enable container unbound.";
+    name = mkOpt str "unbound" "The name of the container.";
   };
 
   config = mkIf cfg.enable {

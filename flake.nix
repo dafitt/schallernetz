@@ -37,5 +37,5 @@
     templates = import ./templates { };
   };
 
-  description = "The schallernetz servers";
+  description = "The schallernetz servers.";
 }

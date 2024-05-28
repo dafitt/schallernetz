@@ -7,8 +7,8 @@ let
 in
 {
   options.schallernetz.containers.adguard = with types; {
-    enable = mkBoolOpt false "Enable container adguard";
-    name = mkOpt str "adguard" "The name of the container"; # TODO: rename adguardhome
+    enable = mkBoolOpt false "Enable container adguard.";
+    name = mkOpt str "adguard" "The name of the container."; # TODO: rename adguardhome
   };
 
   config = mkIf cfg.enable {
