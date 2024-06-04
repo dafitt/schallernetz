@@ -6,7 +6,7 @@ with lib;
 
   nix = {
     settings = {
-      experimental-features = [ "nix-command" "flakes" "repl-flake" ];
+      experimental-features = [ "nix-command" "flakes" ];
       auto-optimise-store = true;
       warn-dirty = false;
       trusted-users = [ "root" ];
@@ -19,13 +19,7 @@ with lib;
       options = "--delete-older-than 2w";
     };
 
-    # TODO: 24.05 obsolete, see: https://github.com/NixOS/nixpkgs/pull/254405
-    registry."nixpkgs".flake = inputs.nixpkgs; # Make `nix run nixpkgs#nixpkgs` use the same nixpkgs as the one used by this flake.
-
     # disable nix-channel, we use flakes instead.
     channel.enable = false;
   };
-
-  # Multitheaded building (make)
-  environment.variables.MAKEFLAGS = "-j$(expr $(nproc) \+ 1)";
 }
