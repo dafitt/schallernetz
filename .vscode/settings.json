@@ -1,0 +1,30 @@
+{
+    "[nix]": {
+        "editor.defaultFormatter": "jnoortheen.nix-ide",
+        "editor.tabSize": 2
+    },
+
+    // with language server
+    "nix.enableLanguageServer": false, // disable this, when nil is NOT installed on your system
+    "nix.serverPath": "nil",
+    "nix.serverSettings": {
+        "nil": {
+            "diagnostics": {
+                //"ignored": ["unused_binding", "unused_with"]
+            },
+            "formatting": {
+                "command": ["nixpkgs-fmt"]
+            }
+        }
+    },
+    // without language server
+    "nix.formatterPath": ["nixpkgs-fmt"],
+
+    "todo-tree.general.tags": ["FIXME", "TODO", "REFACTOR", "???"],
+
+    "workbench.editor.customLabels.patterns": {
+        "**/default.nix": "${dirname}/.nix",
+        "**/modules/nixos/containers/**/default.nix": "container/${dirname}/.nix",
+        "**/templates/**/default.nix": "template/${dirname}/.nix"
+    }
+}
