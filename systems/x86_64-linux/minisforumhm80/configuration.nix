@@ -9,9 +9,6 @@
   services.fstrim.enable = true; # SSD
 
   networking = {
-    hostName = "minisforumhm80";
-    domain = "***REMOVED_DOMAIN***";
-
     # Gets in the way of static IP adressing
     networkmanager.enable = false;
     useDHCP = false;
