@@ -1,12 +1,17 @@
 #$ nix repl .#nixosConfigurations.<host>
 #$ nix build .#nixosConfigurations.<host>.config.system.build.toplevel
-#$ nixos-rebuild build --fast --flake .#<host> --show-trace
-#$ ssh-add ~/.ssh/<host> && nixos-rebuild --flake .#<host> --target-host admin@<host> --use-remote-sudo <test|switch|boot>
+{ options, config, lib, pkgs, inputs, ... }:
 
-{ lib, ... }: with lib.schallernetz; {
+with lib;
+with lib.schallernetz; {
   imports = [ ./hardware-configuration.nix ];
 
-  schallernetz = { };
+  schallernetz = rec { };
 
-  system.stateVersion = "24.05"; # move this line to hardware-configuration.nix
+  environment.systemPackages = with pkgs; [
+  ];
+
+  # add device-specific nixos configuration here #
+
+  system.stateVersion = "24.05";
 }
