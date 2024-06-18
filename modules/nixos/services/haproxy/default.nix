@@ -19,8 +19,8 @@ in
   };
 
   config = mkIf cfg.enable {
-    age.secrets."haproxy-www-ssl.pem" = {
-      file = ./haproxy-www-ssl.pem.age;
+    age.secrets."haproxy.***REMOVED_DOMAIN***.crt.key" = {
+      file = ./haproxy.***REMOVED_DOMAIN***.crt.key.age;
       owner = "haproxy";
       group = "haproxy";
     };
@@ -45,7 +45,7 @@ in
 
         frontend www
           bind [::]:80 v4v6
-          bind [::]:443 v4v6 ssl crt ${config.age.secrets."haproxy-www-ssl.pem".path}
+          bind [::]:443 v4v6 ssl crt ${config.age.secrets."haproxy.***REMOVED_DOMAIN***.crt.key".path}
           http-request redirect scheme https unless { ssl_fc }
 
           ${concatStringsSep "\n  " cfg.frontends.www.extraConfig}
