@@ -9,6 +9,7 @@ in
   options.schallernetz.containers.unbound = with types; {
     enable = mkBoolOpt false "Enable container unbound.";
     name = mkOpt str "unbound" "The name of the container.";
+    ipv6address = mkOpt str "***REMOVED_IPv6***" "IPv6 address of the container.";
   };
 
   config = mkIf cfg.enable {
@@ -21,21 +22,21 @@ in
       privateNetwork = true;
       hostBridge = "br0";
       localAddress = "***REMOVED_IPv4***/23";
-      localAddress6 = "***REMOVED_IPv6***/64";
+      localAddress6 = "${cfg.ipv6address}/64";
 
       specialArgs = { hostConfig = config; };
       config = { hostConfig, config, lib, pkgs, ... }: {
 
         # Unbound is a validating, recursive, caching DNS resolver (like ***REMOVED_IPv4***).
         # It is designed to be fast and lean and incorporates modern features based on open standards.
-        services.unbound = {
+        services.${cfg.name} = {
           enable = true;
 
           settings.server = {
             # the interface ip's that is used to connect to the network
             interface = [
               "***REMOVED_IPv4***"
-              "***REMOVED_IPv6***"
+              "${cfg.ipv6address}"
               "***REMOVED_IPv6***"
             ];
 
@@ -52,12 +53,12 @@ in
                 minisforumhm80 = "***REMOVED_IPv6***"; # Workaround for CNAME
               in
               [
-                ''"${domain}. IN NS unbound.${domain}"''
+                ''"${domain}. IN NS ${cfg.name}.${domain}"''
                 ''"${domain}. IN SOA ${domain}. nobody.email. 1 3600 1200 604800 10800"''
 
+                ''"${cfg.name}.${domain}. IN AAAA ${cfg.ipv6address}"''
                 ''"fritzbox.${domain}. IN AAAA ***REMOVED_IPv6***"''
                 ''"adguard.${domain}. IN AAAA ${minisforumhm80}"''
-                ''"unbound.${domain}. IN AAAA ***REMOVED_IPv6***"''
                 ''"searx.${domain}. IN AAAA ${minisforumhm80}"''
 
                 ''"minisforumhm80.${domain}. IN AAAA ${minisforumhm80}"''
