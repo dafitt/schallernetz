@@ -9,6 +9,7 @@ in
   options.schallernetz.containers.adguard = with types; {
     enable = mkBoolOpt false "Enable container adguard.";
     name = mkOpt str "adguard" "The name of the container."; # TODO: rename adguardhome
+    ipv6address = mkOpt str "***REMOVED_IPv6***" "IPv6 address of the container.";
   };
 
   config = mkIf cfg.enable {
@@ -16,7 +17,7 @@ in
     schallernetz.services.haproxy.frontends.www.extraConfig = [ "use_backend ${cfg.name} if { req.hdr(host) -i ${cfg.name}.${config.networking.domain} }" ];
     services.haproxy.config = mkAfter ''
       backend ${cfg.name}
-        server _0 [***REMOVED_IPv6***]:3000 maxconn 32 check
+        server _0 [${cfg.ipv6address}]:3000 maxconn 32 check
     '';
 
     #$ sudo nixos-container start adguard
@@ -27,7 +28,7 @@ in
       privateNetwork = true;
       hostBridge = "br0";
       localAddress = "***REMOVED_IPv4***/23";
-      localAddress6 = "***REMOVED_IPv6***/56";
+      localAddress6 = "${cfg.ipv6address}/64";
 
       specialArgs = { hostConfig = config; };
       config = { hostConfig, config, lib, pkgs, ... }: {
@@ -39,7 +40,7 @@ in
             # https://github.com/AdguardTeam/AdGuardHome/wiki/Configuration#configuration-file
             safebrowsing_enabled = true;
             dns = {
-              bind_hosts = [ "***REMOVED_IPv4***" "***REMOVED_IPv6***" ];
+              bind_hosts = [ "***REMOVED_IPv4***" "${cfg.ipv6address}" ];
               enable_dnssec = true;
               upstream_dns = [ "***REMOVED_IPv6***" ];
             };

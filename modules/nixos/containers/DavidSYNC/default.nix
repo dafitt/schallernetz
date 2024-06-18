@@ -9,6 +9,7 @@ in
   options.schallernetz.containers.DavidSYNC = with types; {
     enable = mkBoolOpt false "Enable container DavidSYNC.";
     name = mkOpt str "DavidSYNC" "The name of the container.";
+    ipv6address = mkOpt str "***REMOVED_IPv6***" "IPv6 address of the container.";
   };
 
   config = mkIf cfg.enable {
@@ -16,7 +17,7 @@ in
     schallernetz.services.haproxy.frontends.www.extraConfig = [ "use_backend ${cfg.name} if { req.hdr(host) -i ${cfg.name}.${config.networking.domain} }" ];
     services.haproxy.config = mkAfter ''
       backend ${cfg.name}
-        server _0 [***REMOVED_IPv6***]:8384 maxconn 32 check
+        server _0 [${cfg.ipv6address}]:8384 maxconn 32 check
     '';
 
     #$ sudo nixos-container start DavidSYNC
@@ -27,7 +28,7 @@ in
       privateNetwork = true;
       hostBridge = "br0";
       localAddress = "***REMOVED_IPv4***/23";
-      localAddress6 = "***REMOVED_IPv6***/64";
+      localAddress6 = "${cfg.ipv6address}/64";
 
       specialArgs = { hostConfig = config; };
       config = { hostConfig, config, lib, pkgs, ... }: {

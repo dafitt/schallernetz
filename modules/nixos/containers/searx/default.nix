@@ -9,6 +9,7 @@ in
   options.schallernetz.containers.searx = with types; {
     enable = mkBoolOpt false "Enable container searx.";
     name = mkOpt str "searx" "The name of the container.";
+    ipv6address = mkOpt str "***REMOVED_IPv6***" "IPv6 address of the container.";
   };
 
   config = mkIf cfg.enable {
@@ -20,7 +21,7 @@ in
     schallernetz.services.haproxy.frontends.www.extraConfig = [ "use_backend ${cfg.name} if { req.hdr(host) -i ${cfg.name}.${config.networking.domain} }" ];
     services.haproxy.config = mkAfter ''
       backend ${cfg.name}
-        server _0 [***REMOVED_IPv6***]:80 maxconn 32 check
+        server _0 [${cfg.ipv6address}]:80 maxconn 32 check
     '';
 
     #$ sudo nixos-container start searx
@@ -31,7 +32,7 @@ in
       privateNetwork = true;
       hostBridge = "br0";
       localAddress = "***REMOVED_IPv4***/23";
-      localAddress6 = "***REMOVED_IPv6***/64";
+      localAddress6 = "${cfg.ipv6address}/64";
 
       # Mount secret environmentFile `/run/agenix.d/3/searx`
       bindMounts.${config.age.secrets."searx".path}.isReadOnly = true;

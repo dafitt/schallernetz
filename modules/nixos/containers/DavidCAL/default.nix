@@ -9,6 +9,7 @@ in
   options.schallernetz.containers.DavidCAL = with types; {
     enable = mkBoolOpt false "Enable container DavidCAL.";
     name = mkOpt str "DavidCAL" "The name of the container.";
+    ipv6address = mkOpt str "***REMOVED_IPv6***" "IPv6 address of the container.";
 
     remoteBackups = mkBoolOpt true "Whether or not to enable remote backups.";
   };
@@ -18,7 +19,7 @@ in
     schallernetz.services.haproxy.frontends.www.extraConfig = [ "use_backend ${cfg.name} if { req.hdr(host) -i ${cfg.name}.${config.networking.domain} }" ];
     services.haproxy.config = mkAfter ''
       backend ${cfg.name}
-        server _0 [***REMOVED_IPv6***]:5232 maxconn 32 check
+        server _0 [${cfg.ipv6address}]:5232 maxconn 32 check
     '';
 
     #$ sudo nixos-container start DavidCAL
@@ -29,7 +30,7 @@ in
       privateNetwork = true;
       hostBridge = "br0";
       localAddress = "***REMOVED_IPv4***/23";
-      localAddress6 = "***REMOVED_IPv6***/56";
+      localAddress6 = "${cfg.ipv6address}/64";
 
       bindMounts."/etc/ssh/ssh_host_ed25519_key".isReadOnly = true;
 
