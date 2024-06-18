@@ -31,3 +31,5 @@ in
     };
   };
 }
+
+# Dont forget to add `schallernetz.containers.CONTAINERMODULE.enable = true;` to the hosts configuration!

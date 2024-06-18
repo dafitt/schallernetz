@@ -16,6 +16,7 @@ with lib.schallernetz; {
       DavidSYNC.enable = true;
       DavidVPN.enable = true;
       MichiSHARE.enable = true;
+      ntfy.enable = true;
       searx.enable = true;
       unbound.enable = true;
     };
