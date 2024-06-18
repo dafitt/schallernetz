@@ -53,7 +53,7 @@ in
               instance_name = "searx";
             };
             server = {
-              base_url = "https://searx.***REMOVED_DOMAIN***/";
+              base_url = "https://${cfg.name}.${hostConfig.networking.domain}";
               secret_key = "@SEARX_SECRET_KEY@";
               method = "GET";
               image_proxy = false;

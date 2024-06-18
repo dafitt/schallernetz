@@ -60,6 +60,7 @@ in
                 ''"fritzbox.${domain}. IN AAAA ***REMOVED_IPv6***"''
                 ''"adguard.${domain}. IN AAAA ${minisforumhm80}"''
                 ''"searx.${domain}. IN AAAA ${minisforumhm80}"''
+                ''"ntfy.${domain}. IN AAAA ${minisforumhm80}"''
 
                 ''"minisforumhm80.${domain}. IN AAAA ${minisforumhm80}"''
                 ''"minisforumhm80.${domain}. IN A ***REMOVED_IPv4***"''
