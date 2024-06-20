@@ -1,6 +1,8 @@
 #nix-repl> nixosConfigurations.minisforumhm80.config
+
 #$ nix build .#nixosConfigurations.minisforumhm80.config.system.build.toplevel
 #$ nixos-rebuild build --fast --flake .#minisforumhm80 --show-trace
+
 #$ ssh-add ~/.ssh/minisforumhm80 && nixos-rebuild --flake .#minisforumhm80 --target-host admin@minisforumhm80.***REMOVED_DOMAIN*** --use-remote-sudo <test|boot|switch>
 
 { config, lib, pkgs, inputs, ... }:
@@ -8,6 +10,14 @@
 with lib;
 with lib.schallernetz; {
   imports = [ ./hardware-configuration.nix ];
+
+  #$ nix run .#apps.nixinate.minisforumhm80[-dry-run]
+  _module.args.nixinate = {
+    host = "minisforumhm80.***REMOVED_DOMAIN***";
+    sshUser = "root"; #TODO ssh allow admin nixos-rebuild activation
+    buildOn = "local";
+    substituteOnTarget = true;
+  };
 
   schallernetz = {
     containers = {
