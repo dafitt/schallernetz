@@ -2,26 +2,28 @@
 
 # NOTE This file is only used for the agenix command.
 let
-  # public ssh keys of machines, that will have access to the secrets
-  # the corresponding private keys will be able to decrypt them
-  # grab them through #$ ssh-keyscan host
+  # USERs
+  #$ cat ~/.ssh/id_ed25519.pub
+  david = [
+    "***REMOVED_SSH-PUBLICKEY***" # manually
+    "***REMOVED_SSH-PUBLICKEY*** david@DavidDESKTOP"
+    "***REMOVED_SSH-PUBLICKEY*** david@DavidLEGION"
+  ];
 
-  # USERS
-  david = "***REMOVED_SSH-PUBLICKEY***";
-
-  # MACHINES
-  minisforumhm80 = "***REMOVED_SSH-PUBLICKEY***"; # minisforumhm80
+  # SYSTEMs root@<host>
+  #$ ssh-keyscan <host>
+  minisforumhm80 = "***REMOVED_SSH-PUBLICKEY***";
 in
 {
-  # 1. New entry with allowed keys `"FILE.age".publicKeys = keys;`
-  # 2. Create the secret file #$ nix run github:ryantm/agenix -- -e FILE.age
-  # 3. Import to your NixOS configuration `age.secrets."FILE".file = ../secrets/FILE.age;`
-  # 4. Use it with `config.age.secrets."FILE".path;`
+  # 1. New entry: `"FILE.age".publicKeys = allowedKeys;`
+  # 2. #$ nix run github:ryantm/agenix -- -e FILE.age
+  # 3. NixOS configuration import: `age.secrets."FILE".file = ./FILE.age;`
+  # 4. Use it with: `config.age.secrets."FILE".path;`
 
-  "modules/nixos/services/haproxy/haproxy.***REMOVED_DOMAIN***.crt.key.age".publicKeys = [ david minisforumhm80 ];
-  "modules/nixos/containers/DavidCAL/DavidCAL-backup.age".publicKeys = [ david minisforumhm80 ];
-  "modules/nixos/containers/DavidCAL/DavidCAL-users.age".publicKeys = [ david minisforumhm80 ];
-  "modules/nixos/containers/searx/searx.age".publicKeys = [ david minisforumhm80 ];
+  "modules/nixos/containers/DavidCAL/DavidCAL-backup.age".publicKeys = [ minisforumhm80 ] ++ david;
+  "modules/nixos/containers/DavidCAL/DavidCAL-users.age".publicKeys = [ minisforumhm80 ] ++ david;
+  "modules/nixos/containers/searx/searx.age".publicKeys = [ minisforumhm80 ] ++ david;
+  "modules/nixos/services/haproxy/haproxy.***REMOVED_DOMAIN***.crt.key.age".publicKeys = [ minisforumhm80 ] ++ david;
 
   # Edit #$ nix run github:ryantm/agenix -- -e FILE -i PRIVATE_KEY
   # Rekey #$ nix run github:ryantm/agenix -- -r -i PRIVATE_KEY
