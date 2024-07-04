@@ -11,6 +11,13 @@ in
   };
 
   config = mkIf cfg.enable {
-    services.openssh.enable = true;
+    services.openssh = {
+      enable = true;
+      settings = {
+        # require public key authentication for better security
+        PasswordAuthentication = mkDefault false;
+        KbdInteractiveAuthentication = mkDefault false;
+      };
+    };
   };
 }
