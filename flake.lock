@@ -8,11 +8,11 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1716561646,
+        "lastModified": 1718371084,
         "narHash": "sha256-***REMOVED_WIREGUARD-KEY***",
         "owner": "ryantm",
         "repo": "agenix",
-        "rev": "c2fc0762bbe8feb06a2e59a364fa81b3a57671c9",
+        "rev": "3a56735779db467538fb2e577eda28a9daacaca6",
         "type": "github"
       },
       "original": {
@@ -169,11 +169,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1717144377,
+        "lastModified": 1719956923,
         "narHash": "sha256-***REMOVED_WIREGUARD-KEY***",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "805a384895c696f802a9bf5bf4720f37385df547",
+        "rev": "706eef542dec88cc0ed25b9075d3037564b2d164",
         "type": "github"
       },
       "original": {
@@ -200,11 +200,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1716563019,
+        "lastModified": 1717625599,
         "narHash": "sha256-***REMOVED_WIREGUARD-KEY***",
         "owner": "snowfallorg",
         "repo": "lib",
-        "rev": "727d634555bc6749c19cce1ac63d56b6400c82ed",
+        "rev": "5a10d2e37b6c6223763fa7c00b974875e49f93cc",
         "type": "github"
       },
       "original": {
