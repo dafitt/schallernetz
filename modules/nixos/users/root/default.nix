@@ -7,7 +7,8 @@ let
 in
 {
   options.schallernetz.users.root = with types; {
-    enable = mkBoolOpt false "Whether or not to enable additional configuration for the user 'root'.";
+    enable = mkBoolOpt true "Whether or not to enable additional configuration for the user 'root'.";
+    allowSshPasswordAuthentication = mkBoolOpt false "Whether or not to allow ssh login with a password.";
   };
 
   config = mkIf cfg.enable {
@@ -20,13 +21,10 @@ in
       ];
     };
 
-    services.openssh.settings = {
+    services.openssh.settings = mkIf cfg.allowSshPasswordAuthentication {
       PermitRootLogin = "yes";
-
-      # require public key authentication for better security
-      #PasswordAuthentication = false;
-      #KbdInteractiveAuthentication = false;
-      #PermitRootLogin = "no";
+      PasswordAuthentication = true;
+      KbdInteractiveAuthentication = true;
     };
   };
 }
