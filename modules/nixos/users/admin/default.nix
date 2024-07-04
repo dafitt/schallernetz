@@ -12,16 +12,19 @@ in
 
   config = mkIf cfg.enable {
     users.users."admin" = {
-      isNormalUser = true;
       description = "Administrator";
+
+      isNormalUser = true;
 
       extraGroups = [ "wheel" ];
 
       packages = with pkgs; [ ];
 
       openssh.authorizedKeys.keys = [
-        # Put all allowed hosts' key here (user specific)
+        # Put all ssh allowed users' key here
         # "ssh-ed25519 AAAAC3Nxxxxx user@host"
+        "***REMOVED_SSH-PUBLICKEY*** david@DavidDESKTOP"
+        "***REMOVED_SSH-PUBLICKEY*** david@DavidLEGION"
       ];
     };
   };

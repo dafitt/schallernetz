@@ -7,7 +7,7 @@ let
 in
 {
   options.schallernetz.users.root = with types; {
-    enable = mkBoolOpt false "Weather or not to enable additional configuration for the user 'root'.";
+    enable = mkBoolOpt false "Whether or not to enable additional configuration for the user 'root'.";
   };
 
   config = mkIf cfg.enable {
@@ -15,9 +15,18 @@ in
       packages = with pkgs; [ ];
 
       openssh.authorizedKeys.keys = [
-        # Put all allowed hosts' key here (user specific)
+        # Put all ssh allowed users' key here
         # "ssh-ed25519 AAAAC3Nxxxxx user@host"
       ];
+    };
+
+    services.openssh.settings = {
+      PermitRootLogin = "yes";
+
+      # require public key authentication for better security
+      #PasswordAuthentication = false;
+      #KbdInteractiveAuthentication = false;
+      #PermitRootLogin = "no";
     };
   };
 }

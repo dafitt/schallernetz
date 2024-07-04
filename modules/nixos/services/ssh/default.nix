@@ -11,16 +11,6 @@ in
   };
 
   config = mkIf cfg.enable {
-    services.openssh = {
-      enable = true;
-      settings = {
-        PermitRootLogin = "yes";
-
-        # require public key authentication for better security
-        #PasswordAuthentication = false;
-        #KbdInteractiveAuthentication = false;
-        #PermitRootLogin = "no";
-      };
-    };
+    services.openssh.enable = true;
   };
 }
