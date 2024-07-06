@@ -72,7 +72,6 @@ in
               "ccc-tv".disabled = false;
               "codeberg".disabled = false;
               "crowdview".disabled = false;
-              "curlie".disabled = false;
               "ddg definitions".disabled = false;
               "deezer".disabled = false;
               "duckduckgo images".disabled = false;
