@@ -12,6 +12,7 @@ let
 
   # SYSTEMs root@<host>
   #$ ssh-keyscan <host>
+  #$ cat /etc/ssh/ssh_host_ed25519_key.pub
   minisforumhm80 = "***REMOVED_SSH-PUBLICKEY***";
 in
 {
@@ -20,6 +21,7 @@ in
   # 3. NixOS configuration import: `age.secrets."FILE".file = ./FILE.age;`
   # 4. Use it with: `config.age.secrets."FILE".path;`
 
+  "modules/nixos/backups/minisforumhm80.age".publicKeys = [ minisforumhm80 ] ++ david;
   "modules/nixos/containers/DavidCAL/DavidCAL-backup.age".publicKeys = [ minisforumhm80 ] ++ david;
   "modules/nixos/containers/DavidCAL/DavidCAL-users.age".publicKeys = [ minisforumhm80 ] ++ david;
   "modules/nixos/containers/searx/searx.age".publicKeys = [ minisforumhm80 ] ++ david;

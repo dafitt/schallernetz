@@ -15,6 +15,13 @@ in
   };
 
   config = mkIf cfg.enable {
+    schallernetz.backups.paths = [
+      "/var/lib/nixos-containers/${cfg.name}/etc/group"
+      "/var/lib/nixos-containers/${cfg.name}/etc/machine-id"
+      "/var/lib/nixos-containers/${cfg.name}/etc/passwd"
+      "/var/lib/nixos-containers/${cfg.name}/etc/subgid"
+      "/var/lib/nixos-containers/${cfg.name}${toString config.containers.${cfg.name}.config.services.radicale.settings.storage.filesystem_folder}"
+    ];
 
     schallernetz.services.haproxy.frontends.www.extraConfig = [ "use_backend ${cfg.name} if { req.hdr(host) -i ${cfg.name}.${config.networking.domain} }" ];
     services.haproxy.config = mkAfter ''
