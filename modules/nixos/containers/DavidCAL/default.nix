@@ -37,7 +37,10 @@ in
       specialArgs = { hostConfig = config; };
       config = { hostConfig, config, lib, pkgs, ... }: {
 
-        imports = [ inputs.agenix.nixosModules.default ];
+        imports = with inputs; [
+          agenix.nixosModules.default
+          (self.nixosModules."systemd/ntfy" { config = hostConfig; inherit pkgs; })
+        ];
 
         age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
         age.secrets."DavidCAL-backup".file = ./DavidCAL-backup.age;
@@ -87,8 +90,15 @@ in
             fi
           '';
 
-        # Backup radicale data
-        services.borgbackup.jobs."localBackup" = {
+        # BACKUP #
+        #TODO backup full containers on the host instead of single directories inside the containers
+        systemd.services."borgbackup-job-local" = mkIf cfg.remoteBackups {
+          unitConfig = {
+            OnFailure = [ "ntfy-systemd-failure@%i.service" ];
+            OnSuccess = [ "ntfy-systemd-success@%i.service" ];
+          };
+        };
+        services.borgbackup.jobs."local" = {
           repo = "/borgbackup";
           encryption.mode = "repokey-blake2";
           encryption.passCommand = "cat ${config.age.secrets."DavidCAL-backup".path}";
@@ -103,21 +113,26 @@ in
             monthly = -1; # - means at least
           };
         };
-
-
+        # remote
         services.rpcbind.enable = mkIf cfg.remoteBackups true; # needed for NFS
         systemd.mounts = mkIf cfg.remoteBackups [{
-          type = "nfs";
-          mountConfig = {
-            Options = "noatime";
+          unitConfig = {
+            PartOf = [ "borgbackup-job-SchallernetzBACKUP.service" ];
           };
           what = "***REMOVED_IPv4***:/SchallernetzBACKUP";
           where = "/mnt/SchallernetzBACKUP_NAS4";
-          partOf = [ "borgbackup-job-SchallernetzBACKUP.service" ];
+          mountConfig = {
+            Type = "nfs";
+            Options = "noatime";
+          };
         }];
         systemd.services."borgbackup-job-SchallernetzBACKUP" = mkIf cfg.remoteBackups {
-          after = [ "mnt-SchallernetzBACKUP_NAS4.mount" ];
-          requires = [ "mnt-SchallernetzBACKUP_NAS4.mount" ];
+          unitConfig = {
+            Requires = [ "mnt-SchallernetzBACKUP_NAS4.mount" ];
+            After = [ "mnt-SchallernetzBACKUP_NAS4.mount" ];
+            OnFailure = [ "ntfy-systemd-failure@%i.service" ];
+            OnSuccess = [ "ntfy-systemd-success@%i.service" ];
+          };
         };
         services.borgbackup.jobs."SchallernetzBACKUP" = mkIf cfg.remoteBackups {
           repo = "/mnt/SchallernetzBACKUP_NAS4/DavidCAL";
@@ -142,8 +157,8 @@ in
           allowedUDPPorts = [ 5232 ];
         };
 
-        # Workaround for bug https://github.com/NixOS/nixpkgs/issues/162686
-        networking.useHostResolvConf = mkForce false;
+        # to reach ntfy.***REMOVED_DOMAIN***
+        networking.nameservers = [ hostConfig.schallernetz.containers.unbound.ipv6address ];
 
         system.stateVersion = hostConfig.system.stateVersion;
       };
