@@ -59,8 +59,9 @@ in
                 ''"${cfg.name}.${domain}. IN AAAA ${cfg.ipv6address}"''
                 ''"fritzbox.${domain}. IN AAAA ***REMOVED_IPv6***"''
                 ''"adguard.${domain}. IN AAAA ${minisforumhm80}"''
-                ''"searx.${domain}. IN AAAA ${minisforumhm80}"''
+                ''"bitwarden.${domain}. IN AAAA ${minisforumhm80}"''
                 ''"ntfy.${domain}. IN AAAA ${minisforumhm80}"''
+                ''"searx.${domain}. IN AAAA ${minisforumhm80}"''
 
                 ''"minisforumhm80.${domain}. IN AAAA ${minisforumhm80}"''
                 ''"minisforumhm80.${domain}. IN A ***REMOVED_IPv4***"''

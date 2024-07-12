@@ -2,7 +2,7 @@
 
 #$ nix build .#nixosConfigurations.minisforumhm80.config.system.build.toplevel
 
-#$ nixos-rebuild --flake .#minisforumhm80 --target-host rebuild@minisforumhm80.***REMOVED_DOMAIN*** --use-remote-sudo <test|boot|switch>
+#$ nixos-rebuild --flake .#minisforumhm80 --use-remote-sudo --target-host rebuild@minisforumhm80.***REMOVED_DOMAIN*** <test|boot|switch>
 
 { config, lib, pkgs, inputs, ... }:
 
@@ -28,6 +28,7 @@ with lib.schallernetz; {
       ntfy.enable = true;
       searx.enable = true;
       unbound.enable = true;
+      bitwarden.enable = true;
     };
     services.haproxy.enable = true;
   };
