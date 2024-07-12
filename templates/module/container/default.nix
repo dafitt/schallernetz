@@ -32,4 +32,6 @@ in
   };
 }
 
-# Dont forget to add `schallernetz.containers.CONTAINERMODULE.enable = true;` to the hosts configuration!
+# Dont forget to
+# - add `schallernetz.containers.CONTAINERMODULE.enable = true;` to the hosts configuration!
+# - add a DNS entry in case of a website!
