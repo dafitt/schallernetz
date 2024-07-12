@@ -1,3 +1,5 @@
+> !Github: This repository is just a representation of my server configuration, intended for viewing only. It will not work because secrets have been filtered out.
+
 # Our Snowfall🌨️🍂 NixOS❄️ servers
 
 -   [Our Snowfall🌨️🍂 NixOS❄️ servers](#our-snowfall️-nixos️-servers)
