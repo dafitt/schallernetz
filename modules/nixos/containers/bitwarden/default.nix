@@ -13,6 +13,8 @@ in
   };
 
   config = mkIf cfg.enable {
+    schallernetz.backups.paths = [ "/var/lib/nixos-containers/${cfg.name}/var/backup/vaultwarden" ];
+
     schallernetz.services.haproxy.frontends.www.extraConfig = [ "use_backend ${cfg.name} if { req.hdr(host) -i ${cfg.name}.${config.networking.domain} }" ];
     services.haproxy.config = mkAfter ''
       backend ${cfg.name}
@@ -34,6 +36,7 @@ in
         #TODO backups
         services.vaultwarden = {
           enable = true;
+          backupDir = "/var/backup/vaultwarden";
 
           config = {
             DOMAIN = "https://${cfg.name}.${hostConfig.networking.domain}";
