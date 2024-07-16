@@ -62,6 +62,7 @@ in
             ui.infinite_scroll = true;
             ui.query_in_title = true;
             search.autocomplete = "qwant";
+            search.default_lang = "de-DE";
             engines = mapAttrsToList (name: value: { inherit name; } // value) {
               "1337x".disabled = false;
               "1x".disabled = false;
