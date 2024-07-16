@@ -24,6 +24,7 @@ with lib.schallernetz; {
       DavidCAL.enable = true;
       DavidSYNC.enable = true;
       DavidVPN.enable = true;
+      gitea.enable = true;
       MichiSHARE.enable = true;
       ntfy.enable = true;
       searx.enable = true;
