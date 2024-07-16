@@ -13,7 +13,15 @@ in
   };
 
   config = mkIf cfg.enable {
-    schallernetz.backups.paths = [ "/var/lib/nixos-containers/${cfg.name}/var/backup/vaultwarden" ];
+    schallernetz.backups.paths = [
+      "/var/lib/nixos-containers/${cfg.name}/etc/group"
+      "/var/lib/nixos-containers/${cfg.name}/etc/machine-id"
+      "/var/lib/nixos-containers/${cfg.name}/etc/passwd"
+      "/var/lib/nixos-containers/${cfg.name}/etc/subgid"
+      "/var/lib/nixos-containers/${cfg.name}/var/lib/vaultwarden"
+      "/var/lib/nixos-containers/${cfg.name}/var/lib/bitwarden_rs" # before 24.11
+      "/var/lib/nixos-containers/${cfg.name}${config.containers.${cfg.name}.config.services.vaultwarden.backupDir}"
+    ];
 
     schallernetz.services.haproxy.frontends.www.extraConfig = [ "use_backend ${cfg.name} if { req.hdr(host) -i ${cfg.name}.${config.networking.domain} }" ];
     services.haproxy.config = mkAfter ''
@@ -33,7 +41,6 @@ in
       specialArgs = { hostConfig = config; };
       config = { hostConfig, config, lib, pkgs, ... }: {
 
-        #TODO backups
         services.vaultwarden = {
           enable = true;
           backupDir = "/var/backup/vaultwarden";
