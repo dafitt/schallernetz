@@ -40,6 +40,9 @@ with lib.schallernetz; {
     containers.DavidSYNC.ipv6address = "***REMOVED_IPv6***";
     containers.DavidVPN.enable = false;
     containers.DavidVPN.name = "DavidVPN";
+    containers.gitea.enable = false;
+    containers.gitea.name = "gitea";
+    containers.gitea.ipv6address = "***REMOVED_IPv6***";
     containers.MichiSHARE.enable = false;
     containers.MichiSHARE.name = "MichiSHARE";
     containers.MichiSHARE.ipv6address = "***REMOVED_IPv6***";
