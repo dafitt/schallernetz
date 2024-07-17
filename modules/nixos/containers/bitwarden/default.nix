@@ -18,8 +18,7 @@ in
       "/var/lib/nixos-containers/${cfg.name}/etc/machine-id"
       "/var/lib/nixos-containers/${cfg.name}/etc/passwd"
       "/var/lib/nixos-containers/${cfg.name}/etc/subgid"
-      "/var/lib/nixos-containers/${cfg.name}/var/lib/vaultwarden"
-      "/var/lib/nixos-containers/${cfg.name}/var/lib/bitwarden_rs" # before 24.11
+      "/var/lib/nixos-containers/${cfg.name}/var/lib/bitwarden_rs" #TODO 24.11 /var/lib/vaultwarden
       "/var/lib/nixos-containers/${cfg.name}${config.containers.${cfg.name}.config.services.vaultwarden.backupDir}"
     ];
 

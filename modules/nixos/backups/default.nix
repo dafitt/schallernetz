@@ -54,24 +54,28 @@ in
     (mkIf cfg.NAS4 {
       age.secrets."borgbackup-job-NAS4".file = ./${host}.age;
 
+      environment.systemPackages = [ pkgs.nfs-utils ]; # needed for NFS
       services.rpcbind.enable = true; # needed for NFS
       systemd.mounts = [{
         unitConfig = {
           PartOf = [ "borgbackup-job-NAS4.service" ];
+          StopWhenUnneeded = true;
         };
         what = "***REMOVED_IPv4***:/SchallernetzBACKUP";
         where = "/mnt/NAS4";
+        type = "nfs";
         mountConfig = {
-          Type = "nfs";
           Options = "noatime";
         };
       }];
       systemd.services."borgbackup-job-NAS4" = {
         unitConfig = {
-          Requires = [ "mnt-NAS4.mount" ]; # autostart
-          After = [ "mnt-NAS4.mount" ];
+          RequiresMountsFor = [ "mnt-NAS4.mount" ]; # autostart
           OnFailure = [ "ntfy-systemd-failure@%i.service" ];
           OnSuccess = [ "ntfy-systemd-success@%i.service" ];
+        };
+        serviceConfig = {
+          ReadWritePaths = [ "/mnt/NAS4" ];
         };
       };
       services.borgbackup.jobs."NAS4" = {
