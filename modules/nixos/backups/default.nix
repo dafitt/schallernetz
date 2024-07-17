@@ -50,6 +50,12 @@ in
           monthly = 2;
         };
       };
+      systemd.timers."borgbackup-job-localhost" = {
+        timerConfig = {
+          AccuracySec = "1us";
+          RandomizedDelaySec = "15min";
+        };
+      };
     })
     (mkIf cfg.NAS4 {
       age.secrets."borgbackup-job-NAS4".file = ./${host}.age;
@@ -92,6 +98,12 @@ in
           within = "1m"; # everything
           monthly = 12;
           yearly = 2;
+        };
+      };
+      systemd.timers."borgbackup-job-NAS4" = {
+        timerConfig = {
+          AccuracySec = "1us";
+          RandomizedDelaySec = "15min";
         };
       };
     })
