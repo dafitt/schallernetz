@@ -10,8 +10,6 @@ in
     enable = mkBoolOpt false "Enable container DavidCAL.";
     name = mkOpt str "DavidCAL" "The name of the container.";
     ipv6address = mkOpt str "***REMOVED_IPv6***" "IPv6 address of the container.";
-
-    remoteBackups = mkBoolOpt true "Whether or not to enable remote backups.";
   };
 
   config = mkIf cfg.enable {
@@ -44,10 +42,7 @@ in
       specialArgs = { hostConfig = config; };
       config = { hostConfig, config, lib, pkgs, ... }: {
 
-        imports = with inputs; [
-          agenix.nixosModules.default
-          (self.nixosModules."systemd/ntfy" { config = hostConfig; inherit pkgs; })
-        ];
+        imports = with inputs; [ agenix.nixosModules.default ];
 
         age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
         age.secrets."DavidCAL-backup".file = ./DavidCAL-backup.age;
@@ -97,75 +92,10 @@ in
             fi
           '';
 
-        # BACKUP #
-        #TODO backup full containers on the host instead of single directories inside the containers
-        systemd.services."borgbackup-job-local" = mkIf cfg.remoteBackups {
-          unitConfig = {
-            OnFailure = [ "ntfy-systemd-failure@%i.service" ];
-            OnSuccess = [ "ntfy-systemd-success@%i.service" ];
-          };
-        };
-        services.borgbackup.jobs."local" = {
-          repo = "/borgbackup";
-          encryption.mode = "repokey-blake2";
-          encryption.passCommand = "cat ${config.age.secrets."DavidCAL-backup".path}";
-          compression = "auto,zstd";
-
-          paths = [ "${toString config.services.radicale.settings.storage.filesystem_folder}" ];
-          startAt = "daily";
-          prune.keep = {
-            within = "1d"; # everything
-            daily = 7;
-            weekly = 4;
-            monthly = -1; # - means at least
-          };
-        };
-        # remote
-        services.rpcbind.enable = mkIf cfg.remoteBackups true; # needed for NFS
-        systemd.mounts = mkIf cfg.remoteBackups [{
-          unitConfig = {
-            PartOf = [ "borgbackup-job-SchallernetzBACKUP.service" ];
-          };
-          what = "***REMOVED_IPv4***:/SchallernetzBACKUP";
-          where = "/mnt/SchallernetzBACKUP_NAS4";
-          mountConfig = {
-            Type = "nfs";
-            Options = "noatime";
-          };
-        }];
-        systemd.services."borgbackup-job-SchallernetzBACKUP" = mkIf cfg.remoteBackups {
-          unitConfig = {
-            Requires = [ "mnt-SchallernetzBACKUP_NAS4.mount" ];
-            After = [ "mnt-SchallernetzBACKUP_NAS4.mount" ];
-            OnFailure = [ "ntfy-systemd-failure@%i.service" ];
-            OnSuccess = [ "ntfy-systemd-success@%i.service" ];
-          };
-        };
-        services.borgbackup.jobs."SchallernetzBACKUP" = mkIf cfg.remoteBackups {
-          repo = "/mnt/SchallernetzBACKUP_NAS4/DavidCAL";
-          removableDevice = true;
-          encryption.mode = "repokey-blake2";
-          encryption.passCommand = "cat ${config.age.secrets."DavidCAL-backup".path}";
-          compression = "auto,zstd";
-
-          paths = [ "${toString config.services.radicale.settings.storage.filesystem_folder}" ];
-          preHook = "mkdir -p /mnt/SchallernetzBACKUP_NAS4/DavidCAL";
-          startAt = "Mon *-*-* ***REMOVED_IPv6***";
-          prune.keep = {
-            within = "1w"; # everything
-            daily = 7;
-            weekly = 4;
-            monthly = -1; # - means at least
-          };
-        };
-
         networking.firewall.interfaces."eth0" = {
           allowedTCPPorts = [ 5232 ];
           allowedUDPPorts = [ 5232 ];
         };
-
-        # to reach ntfy.***REMOVED_DOMAIN***
-        networking.nameservers = [ hostConfig.schallernetz.containers.unbound.ipv6address ];
 
         system.stateVersion = hostConfig.system.stateVersion;
       };
