@@ -34,7 +34,6 @@ with lib.schallernetz; {
     containers.DavidCAL.enable = false;
     containers.DavidCAL.name = "DavidCAL";
     containers.DavidCAL.ipv6address = "***REMOVED_IPv6***";
-    containers.DavidCAL.remoteBackups = true;
     containers.DavidSYNC.enable = false;
     containers.DavidSYNC.name = "DavidSYNC";
     containers.DavidSYNC.ipv6address = "***REMOVED_IPv6***";
