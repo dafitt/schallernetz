@@ -19,7 +19,7 @@ in
       autoStart = true;
 
       privateNetwork = true;
-      #hostBridge = "br0";
+      #hostBridge = "br_lan";
       #localAddress = "192.168.178.x/24";
       localAddress6 = "${cfg.ipv6address}/64";
 

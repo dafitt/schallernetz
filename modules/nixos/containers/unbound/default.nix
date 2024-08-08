@@ -20,7 +20,7 @@ in
       autoStart = true;
 
       privateNetwork = true;
-      hostBridge = "br0";
+      hostBridge = "br_lan";
       localAddress = "***REMOVED_IPv4***/23";
       localAddress6 = "${cfg.ipv6address}/64";
 
@@ -80,8 +80,8 @@ in
             {
               name = "fritz.box";
               forward-addr = [
-                "${hostConfig.networking.defaultGateway.address}"
-                "${hostConfig.networking.defaultGateway6.address}" #! [fe80::]:53 (link-local) is refused
+                "***REMOVED_IPv4***"
+                #! [fe80::]:53 (ipv6-link-local) is refused
               ];
             }
           ];
