@@ -45,37 +45,21 @@ with lib.schallernetz; {
 
   services.fstrim.enable = true; # SSD
 
-  networking = {
-    # Gets in the way of static IP adressing
-    networkmanager.enable = false;
-    useDHCP = false;
-
-    bridges."br0".interfaces = [ "enp4s0" ];
-    interfaces."br0" = {
-      ipv4.addresses = [{
-        address = "***REMOVED_IPv4***";
-        prefixLength = 23;
-      }];
-      ipv6.addresses = [{
-        address = "***REMOVED_IPv6***";
-        prefixLength = 64;
-      }];
+  systemd.network.networks = {
+    # connect physical port to bridge
+    "30-enp4s0" = {
+      matchConfig.Name = "enp4s0";
+      networkConfig.Bridge = "br_lan";
+      linkConfig.RequiredForOnline = "enslaved";
     };
-
-    defaultGateway = {
-      address = "***REMOVED_IPv4***";
-      interface = "br0";
+    "40-br_lan" = {
+      # NOTE completion of bridge
+      address = [
+        "***REMOVED_IPv6***/64"
+      ];
+      #dns = [ ];
+      #domains = [ ];
     };
-    defaultGateway6 = {
-      address = "***REMOVED_IPv6***";
-      interface = "br0";
-    };
-
-    # for local updates
-    nameservers = [
-      config.networking.defaultGateway.address
-      config.networking.defaultGateway6.address
-    ];
   };
 
   system.stateVersion = "23.11";

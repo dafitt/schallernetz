@@ -19,7 +19,7 @@ in
       autoStart = true;
 
       privateNetwork = true;
-      hostBridge = "br0";
+      hostBridge = "br_lan";
 
       specialArgs = { hostConfig = config; };
       config = { hostConfig, config, lib, pkgs, ... }: {

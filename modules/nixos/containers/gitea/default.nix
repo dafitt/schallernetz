@@ -34,7 +34,7 @@ in
       autoStart = true;
 
       privateNetwork = true;
-      hostBridge = "br0";
+      hostBridge = "br_lan";
       localAddress6 = "${cfg.ipv6address}/64";
 
       specialArgs = { hostConfig = config; };
