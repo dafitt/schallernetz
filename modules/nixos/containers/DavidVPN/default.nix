@@ -27,7 +27,10 @@ in
         boot.kernel.sysctl."net.ipv6.conf.wg0.forwarding" = 1;
         boot.kernel.sysctl."net.ipv4.conf.wg0.forwarding" = 1;
 
-        environment.systemPackages = with pkgs; [ wireguard-tools ];
+        environment.systemPackages = with pkgs; [
+          wireguard-tools
+          qrencode
+        ];
 
         networking = {
 
@@ -81,7 +84,7 @@ in
               }
               {
                 # DavidPIXEL
-                publicKey = "***REMOVED_WIREGUARD-PUBLICKEY***";
+                publicKey = "FC6/c1+1LPwx5N6pRL3nyv+gzSkmlswBOVfetWZx+Tw=";
                 allowedIPs = [ "***REMOVED_IPv6***/128" "***REMOVED_IPv4***/32" ];
               }
             ];
