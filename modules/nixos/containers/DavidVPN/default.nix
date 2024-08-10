@@ -27,7 +27,10 @@ in
         boot.kernel.sysctl."net.ipv6.conf.wg0.forwarding" = 1;
         boot.kernel.sysctl."net.ipv4.conf.wg0.forwarding" = 1;
 
-        environment.systemPackages = with pkgs; [ wireguard-tools ];
+        environment.systemPackages = with pkgs; [
+          wireguard-tools
+          qrencode
+        ];
 
         networking = {
 
