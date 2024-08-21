@@ -13,7 +13,6 @@ in
   };
 
   config = mkIf cfg.enable {
-
     #$ sudo nixos-container start MichiSHARE
     #$ sudo nixos-container root-login MichiSHARE
     containers.${cfg.name} = {

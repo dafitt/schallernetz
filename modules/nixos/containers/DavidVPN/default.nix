@@ -12,7 +12,6 @@ in
   };
 
   config = mkIf cfg.enable {
-
     #$ sudo nixos-container start DavidVPN
     #$ sudo nixos-container root-login DavidVPN
     containers.${cfg.name} = {

@@ -12,56 +12,59 @@ in
     ipv6address = mkOpt str "***REMOVED_IPv6***" "IPv6 address of the container.";
   };
 
-  config = mkIf cfg.enable {
+  config = mkMerge [
+    (mkIf cfg.enable {
+      schallernetz.backups.paths = [
+        "/var/lib/nixos-containers/${cfg.name}/etc/group"
+        "/var/lib/nixos-containers/${cfg.name}/etc/machine-id"
+        "/var/lib/nixos-containers/${cfg.name}/etc/passwd"
+        "/var/lib/nixos-containers/${cfg.name}/etc/subgid"
+        "/var/lib/nixos-containers/${cfg.name}${config.containers.${cfg.name}.config.services.gitea.stateDir}"
+      ];
 
-    schallernetz.backups.paths = [
-      "/var/lib/nixos-containers/${cfg.name}/etc/group"
-      "/var/lib/nixos-containers/${cfg.name}/etc/machine-id"
-      "/var/lib/nixos-containers/${cfg.name}/etc/passwd"
-      "/var/lib/nixos-containers/${cfg.name}/etc/subgid"
-      "/var/lib/nixos-containers/${cfg.name}${config.containers.${cfg.name}.config.services.gitea.stateDir}"
-    ];
+      #$ sudo nixos-container start gitea
+      #$ sudo nixos-container root-login gitea
+      containers.${cfg.name} = {
+        autoStart = true;
 
-    schallernetz.services.haproxy.frontends.www.extraConfig = [ "use_backend ${cfg.name} if { req.hdr(host) -i ${cfg.name}.${config.networking.domain} }" ];
-    services.haproxy.config = mkAfter ''
-      backend ${cfg.name}
-        server _0 [${cfg.ipv6address}]:3000 maxconn 32 check
-    '';
+        privateNetwork = true;
+        hostBridge = "br_lan";
+        localAddress6 = "${cfg.ipv6address}/64";
 
-    #$ sudo nixos-container start gitea
-    #$ sudo nixos-container root-login gitea
-    containers.${cfg.name} = {
-      autoStart = true;
+        specialArgs = { hostConfig = config; };
+        config = { hostConfig, config, lib, pkgs, ... }: {
 
-      privateNetwork = true;
-      hostBridge = "br_lan";
-      localAddress6 = "${cfg.ipv6address}/64";
+          services.gitea = {
+            enable = true;
+            appName = "SchallerGit";
 
-      specialArgs = { hostConfig = config; };
-      config = { hostConfig, config, lib, pkgs, ... }: {
+            settings = {
+              server = {
+                DOMAIN = "${cfg.name}.${hostConfig.networking.domain}";
+                HTTP_PORT = 3000;
 
-        services.gitea = {
-          enable = true;
-          appName = "SchallerGit";
-
-          settings = {
-            server = {
-              DOMAIN = "${cfg.name}.${hostConfig.networking.domain}";
-              HTTP_PORT = 3000;
-
-              DISABLE_SSH = true;
+                DISABLE_SSH = true;
+              };
             };
           };
-        };
 
-        networking = {
-          firewall.interfaces."eth0" = {
-            allowedTCPPorts = [ 3000 ];
+          networking = {
+            firewall.interfaces."eth0" = {
+              allowedTCPPorts = [ 3000 ];
+            };
           };
-        };
 
-        system.stateVersion = hostConfig.system.stateVersion;
+          system.stateVersion = hostConfig.system.stateVersion;
+        };
       };
-    };
-  };
+    })
+    {
+      # entry in main reverse proxy
+      schallernetz.services.haproxy.frontends.www.extraConfig = [ "use_backend ${cfg.name} if { req.hdr(host) -i ${cfg.name}.${config.networking.domain} }" ];
+      services.haproxy.config = mkAfter ''
+        backend ${cfg.name}
+          server _0 [${cfg.ipv6address}]:3000 maxconn 32 check
+      '';
+    }
+  ];
 }
