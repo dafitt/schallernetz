@@ -19,6 +19,7 @@ in
   };
 
   config = mkIf cfg.enable {
+    #TODO rename to *.***REMOVED_DOMAIN***.crt.key
     age.secrets."haproxy.***REMOVED_DOMAIN***.crt.key" = {
       file = ./haproxy.***REMOVED_DOMAIN***.crt.key.age;
       owner = "haproxy";

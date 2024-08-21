@@ -57,7 +57,6 @@ with lib.schallernetz; {
       address = [
         "***REMOVED_IPv6***/64"
       ];
-      #dns = [ ];
       #domains = [ ];
     };
   };

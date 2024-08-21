@@ -12,120 +12,123 @@ in
     ipv6address = mkOpt str "***REMOVED_IPv6***" "IPv6 address of the container.";
   };
 
-  config = mkIf cfg.enable {
+  config = mkMerge [
+    (mkIf cfg.enable {
+      #$ sudo nixos-container start DavidSYNC
+      #$ sudo nixos-container root-login DavidSYNC
+      containers.${cfg.name} = {
+        autoStart = true;
 
-    schallernetz.services.haproxy.frontends.www.extraConfig = [ "use_backend ${cfg.name} if { req.hdr(host) -i ${cfg.name}.${config.networking.domain} }" ];
-    services.haproxy.config = mkAfter ''
-      backend ${cfg.name}
-        server _0 [${cfg.ipv6address}]:8384 maxconn 32 check
-    '';
+        privateNetwork = true;
+        hostBridge = "br_lan";
+        localAddress = "***REMOVED_IPv4***/23";
+        localAddress6 = "${cfg.ipv6address}/64";
 
-    #$ sudo nixos-container start DavidSYNC
-    #$ sudo nixos-container root-login DavidSYNC
-    containers.${cfg.name} = {
-      autoStart = true;
+        specialArgs = { hostConfig = config; };
+        config = { hostConfig, config, lib, pkgs, ... }: {
 
-      privateNetwork = true;
-      hostBridge = "br_lan";
-      localAddress = "***REMOVED_IPv4***/23";
-      localAddress6 = "${cfg.ipv6address}/64";
+          services.syncthing = {
+            # <https://nixos.wiki/wiki/Syncthing>
+            enable = true;
 
-      specialArgs = { hostConfig = config; };
-      config = { hostConfig, config, lib, pkgs, ... }: {
+            openDefaultPorts = true;
+            guiAddress = "[::]:8384"; # remote access
 
-        services.syncthing = {
-          # <https://nixos.wiki/wiki/Syncthing>
-          enable = true;
+            #overrideDevices = false; # whether to override devices, manually added or deleted through the WebUI
+            #overrideFolders = false; # whether to override folders, manually added or deleted through the WebUI
 
-          openDefaultPorts = true;
-          guiAddress = "[::]:8384"; # remote access
+            settings = {
+              # https://192.168.19.***REMOVED_IPv6***/rest/config with X-API-Key
 
-          #overrideDevices = false; # whether to override devices, manually added or deleted through the WebUI
-          #overrideFolders = false; # whether to override folders, manually added or deleted through the WebUI
-
-          settings = {
-            # https://192.168.19.***REMOVED_IPv6***/rest/config with X-API-Key
-
-            gui = {
-              enabled = true;
-              theme = "dark";
-              user = "david";
-              password = "***REMOVED_HASH***";
-              useTLS = true;
-            };
-
-            options = {
-              urAccepted = 3; # Anonymous Usage Reporting
-            };
-
-            devices = {
-              "DavidDESKTOP" = {
-                id = "***REMOVED_SYNCTHING-ID***";
-                compression = "never";
+              gui = {
+                enabled = true;
+                theme = "dark";
+                user = "david";
+                password = "***REMOVED_HASH***";
+                useTLS = true;
               };
-              "DavidLEGION" = {
-                id = "***REMOVED_SYNCTHING-ID***";
-                compression = "always";
-              };
-              "DavidTUX" = {
-                id = "***REMOVED_SYNCTHING-ID***";
-                compression = "always";
-              };
-              "DavidPIXEL" = {
-                id = "***REMOVED_SYNCTHING-ID***";
-                compression = "always";
-              };
-            };
 
-            defaults = {
-              folder = {
-                # initial extra care
-                paused = true;
-                type = "receiveonly";
+              options = {
+                urAccepted = 3; # Anonymous Usage Reporting
+              };
 
-                minDiskFree = {
-                  value = 5;
-                  unit = "%";
+              devices = {
+                "DavidDESKTOP" = {
+                  id = "***REMOVED_SYNCTHING-ID***";
+                  compression = "never";
+                };
+                "DavidLEGION" = {
+                  id = "***REMOVED_SYNCTHING-ID***";
+                  compression = "always";
+                };
+                "DavidTUX" = {
+                  id = "***REMOVED_SYNCTHING-ID***";
+                  compression = "always";
+                };
+                "DavidPIXEL" = {
+                  id = "***REMOVED_SYNCTHING-ID***";
+                  compression = "always";
+                };
+              };
+
+              defaults = {
+                folder = {
+                  # initial extra care
+                  paused = true;
+                  type = "receiveonly";
+
+                  minDiskFree = {
+                    value = 5;
+                    unit = "%";
+                  };
+                };
+              };
+
+              folders = {
+                "Default Folder" = {
+                  id = "default";
+                  path = config.services.syncthing.dataDir + "/Sync";
+                  devices = [ "DavidDESKTOP" "DavidLEGION" "DavidTUX" "DavidPIXEL" ];
+                  #paused = false;
+                  #type = "sendreceive";
+                };
+                "home" = {
+                  path = config.services.syncthing.dataDir + "/home";
+                  devices = [ "DavidDESKTOP" "DavidLEGION" "DavidTUX" ];
+                  #paused = false;
+                  #type = "sendreceive";
                 };
               };
             };
+          };
 
-            folders = {
-              "Default Folder" = {
-                id = "default";
-                path = config.services.syncthing.dataDir + "/Sync";
-                devices = [ "DavidDESKTOP" "DavidLEGION" "DavidTUX" "DavidPIXEL" ];
-                #paused = false;
-                #type = "sendreceive";
-              };
-              "home" = {
-                path = config.services.syncthing.dataDir + "/home";
-                devices = [ "DavidDESKTOP" "DavidLEGION" "DavidTUX" ];
-                #paused = false;
-                #type = "sendreceive";
-              };
+          networking = {
+
+            # automatically get IP and default gateway
+            useDHCP = mkForce true;
+            enableIPv6 = true;
+
+            firewall.interfaces."eth0" = {
+              allowedTCPPorts = [ 8384 ];
             };
           };
+
+          # Use systemd-resolved inside the container
+          # Workaround for bug https://github.com/NixOS/nixpkgs/issues/162686
+          networking.useHostResolvConf = mkForce false;
+          #services.resolved.enable = true;
+
+          system.stateVersion = hostConfig.system.stateVersion;
         };
-
-        networking = {
-
-          # automatically get IP and default gateway
-          useDHCP = mkForce true;
-          enableIPv6 = true;
-
-          firewall.interfaces."eth0" = {
-            allowedTCPPorts = [ 8384 ];
-          };
-        };
-
-        # Use systemd-resolved inside the container
-        # Workaround for bug https://github.com/NixOS/nixpkgs/issues/162686
-        networking.useHostResolvConf = mkForce false;
-        #services.resolved.enable = true;
-
-        system.stateVersion = hostConfig.system.stateVersion;
       };
-    };
-  };
+    })
+    {
+      # entry in main reverse proxy
+      schallernetz.services.haproxy.frontends.www.extraConfig = [ "use_backend ${cfg.name} if { req.hdr(host) -i ${cfg.name}.${config.networking.domain} }" ];
+      services.haproxy.config = mkAfter ''
+        backend ${cfg.name}
+          server _0 [${cfg.ipv6address}]:8384 maxconn 32 check
+      '';
+    }
+  ];
 }

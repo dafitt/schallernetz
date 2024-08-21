@@ -13,7 +13,6 @@ in
   };
 
   config = mkIf cfg.enable {
-
     #$ sudo nixos-container start unbound
     #$ sudo nixos-container root-login unbound
     containers.${cfg.name} = {
