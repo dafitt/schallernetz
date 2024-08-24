@@ -39,12 +39,12 @@ in
           ssl-default-bind-options ssl-min-ver TLSv1.2 no-tls-tickets
 
         defaults
-          mode http
           timeout connect 10s
           timeout client 30s
           timeout server 30s
 
         frontend www
+          mode http
           bind [::]:80 v4v6
           bind [::]:443 v4v6 ssl crt ${config.age.secrets."haproxy.***REMOVED_DOMAIN***.crt.key".path}
           http-request redirect scheme https unless { ssl_fc }
