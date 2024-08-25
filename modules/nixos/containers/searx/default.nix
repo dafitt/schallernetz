@@ -142,13 +142,8 @@ in
           };
 
           networking = {
-
-            # automatically get IP and default gateway
-            useDHCP = mkForce true;
-            enableIPv6 = true;
-
-            #defaultGateway = hostConfig.networking.defaultGateway.address;
-            #defaultGateway6 = hostConfig.networking.defaultGateway6.address;
+            enableIPv6 = true; # automatically get IP and default gateway
+            nameservers = [ hostConfig.schallernetz.containers.unbound.ipv6Address ];
 
             firewall.interfaces."eth0" = {
               allowedTCPPorts = [ 80 ];
