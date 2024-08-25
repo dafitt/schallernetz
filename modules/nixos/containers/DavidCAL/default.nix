@@ -32,13 +32,12 @@ in
         localAddress = "***REMOVED_IPv4***/23";
         localAddress6 = "${cfg.ipv6Address}/64";
 
-        bindMounts."/etc/ssh/ssh_host_ed25519_key".isReadOnly = true;
+        bindMounts."/etc/ssh/ssh_host_ed25519_key".isReadOnly = true; # mount host's ssh key for agenix secrets in the container
 
         specialArgs = { hostConfig = config; };
         config = { hostConfig, config, lib, pkgs, ... }: {
-
+          # agenix secrets
           imports = with inputs; [ agenix.nixosModules.default ];
-
           age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
           age.secrets."DavidCAL-backup".file = ./DavidCAL-backup.age;
           age.secrets."DavidCAL-users" = { file = ./DavidCAL-users.age; owner = "radicale"; };
@@ -98,7 +97,7 @@ in
     })
     {
       # entry in main reverse proxy
-      schallernetz.services.haproxy = {
+      schallernetz.containers.haproxy = {
         frontends.www.extraConfig = [ "use_backend ${cfg.name} if { req.hdr(host) -i ${cfg.name}.${config.networking.domain} }" ];
         backends.extraConfig = [
           ''

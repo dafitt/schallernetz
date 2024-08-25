@@ -133,8 +133,6 @@ in
               frontend searx
                 mode http
                 bind [::]:80 v4v6
-                #bind :443 ssl crt /site.pem
-                #http-request redirect scheme https unless { ssl_fc }
                 default_backend searx
 
               backend searx
@@ -166,7 +164,7 @@ in
     })
     {
       # entry in main reverse proxy
-      schallernetz.services.haproxy = {
+      schallernetz.containers.haproxy = {
         frontends.www.extraConfig = [ "use_backend ${cfg.name} if { req.hdr(host) -i ${cfg.name}.${config.networking.domain} }" ];
         backends.extraConfig = [
           ''

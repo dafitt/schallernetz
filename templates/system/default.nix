@@ -42,6 +42,9 @@ with lib.schallernetz; {
     containers.gitea.enable = false;
     containers.gitea.name = "gitea";
     containers.gitea.ipv6Address = "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***";
+    containers.haproxy.enable = false;
+    containers.haproxy.name = "haproxy";
+    containers.haproxy.ipv6Address = "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***";
     containers.MichiSHARE.enable = false;
     containers.MichiSHARE.name = "MichiSHARE";
     containers.MichiSHARE.ipv6Address = "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***";
@@ -63,8 +66,6 @@ with lib.schallernetz; {
 
     nix.enable = true;
 
-    services.haproxy.enable = true;
-    services.haproxy.frontends.www.extraConfig = [ ];
     services.ssh.enable = true;
 
     time.enable = true;
