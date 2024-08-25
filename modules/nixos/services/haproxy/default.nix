@@ -8,18 +8,21 @@ in
 {
   options.schallernetz.services.haproxy = with types; {
     enable = mkBoolOpt false "Enable haproxy.";
+
+    frontends.extraConfig = mkOpt (listOf str) [ ] "List of additional frontends (config).";
     frontends.www.extraConfig = mkOption {
       type = listOf str;
       default = [ ];
       description = mdDoc ''
         List of strings containing additional configuration for the frontend www.
-        Intended for additional backends: "use_backend <backend> if { req.hdr(host) -i <domain> }"
+        Intended for additional backends: `"use_backend <backend> if { req.hdr(host) -i <domain> }"`.
       '';
     };
+
+    backends.extraConfig = mkOpt (listOf str) [ ] "List of additional backends (config).";
   };
 
   config = mkIf cfg.enable {
-    #TODO rename to *.***REMOVED_DOMAIN***.crt.key
     age.secrets."haproxy.***REMOVED_DOMAIN***.crt.key" = {
       file = ./haproxy.***REMOVED_DOMAIN***.crt.key.age;
       owner = "haproxy";
@@ -43,6 +46,8 @@ in
           timeout client 30s
           timeout server 30s
 
+        ${concatStringsSep "\n" cfg.frontends.extraConfig}
+
         frontend www
           mode http
           bind [::]:80 v4v6
@@ -50,6 +55,8 @@ in
           http-request redirect scheme https unless { ssl_fc }
 
           ${concatStringsSep "\n  " cfg.frontends.www.extraConfig}
+
+        ${concatStringsSep "\n" cfg.backends.extraConfig}
       '';
     };
 

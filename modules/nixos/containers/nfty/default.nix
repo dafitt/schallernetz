@@ -48,12 +48,16 @@ in
     })
     {
       # entry in main reverse proxy
-      schallernetz.services.haproxy.frontends.www.extraConfig = [ "use_backend ${cfg.name} if { req.hdr(host) -i ${cfg.name}.${config.networking.domain} }" ];
-      services.haproxy.config = mkAfter ''
-        backend ${cfg.name}
-          mode http
-          server _0 [${cfg.ipv6Address}]:80 maxconn 32 check
-      '';
+      schallernetz.services.haproxy = {
+        frontends.www.extraConfig = [ "use_backend ${cfg.name} if { req.hdr(host) -i ${cfg.name}.${config.networking.domain} }" ];
+        backends.extraConfig = [
+          ''
+            backend ${cfg.name}
+              mode http
+              server _0 [${cfg.ipv6Address}]:80 maxconn 32 check
+          ''
+        ];
+      };
     }
   ];
 }
