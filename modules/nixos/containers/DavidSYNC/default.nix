@@ -78,20 +78,13 @@ in
           };
 
           networking = {
-
-            # automatically get IP and default gateway
-            useDHCP = mkForce true;
-            enableIPv6 = true;
+            enableIPv6 = true; # # automatically get IPv6 and default route6
+            useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
 
             firewall.interfaces."eth0" = {
               allowedTCPPorts = [ 8384 ];
             };
           };
-
-          # Use systemd-resolved inside the container
-          # Workaround for bug https://github.com/NixOS/nixpkgs/issues/162686
-          networking.useHostResolvConf = mkForce false;
-          #services.resolved.enable = true;
 
           system.stateVersion = hostConfig.system.stateVersion;
         };

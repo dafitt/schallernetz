@@ -32,10 +32,10 @@ in
         ];
 
         networking = {
-
           # Log in to the network like a normal client
-          useDHCP = mkForce true;
-          enableIPv6 = true;
+          useDHCP = mkForce true; # automatically get IPv4 and default route
+          enableIPv6 = true; # automatically get IPv6 and default route6
+          useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
 
           # use ramdom IPv6 addresses (privacy extensions)
           interfaces."eth0".tempAddress = "default";
@@ -89,9 +89,6 @@ in
             ];
           };
         };
-
-        ## Workaround for bug https://github.com/NixOS/nixpkgs/issues/162686
-        networking.useHostResolvConf = mkForce false;
 
         system.stateVersion = hostConfig.system.stateVersion;
       };

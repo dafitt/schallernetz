@@ -81,10 +81,8 @@ in
           '';
         };
 
-        networking = {
-          firewall.interfaces."eth0" = {
-            allowedTCPPorts = [ 80 443 ];
-          };
+        networking.firewall.interfaces."eth0" = {
+          allowedTCPPorts = [ 80 443 ];
         };
 
         # Workaround for bug https://github.com/NixOS/nixpkgs/issues/162686

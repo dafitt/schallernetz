@@ -54,9 +54,6 @@ in
             allowedUDPPorts = [ 53 ];
           };
 
-          # Workaround for bug https://github.com/NixOS/nixpkgs/issues/162686
-          networking.useHostResolvConf = mkForce false;
-
           system.stateVersion = hostConfig.system.stateVersion;
         };
       };

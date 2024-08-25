@@ -48,10 +48,8 @@ in
             };
           };
 
-          networking = {
-            firewall.interfaces."eth0" = {
-              allowedTCPPorts = [ 3000 ];
-            };
+          networking.firewall.interfaces."eth0" = {
+            allowedTCPPorts = [ 3000 ];
           };
 
           system.stateVersion = hostConfig.system.stateVersion;
