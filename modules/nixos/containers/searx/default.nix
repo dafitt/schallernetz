@@ -142,16 +142,14 @@ in
           };
 
           networking = {
-            enableIPv6 = true; # automatically get IP and default gateway
+            enableIPv6 = true; # # automatically get IPv6 and default route6
+            useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
             nameservers = [ hostConfig.schallernetz.containers.unbound.ipv6Address ];
 
             firewall.interfaces."eth0" = {
               allowedTCPPorts = [ 80 ];
             };
           };
-
-          # Workaround for bug https://github.com/NixOS/nixpkgs/issues/162686
-          networking.useHostResolvConf = mkForce false;
 
           system.stateVersion = hostConfig.system.stateVersion;
         };
