@@ -3,19 +3,19 @@
 with lib;
 with lib.schallernetz;
 let
-  cfg = config.schallernetz.containers.adguard;
+  cfg = config.schallernetz.containers.adguardhome;
 in
 {
-  options.schallernetz.containers.adguard = with types; {
-    enable = mkBoolOpt false "Enable container adguard.";
-    name = mkOpt str "adguard" "The name of the container."; # TODO: rename adguardhome
+  options.schallernetz.containers.adguardhome = with types; {
+    enable = mkBoolOpt false "Enable container adguardhome.";
+    name = mkOpt str "adguardhome" "The name of the container."; # TODO: rename adguardhome
     ipv6address = mkOpt str "***REMOVED_IPv6***" "IPv6 address of the container.";
   };
 
   config = mkMerge [
     (mkIf cfg.enable {
-      #$ sudo nixos-container start adguard
-      #$ sudo nixos-container root-login adguard
+      #$ sudo nixos-container start adguardhome
+      #$ sudo nixos-container root-login adguardhome
       containers.${cfg.name} = {
         autoStart = true;
 
@@ -43,14 +43,14 @@ in
                 { name = "schaller"; password = "***REMOVED_HASH***"; }
               ];
               querylog.interval = "2h";
-              statistics.interval = "2160h"; # 90d
+              statistics.interval = "504h"; # 21d
             };
 
+            port = 3000;
             openFirewall = true;
           };
 
           networking.firewall.interfaces."eth0" = {
-            allowedTCPPorts = [ 53 ];
             allowedUDPPorts = [ 53 ];
           };
 

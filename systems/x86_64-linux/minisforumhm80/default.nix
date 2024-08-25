@@ -2,7 +2,7 @@
 
 #$ nix build .#nixosConfigurations.minisforumhm80.config.system.build.toplevel
 
-#$ nixos-rebuild --flake .#minisforumhm80 --use-remote-sudo --target-host rebuild@minisforumhm80.***REMOVED_DOMAIN*** <test|boot|switch>
+#$ nixos-rebuild --flake .#minisforumhm80 --fast --use-remote-sudo --target-host rebuild@minisforumhm80.***REMOVED_DOMAIN*** <test|boot|switch>
 
 { config, lib, pkgs, inputs, ... }:
 
@@ -20,7 +20,8 @@ with lib.schallernetz; {
 
   schallernetz = {
     containers = {
-      adguard.enable = true;
+      adguardhome.enable = true;
+      bitwarden.enable = true;
       DavidCAL.enable = true;
       DavidSYNC.enable = true;
       DavidVPN.enable = true;
@@ -29,7 +30,6 @@ with lib.schallernetz; {
       ntfy.enable = true;
       searx.enable = true;
       unbound.enable = true;
-      bitwarden.enable = true;
     };
     services.haproxy.enable = true;
   };
