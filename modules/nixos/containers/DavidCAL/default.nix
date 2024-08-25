@@ -9,7 +9,7 @@ in
   options.schallernetz.containers.DavidCAL = with types; {
     enable = mkBoolOpt false "Enable container DavidCAL.";
     name = mkOpt str "DavidCAL" "The name of the container.";
-    ipv6address = mkOpt str "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***" "IPv6 address of the container.";
+    ipv6Address = mkOpt str "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***" "IPv6 address of the container.";
   };
 
   config = mkMerge [
@@ -30,7 +30,7 @@ in
         privateNetwork = true;
         hostBridge = "br_lan";
         localAddress = "***REMOVED_IPv4***/23";
-        localAddress6 = "${cfg.ipv6address}/64";
+        localAddress6 = "${cfg.ipv6Address}/64";
 
         bindMounts."/etc/ssh/ssh_host_ed25519_key".isReadOnly = true;
 
@@ -102,7 +102,7 @@ in
       services.haproxy.config = mkAfter ''
         backend ${cfg.name}
           mode http
-          server _0 [${cfg.ipv6address}]:5232 maxconn 32 check
+          server _0 [${cfg.ipv6Address}]:5232 maxconn 32 check
       '';
     }
   ];
