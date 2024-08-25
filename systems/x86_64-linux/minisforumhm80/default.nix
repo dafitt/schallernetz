@@ -26,12 +26,12 @@ with lib.schallernetz; {
       DavidSYNC.enable = true;
       DavidVPN.enable = true;
       gitea.enable = true;
+      haproxy.enable = true;
       MichiSHARE.enable = true;
       ntfy.enable = true;
       searx.enable = true;
       unbound.enable = true;
     };
-    services.haproxy.enable = true;
   };
 
   environment.systemPackages = with pkgs; [
