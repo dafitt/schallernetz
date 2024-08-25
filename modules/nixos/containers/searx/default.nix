@@ -126,18 +126,19 @@ in
                 daemon
 
               defaults
-                mode http
                 timeout connect 5s
                 timeout client 50s
                 timeout server 50s
 
               frontend searx
+                mode http
                 bind [::]:80 v4v6
                 #bind :443 ssl crt /site.pem
                 #http-request redirect scheme https unless { ssl_fc }
                 default_backend searx
 
               backend searx
+                mode http
                 server searx 127.0.0.***REMOVED_IPv6*** maxconn 32 check
             '';
           };
