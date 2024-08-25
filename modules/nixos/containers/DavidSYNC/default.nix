@@ -34,7 +34,7 @@ in
             openDefaultPorts = true;
             guiAddress = "[::]:8384"; # remote access
 
-            #overrideDevices = false; # whether to override devices, manually added or deleted through the WebUI
+            overrideDevices = false; # whether to override devices, manually added or deleted through the WebUI
             #overrideFolders = false; # whether to override folders, manually added or deleted through the WebUI
 
             settings = {
@@ -52,31 +52,8 @@ in
                 urAccepted = 3; # Anonymous Usage Reporting
               };
 
-              devices = {
-                "DavidDESKTOP" = {
-                  id = "***REMOVED_SYNCTHING-ID***";
-                  compression = "never";
-                };
-                "DavidLEGION" = {
-                  id = "***REMOVED_SYNCTHING-ID***";
-                  compression = "always";
-                };
-                "DavidTUX" = {
-                  id = "***REMOVED_SYNCTHING-ID***";
-                  compression = "always";
-                };
-                "DavidPIXEL" = {
-                  id = "***REMOVED_SYNCTHING-ID***";
-                  compression = "always";
-                };
-              };
-
               defaults = {
                 folder = {
-                  # initial extra care
-                  paused = true;
-                  type = "receiveonly";
-
                   minDiskFree = {
                     value = 5;
                     unit = "%";
@@ -88,13 +65,11 @@ in
                 "Default Folder" = {
                   id = "default";
                   path = config.services.syncthing.dataDir + "/Sync";
-                  devices = [ "DavidDESKTOP" "DavidLEGION" "DavidTUX" "DavidPIXEL" ];
                   #paused = false;
                   #type = "sendreceive";
                 };
                 "home" = {
                   path = config.services.syncthing.dataDir + "/home";
-                  devices = [ "DavidDESKTOP" "DavidLEGION" "DavidTUX" ];
                   #paused = false;
                   #type = "sendreceive";
                 };
