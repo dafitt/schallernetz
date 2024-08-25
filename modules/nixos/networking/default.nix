@@ -8,6 +8,16 @@ in
 {
   options.schallernetz.networking = with types; {
     enable = mkBoolOpt true "Enable network configuration.";
+
+    uniqueLocalPrefix = mkOption {
+      type = types.str;
+      default = "***REMOVED_IPv6***";
+      example = "***REMOVED_IPv6***";
+      description = lib.mdDoc ''
+        IPv6 Unique Local Address prefix (ULA prefix). Only intended
+        for usage in your config: `$\{config.schallernetz.networking.uniqueLocalPrefix}`
+      '';
+    };
   };
 
   config = mkIf cfg.enable {

@@ -9,7 +9,7 @@ in
   options.schallernetz.containers.DavidCAL = with types; {
     enable = mkBoolOpt false "Enable container DavidCAL.";
     name = mkOpt str "DavidCAL" "The name of the container.";
-    ipv6address = mkOpt str "***REMOVED_IPv6***" "IPv6 address of the container.";
+    ipv6address = mkOpt str "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***" "IPv6 address of the container.";
   };
 
   config = mkMerge [

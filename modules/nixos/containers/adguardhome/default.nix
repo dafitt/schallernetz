@@ -9,7 +9,7 @@ in
   options.schallernetz.containers.adguardhome = with types; {
     enable = mkBoolOpt false "Enable container adguardhome.";
     name = mkOpt str "adguardhome" "The name of the container."; # TODO: rename adguardhome
-    ipv6address = mkOpt str "***REMOVED_IPv6***" "IPv6 address of the container.";
+    ipv6address = mkOpt str "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***" "IPv6 address of the container.";
   };
 
   config = mkMerge [
@@ -36,7 +36,7 @@ in
               dns = {
                 bind_hosts = [ "***REMOVED_IPv4***" "${cfg.ipv6address}" ];
                 enable_dnssec = true;
-                upstream_dns = [ "***REMOVED_IPv6***" ];
+                upstream_dns = [ "${hostConfig.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***" ];
               };
               users = [
                 { name = "admin"; password = "***REMOVED_HASH***"; }
