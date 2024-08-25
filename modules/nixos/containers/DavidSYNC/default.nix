@@ -9,7 +9,7 @@ in
   options.schallernetz.containers.DavidSYNC = with types; {
     enable = mkBoolOpt false "Enable container DavidSYNC.";
     name = mkOpt str "DavidSYNC" "The name of the container.";
-    ipv6address = mkOpt str "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***" "IPv6 address of the container.";
+    ipv6Address = mkOpt str "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***" "IPv6 address of the container.";
   };
 
   config = mkMerge [
@@ -22,7 +22,7 @@ in
         privateNetwork = true;
         hostBridge = "br_lan";
         localAddress = "***REMOVED_IPv4***/23";
-        localAddress6 = "${cfg.ipv6address}/64";
+        localAddress6 = "${cfg.ipv6Address}/64";
 
         specialArgs = { hostConfig = config; };
         config = { hostConfig, config, lib, pkgs, ... }: {
@@ -128,7 +128,7 @@ in
       services.haproxy.config = mkAfter ''
         backend ${cfg.name}
           mode http
-          server _0 [${cfg.ipv6address}]:8384 maxconn 32 check
+          server _0 [${cfg.ipv6Address}]:8384 maxconn 32 check
       '';
     }
   ];

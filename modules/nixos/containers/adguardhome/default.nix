@@ -9,7 +9,7 @@ in
   options.schallernetz.containers.adguardhome = with types; {
     enable = mkBoolOpt false "Enable container adguardhome.";
     name = mkOpt str "adguardhome" "The name of the container."; # TODO: rename adguardhome
-    ipv6address = mkOpt str "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***" "IPv6 address of the container.";
+    ipv6Address = mkOpt str "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***" "IPv6 address of the container.";
   };
 
   config = mkMerge [
@@ -22,7 +22,7 @@ in
         privateNetwork = true;
         hostBridge = "br_lan";
         localAddress = "***REMOVED_IPv4***/23";
-        localAddress6 = "${cfg.ipv6address}/64";
+        localAddress6 = "${cfg.ipv6Address}/64";
 
         specialArgs = { hostConfig = config; };
         config = { hostConfig, config, lib, pkgs, ... }: {
@@ -34,7 +34,7 @@ in
               # https://github.com/AdguardTeam/AdGuardHome/wiki/Configuration#configuration-file
               safebrowsing_enabled = true;
               dns = {
-                bind_hosts = [ "***REMOVED_IPv4***" "${cfg.ipv6address}" ];
+                bind_hosts = [ "***REMOVED_IPv4***" "${cfg.ipv6Address}" ];
                 enable_dnssec = true;
                 upstream_dns = [ "${hostConfig.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***" ];
               };
@@ -67,7 +67,7 @@ in
       services.haproxy.config = mkAfter ''
         backend ${cfg.name}
           mode http
-          server _0 [${cfg.ipv6address}]:3000 maxconn 32 check
+          server _0 [${cfg.ipv6Address}]:3000 maxconn 32 check
       '';
     }
   ];

@@ -9,7 +9,7 @@ in
   options.schallernetz.containers.MichiSHARE = with types; {
     enable = mkBoolOpt false "Enable container MichiSHARE.";
     name = mkOpt str "MichiSHARE" "The name of the container.";
-    ipv6address = mkOpt str "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***" "IPv6 address of the container.";
+    ipv6Address = mkOpt str "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***" "IPv6 address of the container.";
   };
 
   config = mkIf cfg.enable {
@@ -21,7 +21,7 @@ in
       privateNetwork = true;
       hostBridge = "br_lan";
       localAddress = "***REMOVED_IPv4***/23";
-      localAddress6 = "${cfg.ipv6address}/64";
+      localAddress6 = "${cfg.ipv6Address}/64";
 
       specialArgs = { hostConfig = config; };
       config = { hostConfig, config, lib, pkgs, ... }: {

@@ -25,7 +25,7 @@ in
       hostName = host;
       domain = "***REMOVED_DOMAIN***";
 
-      #nameservers = mkAfter [ config.schallernetz.containers.unbound.ipv6address ]; #FIXME ping ***REMOVED_IPv6*** doesn't work with this
+      #nameservers = mkAfter [ config.schallernetz.containers.unbound.ipv6Address ]; #FIXME ping ***REMOVED_IPv6*** doesn't work with this
     };
 
     networking.useDHCP = false;

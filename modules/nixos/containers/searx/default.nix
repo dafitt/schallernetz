@@ -9,7 +9,7 @@ in
   options.schallernetz.containers.searx = with types; {
     enable = mkBoolOpt false "Enable container searx.";
     name = mkOpt str "searx" "The name of the container.";
-    ipv6address = mkOpt str "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***" "IPv6 address of the container.";
+    ipv6Address = mkOpt str "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***" "IPv6 address of the container.";
   };
 
   config = mkMerge [
@@ -25,7 +25,7 @@ in
         privateNetwork = true;
         hostBridge = "br_lan";
         localAddress = "***REMOVED_IPv4***/23";
-        localAddress6 = "${cfg.ipv6address}/64";
+        localAddress6 = "${cfg.ipv6Address}/64";
 
         # Mount secret environmentFile `/run/agenix.d/3/searx`
         bindMounts.${config.age.secrets."searx".path}.isReadOnly = true;
@@ -170,7 +170,7 @@ in
       services.haproxy.config = mkAfter ''
         backend ${cfg.name}
           mode http
-          server _0 [${cfg.ipv6address}]:80 maxconn 32 check
+          server _0 [${cfg.ipv6Address}]:80 maxconn 32 check
       '';
     }
   ];
