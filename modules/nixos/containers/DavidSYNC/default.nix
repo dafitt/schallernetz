@@ -9,7 +9,7 @@ in
   options.schallernetz.containers.DavidSYNC = with types; {
     enable = mkBoolOpt false "Enable container DavidSYNC.";
     name = mkOpt str "DavidSYNC" "The name of the container.";
-    ipv6address = mkOpt str "***REMOVED_IPv6***" "IPv6 address of the container.";
+    ipv6address = mkOpt str "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***" "IPv6 address of the container.";
   };
 
   config = mkMerge [

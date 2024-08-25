@@ -9,7 +9,7 @@ in
   options.schallernetz.containers.unbound = with types; {
     enable = mkBoolOpt false "Enable container unbound.";
     name = mkOpt str "unbound" "The name of the container.";
-    ipv6address = mkOpt str "***REMOVED_IPv6***" "IPv6 address of the container.";
+    ipv6address = mkOpt str "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***" "IPv6 address of the container.";
   };
 
   config = mkIf cfg.enable {
@@ -40,7 +40,7 @@ in
             ];
 
             # IP ranges that are allowed to connect to the resolver
-            access-control = [ "***REMOVED_IPv4***/16 allow" "***REMOVED_IPv6***::/56 allow" ];
+            access-control = [ "***REMOVED_IPv4***/16 allow" "${hostConfig.schallernetz.networking.uniqueLocalPrefix}::/56 allow" ];
 
             qname-minimisation = true;
           };
