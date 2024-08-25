@@ -72,6 +72,9 @@ in
               bind [::]:443 v4v6 ssl crt ${config.age.secrets."haproxy.***REMOVED_DOMAIN***.crt.key".path}
               http-request redirect scheme https unless { ssl_fc }
 
+              # HSTS (HTTPS-Strict-Transport-Security) against man-in-the-middle attacks
+              http-response set-header Strict-Transport-Security "max-age=16000000; includeSubDomains; preload;"
+
               ${concatStringsSep "\n  " cfg.frontends.www.extraConfig}
 
             ${concatStringsSep "\n" cfg.backends.extraConfig}
