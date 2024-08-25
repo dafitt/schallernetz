@@ -1,7 +1,7 @@
 $ORIGIN ***REMOVED_DOMAIN***.
 $TTL 86400
 
-@ IN SOA coredns.***REMOVED_DOMAIN***. dafitt.posteo.me. (
+@ IN SOA coredns.***REMOVED_DOMAIN***. admin.***REMOVED_DOMAIN***. (
         2024082301  ; serial number YYMMDDNN
         28800       ; Refresh
         7200        ; Retry
