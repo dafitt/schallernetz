@@ -1,0 +1,28 @@
+$ORIGIN ***REMOVED_DOMAIN***.
+$TTL 86400
+
+@ IN SOA coredns.***REMOVED_DOMAIN***. dafitt.posteo.me. (
+        2024082301  ; serial number YYMMDDNN
+        28800       ; Refresh
+        7200        ; Retry
+        864000      ; Expire
+        86400       ; Min TTL
+  )
+  NS adguard.***REMOVED_DOMAIN***.
+  NS unbound.***REMOVED_DOMAIN***.
+
+adguard IN A ***REMOVED_IPv4***
+adguard IN AAAA ***REMOVED_IPv6***
+adguardhome IN CNAME minisforumhm80
+bitwarden IN CNAME minisforumhm80
+coredns IN AAAA ***REMOVED_IPv6***
+DavidCAL IN CNAME minisforumhm80
+DavidSYNC IN CNAME minisforumhm80
+gitea IN CNAME minisforumhm80
+MichiSHARE IN A ***REMOVED_IPv4***
+MichiSHARE IN AAAA ***REMOVED_IPv6***
+minisforumhm80 in AAAA ***REMOVED_IPv6***
+nfty IN CNAME minisforumhm80
+searx IN CNAME minisforumhm80
+unbound IN A ***REMOVED_IPv4***
+unbound IN AAAA ***REMOVED_IPv6***

@@ -25,9 +25,9 @@ with lib.schallernetz; {
     backups.NAS4 = true;
     backups.paths = [ ];
 
-    containers.adguard.enable = false;
-    containers.adguard.name = "adguard";
-    containers.adguard.ipv6address = "***REMOVED_IPv6***";
+    containers.adguardhome.enable = false;
+    containers.adguardhome.name = "adguardhome";
+    containers.adguardhome.ipv6address = "***REMOVED_IPv6***";
     containers.bitwarden.enable = false;
     containers.bitwarden.name = "bitwarden";
     containers.bitwarden.ipv6address = "***REMOVED_IPv6***";
