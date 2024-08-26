@@ -25,7 +25,8 @@ in
   "modules/nixos/containers/DavidCAL/DavidCAL-backup.age".publicKeys = [ minisforumhm80 ] ++ david;
   "modules/nixos/containers/DavidCAL/DavidCAL-users.age".publicKeys = [ minisforumhm80 ] ++ david;
   "modules/nixos/containers/searx/searx.age".publicKeys = [ minisforumhm80 ] ++ david;
-  "modules/nixos/services/haproxy/haproxy.***REMOVED_DOMAIN***.crt.key.age".publicKeys = [ minisforumhm80 ] ++ david;
+  "modules/nixos/containers/haproxy/haproxy.***REMOVED_DOMAIN***.crt.key.age".publicKeys = [ minisforumhm80 ] ++ david;
+  "modules/nixos/containers/haproxy/acme_dode.age".publicKeys = [ minisforumhm80 ] ++ david;
 
   # Edit #$ nix run github:ryantm/agenix -- -e FILE -i PRIVATE_KEY
   # Rekey #$ nix run github:ryantm/agenix -- -r -i PRIVATE_KEY

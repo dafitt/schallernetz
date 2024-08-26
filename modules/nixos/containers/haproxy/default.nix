@@ -42,10 +42,15 @@ in
         # agenix secrets
         imports = with inputs; [ agenix.nixosModules.default ];
         age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-        age.secrets."haproxy.***REMOVED_DOMAIN***.crt.key" = {
-          file = ./haproxy.***REMOVED_DOMAIN***.crt.key.age;
-          owner = "haproxy";
-          group = "haproxy";
+        age.secrets = {
+          "haproxy.***REMOVED_DOMAIN***.crt.key" = {
+            file = ./haproxy.***REMOVED_DOMAIN***.crt.key.age;
+            owner = config.services.haproxy.user;
+            group = config.services.haproxy.group;
+          };
+          "acme_dode" = {
+            file = ./acme_dode.age;
+          };
         };
 
         # Reverse Proxy before the application servers
@@ -69,7 +74,7 @@ in
             frontend www
               mode http
               bind [::]:80 v4v6
-              bind [::]:443 v4v6 ssl crt ${config.age.secrets."haproxy.***REMOVED_DOMAIN***.crt.key".path}
+              bind [::]:443 v4v6 ssl crt /var/lib/acme/***REMOVED_DOMAIN***/full.pem crt ${config.age.secrets."haproxy.***REMOVED_DOMAIN***.crt.key".path}
               http-request redirect scheme https unless { ssl_fc }
 
               # HSTS (HTTPS-Strict-Transport-Security) against man-in-the-middle attacks
@@ -81,12 +86,28 @@ in
           '';
         };
 
-        networking.firewall.interfaces."eth0" = {
-          allowedTCPPorts = [ 80 443 ];
+        # https://wiki.nixos.org/wiki/ACME
+        security.acme = {
+          acceptTerms = true;
+          defaults.email = "admin@***REMOVED_DOMAIN***";
+          certs."***REMOVED_DOMAIN***" = {
+            extraDomainNames = [ "*.***REMOVED_DOMAIN***" ];
+            dnsProvider = "dode";
+            environmentFile = config.age.secrets."acme_dode".path;
+            group = config.services.haproxy.group;
+          };
         };
 
-        # Workaround for bug https://github.com/NixOS/nixpkgs/issues/162686
-        networking.useHostResolvConf = mkForce false;
+        networking = {
+          # for acme
+          enableIPv6 = true; # # automatically get IPv6 and default route6
+          useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
+          nameservers = [ hostConfig.schallernetz.containers.unbound.ipv6Address ];
+
+          firewall.interfaces."eth0" = {
+            allowedTCPPorts = [ 80 443 ];
+          };
+        };
 
         system.stateVersion = hostConfig.system.stateVersion;
       };
