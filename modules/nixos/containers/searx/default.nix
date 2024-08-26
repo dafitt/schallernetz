@@ -160,7 +160,6 @@ in
       schallernetz.containers.haproxy = {
         frontends.www.extraConfig = [
           "use_backend ${cfg.name} if { hdr(host) -i ${cfg.name}.${config.networking.domain} }"
-          "use_backend ${cfg.name} if { hdr(host) -i ${cfg.name}.***REMOVED_DOMAIN*** }"
         ];
         backends.extraConfig = [
           ''
