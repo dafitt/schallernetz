@@ -29,7 +29,6 @@ in
 
         privateNetwork = true;
         hostBridge = "br_lan";
-        localAddress = "***REMOVED_IPv4***/23";
         localAddress6 = "${cfg.ipv6Address}/64";
 
         bindMounts."/etc/ssh/ssh_host_ed25519_key".isReadOnly = true; # mount host's ssh key for agenix secrets in the container

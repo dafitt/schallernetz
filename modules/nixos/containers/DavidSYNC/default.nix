@@ -21,7 +21,6 @@ in
 
         privateNetwork = true;
         hostBridge = "br_lan";
-        localAddress = "***REMOVED_IPv4***/23";
         localAddress6 = "${cfg.ipv6Address}/64";
 
         specialArgs = { hostConfig = config; };
