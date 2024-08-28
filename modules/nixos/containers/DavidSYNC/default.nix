@@ -34,7 +34,7 @@ in
             guiAddress = "[::]:8384"; # remote access
 
             overrideDevices = false; # whether to override devices, manually added or deleted through the WebUI
-            #overrideFolders = false; # whether to override folders, manually added or deleted through the WebUI
+            overrideFolders = false; # whether to override folders, manually added or deleted through the WebUI
 
             settings = {
               # https://192.168.19.***REMOVED_IPv6***/rest/config with X-API-Key
@@ -60,19 +60,19 @@ in
                 };
               };
 
-              folders = {
-                "Default Folder" = {
-                  id = "default";
-                  path = config.services.syncthing.dataDir + "/Sync";
-                  #paused = false;
-                  #type = "sendreceive";
-                };
-                "home" = {
-                  path = config.services.syncthing.dataDir + "/home";
-                  #paused = false;
-                  #type = "sendreceive";
-                };
-              };
+              #folders = {
+              #  "Default Folder" = {
+              #    id = "default";
+              #    path = config.services.syncthing.dataDir + "/Sync";
+              #    #paused = false;
+              #    #type = "sendreceive";
+              #  };
+              #  "home" = {
+              #    path = config.services.syncthing.dataDir + "/home";
+              #    #paused = false;
+              #    #type = "sendreceive";
+              #  };
+              #};
             };
           };
 
