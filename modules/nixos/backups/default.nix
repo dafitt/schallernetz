@@ -1,4 +1,4 @@
-{ options, config, lib, pkgs, host, ... }:
+{ options, config, lib, pkgs, host, inputs, ... }:
 
 with lib;
 with lib.schallernetz;
@@ -6,33 +6,40 @@ let
   cfg = config.schallernetz.backups;
 in
 {
-  options.schallernetz.backups = with types; {
-    localhost = mkBoolOpt true "Enable backups to localhost.";
-    NAS4 = mkBoolOpt true "Enable backups to NAS4.";
+  options.schallernetz.backups = with types;
+    {
+      localhost = mkBoolOpt true "Enable backups to localhost.";
+      NAS4 = mkBoolOpt true "Enable backups to NAS4.";
 
-    paths = mkOption {
-      description = "Which paths to backup.";
-      type = listOf str;
-      default = [ ];
-      example = [
-        "/var/lib/nixos-containers/<name>/etc/group"
-        "/var/lib/nixos-containers/<name>/etc/machine-id"
-        "/var/lib/nixos-containers/<name>/etc/passwd"
-        "/var/lib/nixos-containers/<name>/etc/subgid"
-        "/var/lib/nixos-containers/<name>/root"
-        "/var/lib/nixos-containers/<name>/var/lib"
-      ];
+      paths = mkOption {
+        description = "Which paths to backup.";
+        type = listOf str;
+        default = [ ];
+        example = [
+          "/var/lib/nixos-containers/<name>/etc/group"
+          "/var/lib/nixos-containers/<name>/etc/machine-id"
+          "/var/lib/nixos-containers/<name>/etc/passwd"
+          "/var/lib/nixos-containers/<name>/etc/subgid"
+          "/var/lib/nixos-containers/<name>/root"
+          "/var/lib/nixos-containers/<name>/var/lib"
+        ];
+      };
     };
-  };
 
   config = mkMerge [
+    (mkIf (cfg.localhost || cfg.NAS4) {
+      schallernetz.ntfy-systemd = {
+        enable = true;
+        url = "http://[***REMOVED_IPv6***]";
+      };
+    })
     (mkIf cfg.localhost {
       age.secrets."borgbackup-job-localhost".file = ./${host}.age;
 
       systemd.services."borgbackup-job-localhost" = {
         unitConfig = {
-          OnFailure = [ "ntfy-systemd-failure@%i.service" ];
-          OnSuccess = [ "ntfy-systemd-success@%i.service" ];
+          OnFailure = [ "ntfy-failure@%i.service" ];
+          OnSuccess = [ "ntfy-success@%i.service" ];
         };
       };
       services.borgbackup.jobs."localhost" = {
@@ -77,8 +84,8 @@ in
       systemd.services."borgbackup-job-NAS4" = {
         unitConfig = {
           RequiresMountsFor = [ "mnt-NAS4.mount" ]; # autostart
-          OnFailure = [ "ntfy-systemd-failure@%i.service" ];
-          OnSuccess = [ "ntfy-systemd-success@%i.service" ];
+          OnFailure = [ "ntfy-failure@%i.service" ];
+          OnSuccess = [ "ntfy-success@%i.service" ];
         };
         serviceConfig = {
           ReadWritePaths = [ "/mnt/NAS4" ];
