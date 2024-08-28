@@ -42,16 +42,7 @@ in
         # agenix secrets
         imports = with inputs; [ agenix.nixosModules.default ];
         age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-        age.secrets = {
-          "haproxy.***REMOVED_DOMAIN***.crt.key" = {
-            file = ./haproxy.***REMOVED_DOMAIN***.crt.key.age;
-            owner = config.services.haproxy.user;
-            group = config.services.haproxy.group;
-          };
-          "acme_dode" = {
-            file = ./acme_dode.age;
-          };
-        };
+        age.secrets."acme_dode" = { file = ./acme_dode.age; };
 
         # Reverse Proxy before the application servers
         # [HAProxy config tutorials](https://www.haproxy.com/documentation/haproxy-configuration-tutorials/core-concepts/overview/)
@@ -74,7 +65,7 @@ in
             frontend www
               mode http
               bind [::]:80 v4v6
-              bind [::]:443 v4v6 ssl crt /var/lib/acme/***REMOVED_DOMAIN***/full.pem crt ${config.age.secrets."haproxy.***REMOVED_DOMAIN***.crt.key".path}
+              bind [::]:443 v4v6 ssl crt /var/lib/acme/***REMOVED_DOMAIN***/full.pem
               http-request redirect scheme https unless { ssl_fc }
 
               # HSTS (HTTPS-Strict-Transport-Security) against man-in-the-middle attacks

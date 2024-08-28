@@ -2,7 +2,7 @@
 
 #$ nix build .#nixosConfigurations.minisforumhm80.config.system.build.toplevel
 
-#$ nixos-rebuild --flake .#minisforumhm80 --fast --use-remote-sudo --target-host rebuild@minisforumhm80.***REMOVED_DOMAIN*** <test|boot|switch>
+#$ nixos-rebuild --flake .#minisforumhm80 --fast --use-remote-sudo --target-host rebuild@minisforumhm80.host.***REMOVED_DOMAIN*** <test|boot|switch>
 
 { config, lib, pkgs, inputs, ... }:
 
@@ -12,7 +12,7 @@ with lib.schallernetz; {
 
   #$ nix run .#apps.nixinate.minisforumhm80[-dry-run]
   _module.args.nixinate = {
-    host = "minisforumhm80.***REMOVED_DOMAIN***";
+    host = "minisforumhm80.host.***REMOVED_DOMAIN***";
     sshUser = "rebuild";
     buildOn = "local";
     substituteOnTarget = true;
