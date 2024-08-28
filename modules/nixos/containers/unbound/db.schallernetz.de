@@ -11,18 +11,12 @@ $TTL 86400
   NS adguard.***REMOVED_DOMAIN***.
   NS unbound.***REMOVED_DOMAIN***.
 
+* IN CNAME haproxy
 adguard IN A ***REMOVED_IPv4***
 adguard IN AAAA ***REMOVED_IPv6***
-adguardhome IN CNAME haproxy
-bitwarden IN CNAME haproxy
-DavidCAL IN CNAME haproxy
-DavidSYNC IN CNAME haproxy
-gitea IN CNAME haproxy
 haproxy IN AAAA ***REMOVED_IPv6***
 MichiSHARE IN A ***REMOVED_IPv4***
 MichiSHARE IN AAAA ***REMOVED_IPv6***
 minisforumhm80 in AAAA ***REMOVED_IPv6***
-nfty IN CNAME haproxy
-searx IN CNAME haproxy
 unbound IN A ***REMOVED_IPv4***
 unbound IN AAAA ***REMOVED_IPv6***
