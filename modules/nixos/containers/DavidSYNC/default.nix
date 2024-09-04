@@ -25,6 +25,10 @@ in
 
         specialArgs = { hostConfig = config; };
         config = { hostConfig, config, lib, pkgs, ... }: {
+          environment.systemPackages = with pkgs; [
+            ncdu
+            tree
+          ];
 
           services.syncthing = {
             # <https://nixos.wiki/wiki/Syncthing>
