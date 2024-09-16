@@ -12,6 +12,8 @@ in
   };
 
   config = mkIf cfg.enable {
+    age.secrets."DDNS-K57174-49283".file = ./DDNS-K57174-49283.age;
+
     #$ sudo nixos-container start DavidVPN
     #$ sudo nixos-container root-login DavidVPN
     containers.${cfg.name} = {
@@ -19,6 +21,8 @@ in
 
       privateNetwork = true;
       hostBridge = "br_lan";
+
+      bindMounts.${config.age.secrets."DDNS-K57174-49283".path}.isReadOnly = true;
 
       specialArgs = { hostConfig = config; };
       config = { hostConfig, config, lib, pkgs, ... }: {
@@ -88,6 +92,17 @@ in
               }
             ];
           };
+        };
+
+        services.ddclient = {
+          enable = true;
+          use = "cmd, cmd='${pkgs.curl}/bin/curl -k -s http://checkip.spdyn.de'"; # TODO 24.11: try: usev4 = "disabled"; usev6 = "ifv6, ifv6=eth0";
+
+          protocol = "dyndns2";
+          server = "ddns.do.de";
+          username = "DDNS-K57174-49283";
+          passwordFile = hostConfig.age.secrets."DDNS-K57174-49283".path;
+          domains = [ "davidvpn.***REMOVED_DOMAIN***" ];
         };
 
         system.stateVersion = hostConfig.system.stateVersion;
