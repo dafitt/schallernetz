@@ -81,7 +81,7 @@ in
           };
 
           networking = {
-            enableIPv6 = true; # # automatically get IPv6 and default route6
+            enableIPv6 = true; # automatically get IPv6 and default route6
             useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
 
             firewall.interfaces."eth0" = {
