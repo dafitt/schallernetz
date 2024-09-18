@@ -12,8 +12,6 @@ in
   };
 
   config = mkIf cfg.enable {
-    age.secrets."DDNS-K57174-49283".file = ./DDNS-K57174-49283.age;
-
     #$ sudo nixos-container start DavidVPN
     #$ sudo nixos-container root-login DavidVPN
     containers.${cfg.name} = {
@@ -22,11 +20,10 @@ in
       privateNetwork = true;
       hostBridge = "br_lan";
 
-      bindMounts.${config.age.secrets."DDNS-K57174-49283".path}.isReadOnly = true;
+      bindMounts."/etc/ssh/ssh_host_ed25519_key".isReadOnly = true;
 
       specialArgs = { hostConfig = config; };
       config = { hostConfig, config, lib, pkgs, ... }: {
-
         boot.kernel.sysctl."net.ipv6.conf.wg0.forwarding" = 1;
         boot.kernel.sysctl."net.ipv4.conf.wg0.forwarding" = 1;
 
@@ -94,15 +91,28 @@ in
           };
         };
 
-        services.ddclient = {
+        imports = [ inputs.agenix.nixosModules.default ];
+        age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+        age.secrets."DDNS-K57174-49283" = {
+          file = ./DDNS-K57174-49283.age;
+          owner = config.services.inadyn.user;
+          group = config.services.inadyn.group;
+        };
+        services.inadyn = {
           enable = true;
-          use = "cmd, cmd='${pkgs.curl}/bin/curl -k -s http://checkip.spdyn.de'"; # TODO 24.11: try: usev4 = "disabled"; usev6 = "ifv6, ifv6=eth0";
 
-          protocol = "dyndns2";
-          server = "ddns.do.de";
-          username = "DDNS-K57174-49283";
-          passwordFile = hostConfig.age.secrets."DDNS-K57174-49283".path;
-          domains = [ "davidvpn.***REMOVED_DOMAIN***" ];
+          logLevel = "info";
+          settings = {
+            allow-ipv6 = true;
+            custom."do.de" = {
+              username = "DDNS-K57174-49283";
+              include = config.age.secrets."DDNS-K57174-49283".path; #`password = `
+              hostname = "testwg.***REMOVED_DOMAIN***";
+              ddns-server = "ddns.do.de";
+              ddns-path = "/?myip=%i";
+              checkip-command = ''${pkgs.curl}/bin/curl -k -s http://checkip.spdyn.de'';
+            };
+          };
         };
 
         system.stateVersion = hostConfig.system.stateVersion;
