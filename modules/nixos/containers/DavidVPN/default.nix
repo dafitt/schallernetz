@@ -9,6 +9,7 @@ in
   options.schallernetz.containers.DavidVPN = with types; {
     enable = mkBoolOpt false "Enable container DavidVPN.";
     name = mkOpt str "DavidVPN" "The name of the container.";
+    #TODO define the mac address for a predictable ipv6 host-address
   };
 
   config = mkIf cfg.enable {
@@ -98,6 +99,7 @@ in
           owner = config.services.inadyn.user;
           group = config.services.inadyn.group;
         };
+        # tell my domain my dynamic ipv6
         services.inadyn = {
           enable = true;
 
@@ -107,10 +109,10 @@ in
             custom."do.de" = {
               username = "DDNS-K57174-49283";
               include = config.age.secrets."DDNS-K57174-49283".path; #`password = `
-              hostname = "testwg.***REMOVED_DOMAIN***";
+              hostname = "davidvpn.***REMOVED_DOMAIN***";
               ddns-server = "ddns.do.de";
               ddns-path = "/?myip=%i";
-              checkip-command = ''${pkgs.curl}/bin/curl -k -s http://checkip.spdyn.de'';
+              checkip-command = ''${pkgs.iproute2}/bin/ip -6 addr show dev eth0 scope global -temporary | ${pkgs.gnugrep}/bin/grep -G 'inet6 [2-3]' ''; # get the non-temporary global unicast address
             };
           };
         };
