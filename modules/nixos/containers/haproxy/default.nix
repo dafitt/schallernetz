@@ -42,7 +42,6 @@ in
         # agenix secrets
         imports = with inputs; [ agenix.nixosModules.default ];
         age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-        age.secrets."acme_dode" = { file = ./acme_dode.age; };
 
         # Reverse Proxy before the application servers
         # [HAProxy config tutorials](https://www.haproxy.com/documentation/haproxy-configuration-tutorials/core-concepts/overview/)
@@ -77,21 +76,24 @@ in
           '';
         };
 
+        age.secrets."acme_dode" = { file = ./acme_dode.age; };
         # https://wiki.nixos.org/wiki/ACME
         security.acme = {
           acceptTerms = true;
           defaults.email = "admin@***REMOVED_DOMAIN***";
+
           certs."***REMOVED_DOMAIN***" = {
             extraDomainNames = [ "*.***REMOVED_DOMAIN***" ];
             dnsProvider = "dode";
             environmentFile = config.age.secrets."acme_dode".path;
+
             group = config.services.haproxy.group;
           };
         };
 
         networking = {
           # for acme
-          enableIPv6 = true; # # automatically get IPv6 and default route6
+          enableIPv6 = true; # automatically get IPv6 and default route6
           useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
           nameservers = [ hostConfig.schallernetz.containers.unbound.ipv6Address ];
 

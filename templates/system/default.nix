@@ -39,9 +39,9 @@ with lib.schallernetz; {
     containers.DavidSYNC.ipv6Address = "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***";
     containers.DavidVPN.enable = false;
     containers.DavidVPN.name = "DavidVPN";
-    containers.gitea.enable = false;
-    containers.gitea.name = "gitea";
-    containers.gitea.ipv6Address = "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***";
+    containers.forgejo.enable = false;
+    containers.forgejo.name = "forgejo";
+    containers.forgejo.ipv6Address = "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***";
     containers.haproxy.enable = false;
     containers.haproxy.name = "haproxy";
     containers.haproxy.ipv6Address = "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***";
