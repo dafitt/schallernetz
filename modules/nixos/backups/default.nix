@@ -34,7 +34,7 @@ in
       };
     })
     (mkIf cfg.localhost {
-      age.secrets."borgbackup-job-localhost".file = ./${host}.age;
+      age.secrets."borgbackup-job-localhost" = { file = ./${host}.age; };
 
       systemd.services."borgbackup-job-localhost" = {
         unitConfig = {
@@ -65,7 +65,7 @@ in
       };
     })
     (mkIf cfg.NAS4 {
-      age.secrets."borgbackup-job-NAS4".file = ./${host}.age;
+      age.secrets."borgbackup-job-NAS4" = { file = ./${host}.age; };
 
       environment.systemPackages = [ pkgs.nfs-utils ]; # needed for NFS
       services.rpcbind.enable = true; # needed for NFS

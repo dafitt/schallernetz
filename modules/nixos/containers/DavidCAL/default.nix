@@ -38,7 +38,7 @@ in
           # agenix secrets
           imports = with inputs; [ agenix.nixosModules.default ];
           age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-          age.secrets."DavidCAL-backup".file = ./DavidCAL-backup.age;
+          age.secrets."DavidCAL-backup" = { file = ./DavidCAL-backup.age; };
           age.secrets."DavidCAL-users" = { file = ./DavidCAL-users.age; owner = "radicale"; };
 
           environment.systemPackages = with pkgs; [ apacheHttpd nfs-utils ];

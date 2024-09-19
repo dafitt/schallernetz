@@ -18,7 +18,7 @@ in
 {
   # 1. New entry: `"FILE.age".publicKeys = allowedKeys;`
   # 2. #$ nix run github:ryantm/agenix -- -e FILE.age
-  # 3. NixOS configuration import: `age.secrets."FILE".file = ./FILE.age;`
+  # 3. NixOS configuration import: `age.secrets."FILE" = { file = ./FILE.age; };`
   # 4. Use it with: `config.age.secrets."FILE".path;`
 
   "modules/nixos/backups/minisforumhm80.age".publicKeys = [ minisforumhm80 ] ++ david;
