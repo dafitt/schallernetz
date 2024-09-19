@@ -9,7 +9,6 @@ in
   options.schallernetz.containers.DavidVPN = with types; {
     enable = mkBoolOpt false "Enable container DavidVPN.";
     name = mkOpt str "DavidVPN" "The name of the container.";
-    #TODO define the mac address for a predictable ipv6 host-address
   };
 
   config = mkIf cfg.enable {
@@ -25,6 +24,11 @@ in
 
       specialArgs = { hostConfig = config; };
       config = { hostConfig, config, lib, pkgs, ... }: {
+        imports = [ inputs.agenix.nixosModules.default ];
+        age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+
+        age.secrets."private.key".file = ./private.key.age;
+
         boot.kernel.sysctl."net.ipv6.conf.wg0.forwarding" = 1;
         boot.kernel.sysctl."net.ipv4.conf.wg0.forwarding" = 1;
 
@@ -71,7 +75,7 @@ in
             '';
 
             #$ (umask 0077; wg genkey > /var/lib/wireguard/private.key)
-            privateKeyFile = "/var/lib/wireguard/private.key";
+            privateKeyFile = config.age.secrets."private.key".path;
             #generatePrivateKeyFile = true;
 
             #$ wg pubkey < /var/lib/wireguard/private.key
@@ -92,8 +96,6 @@ in
           };
         };
 
-        imports = [ inputs.agenix.nixosModules.default ];
-        age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
         age.secrets."DDNS-K57174-49283" = {
           file = ./DDNS-K57174-49283.age;
           owner = config.services.inadyn.user;
