@@ -27,7 +27,7 @@ in
         imports = [ inputs.agenix.nixosModules.default ];
         age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
 
-        age.secrets."private.key".file = ./private.key.age;
+        age.secrets."private.key" = { file = ./private.key.age; };
 
         boot.kernel.sysctl."net.ipv6.conf.wg0.forwarding" = 1;
         boot.kernel.sysctl."net.ipv4.conf.wg0.forwarding" = 1;

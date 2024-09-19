@@ -15,7 +15,7 @@ in
   config = mkMerge [
     (mkIf cfg.enable {
       # Get secret file
-      age.secrets."searx".file = ./searx.age;
+      age.secrets."searx" = { file = ./searx.age; };
 
       #$ sudo nixos-container start searx
       #$ sudo nixos-container root-login searx
