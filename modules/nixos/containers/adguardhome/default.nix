@@ -36,7 +36,7 @@ in
               dns = {
                 bind_hosts = [ "***REMOVED_IPv4***" "${cfg.ipv6Address}" ];
                 enable_dnssec = true;
-                upstream_dns = [ "${hostConfig.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***" ];
+                upstream_dns = [ hostConfig.schallernetz.containers.unbound.ipv6Address ];
               };
               users = [
                 { name = "admin"; password = "***REMOVED_HASH***"; }

@@ -1,12 +1,12 @@
 $ORIGIN ***REMOVED_DOMAIN***.
-$TTL 86400
+$TTL 43200 ; 6h
 
 @ IN SOA coredns.***REMOVED_DOMAIN***. admin.***REMOVED_DOMAIN***. (
         2024082301  ; serial number YYMMDDNN
         28800       ; Refresh
         7200        ; Retry
         864000      ; Expire
-        86400       ; Min TTL
+        43200       ; Min TTL
   )
   NS adguard.***REMOVED_DOMAIN***.
   NS unbound.***REMOVED_DOMAIN***.
