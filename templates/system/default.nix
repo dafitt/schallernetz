@@ -69,7 +69,7 @@ with lib.schallernetz; {
     ntfy-systemd.enable = true;
     ntfy-systemd.url = "https://ntfy.***REMOVED_DOMAIN***";
 
-    services.ssh.enable = true;
+    ssh.enable = true;
 
     time.enable = true;
 

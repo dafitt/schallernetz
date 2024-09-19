@@ -6,6 +6,7 @@
     -   [Usage](#usage)
         -   [Upgrading](#upgrading)
         -   [Modules](#modules)
+    -   [Structure](#structure)
 
 ## Usage
 
@@ -28,3 +29,7 @@ inputs.schallernetz.url = "git+file:../schallernetz?shallow=1";
 
 inputs.schallernetz.nixosModules."systemd/ntfy"
 ```
+
+## Structure
+
+The flakes structure is similar to my [dotfiles](https://github.com/dafitt/dotfiles?tab=readme-ov-file#structure), but without home-manager.

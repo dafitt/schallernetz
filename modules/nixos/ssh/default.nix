@@ -3,10 +3,10 @@
 with lib;
 with lib.schallernetz;
 let
-  cfg = config.schallernetz.services.ssh;
+  cfg = config.schallernetz.ssh;
 in
 {
-  options.schallernetz.services.ssh = with types; {
+  options.schallernetz.ssh = with types; {
     enable = mkBoolOpt true "Enable ssh (access).";
   };
 
