@@ -25,6 +25,7 @@ in
   "modules/nixos/containers/DavidCAL/DavidCAL-backup.age".publicKeys = [ minisforumhm80 ] ++ david;
   "modules/nixos/containers/DavidCAL/DavidCAL-users.age".publicKeys = [ minisforumhm80 ] ++ david;
   "modules/nixos/containers/DavidVPN/DDNS-K57174-49283.age".publicKeys = [ minisforumhm80 ] ++ david;
+  "modules/nixos/containers/DavidVPN/private.key.age".publicKeys = [ minisforumhm80 ] ++ david;
   "modules/nixos/containers/haproxy/acme_dode.age".publicKeys = [ minisforumhm80 ] ++ david;
   "modules/nixos/containers/searx/searx.age".publicKeys = [ minisforumhm80 ] ++ david;
 
