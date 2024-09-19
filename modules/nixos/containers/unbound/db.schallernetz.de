@@ -1,13 +1,16 @@
 $ORIGIN ***REMOVED_DOMAIN***.
 $TTL 43200 ; 6h
 
-@ IN SOA coredns.***REMOVED_DOMAIN***. admin.***REMOVED_DOMAIN***. (
-        2024082301  ; serial number YYMMDDNN
+@ IN SOA adguard.***REMOVED_DOMAIN***. admin.***REMOVED_DOMAIN***. (
+        2024091901  ; serial number YYMMDDNN
         28800       ; Refresh
         7200        ; Retry
         864000      ; Expire
         43200       ; Min TTL
   )
+  NS ns1.domainoffensive.de.
+  NS ns2.domainoffensive.eu.
+  NS ns3.domainoffensive.net.
   NS adguard.***REMOVED_DOMAIN***.
   NS unbound.***REMOVED_DOMAIN***.
 
@@ -17,6 +20,7 @@ adguardhome IN CNAME haproxy
 bitwarden IN CNAME haproxy
 DavidCAL IN CNAME haproxy
 DavidSYNC IN CNAME haproxy
+forgejo IN AAAA ***REMOVED_IPv6***
 haproxy IN AAAA ***REMOVED_IPv6***
 MichiSHARE IN A ***REMOVED_IPv4***
 MichiSHARE IN AAAA ***REMOVED_IPv6***
