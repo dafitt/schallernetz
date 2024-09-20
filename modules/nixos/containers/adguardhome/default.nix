@@ -8,7 +8,7 @@ in
 {
   options.schallernetz.containers.adguardhome = with types; {
     enable = mkBoolOpt false "Enable container adguardhome.";
-    name = mkOpt str "adguardhome" "The name of the container."; # TODO: rename adguardhome
+    name = mkOpt str "adguardhome" "The name of the container.";
     ipv6Address = mkOpt str "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***" "IPv6 address of the container.";
   };
 
