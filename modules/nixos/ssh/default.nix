@@ -13,6 +13,8 @@ in
   config = mkIf cfg.enable {
     services.openssh = {
       enable = true;
+      startWhenNeeded = true;
+
       settings = {
         # require public key authentication for better security
         PasswordAuthentication = mkDefault false;

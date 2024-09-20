@@ -22,6 +22,8 @@ in
         "/var/lib/nixos-containers/${cfg.name}${config.containers.${cfg.name}.config.services.forgejo.stateDir}"
       ];
 
+      age.secrets."acme_dode" = { file = ../haproxy/acme_dode.age; };
+
       #$ sudo nixos-container start forgejo
       #$ sudo nixos-container root-login forgejo
       containers.${cfg.name} = {
@@ -31,14 +33,10 @@ in
         hostBridge = "br_lan";
         localAddress6 = "${cfg.ipv6Address}/64";
 
-        bindMounts."/etc/ssh/ssh_host_ed25519_key".isReadOnly = true; # mount host's ssh key for agenix secrets in the container
+        bindMounts.${config.age.secrets."acme_dode".path}.isReadOnly = true;
 
         specialArgs = { hostConfig = config; };
         config = { hostConfig, config, lib, pkgs, ... }: {
-          # agenix secrets
-          imports = with inputs; [ agenix.nixosModules.default ];
-          age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-
           services.forgejo = {
             enable = true;
 
@@ -52,7 +50,18 @@ in
             };
           };
 
-          age.secrets."acme_dode" = { file = ../haproxy/acme_dode.age; };
+          services.openssh = {
+            enable = true;
+            allowSFTP = false;
+            startWhenNeeded = true;
+
+            settings = {
+              #GatewayPorts = "yes";
+              PermitRootLogin = "no";
+              PasswordAuthentication = false;
+            };
+          };
+
           security.acme = {
             defaults.email = "admin@***REMOVED_DOMAIN***";
             acceptTerms = true;
@@ -60,7 +69,7 @@ in
             # DNS-01 challenge
             certs."${config.services.forgejo.settings.server.DOMAIN}" = {
               dnsProvider = "dode";
-              environmentFile = config.age.secrets."acme_dode".path;
+              environmentFile = hostConfig.age.secrets."acme_dode".path;
               dnsResolver = "ns1.domainoffensive.de";
 
               #extraDomainNames = [ "forgejo.***REMOVED_DOMAIN***" ];
@@ -93,7 +102,7 @@ in
             nameservers = [ hostConfig.schallernetz.containers.unbound.ipv6Address ];
 
             firewall.interfaces."eth0" = {
-              allowedTCPPorts = [ 22 443 ];
+              allowedTCPPorts = [ 443 ];
             };
           };
 
