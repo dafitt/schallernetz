@@ -24,7 +24,7 @@
 
     "workbench.editor.customLabels.patterns": {
         "**/default.nix": "${dirname}/.nix",
-        "**/modules/nixos/containers/**/default.nix": "container/${dirname}/.nix",
+        "**/modules/nixos/servers/**/default.nix": "server/${dirname}/.nix",
         "**/templates/**/default.nix": "template/${dirname}/.nix"
     }
 }

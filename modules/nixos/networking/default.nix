@@ -25,7 +25,7 @@ in
       hostName = host;
       domain = "***REMOVED_DOMAIN***";
 
-      nameservers = [ config.schallernetz.containers.unbound.ipv6Address ];
+      nameservers = [ config.schallernetz.servers.unbound.ipv6Address ];
     };
 
     networking.useDHCP = false;

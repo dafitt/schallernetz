@@ -19,7 +19,7 @@ with lib.schallernetz; {
   };
 
   schallernetz = {
-    containers = {
+    servers = {
       adguardhome.enable = true;
       bitwarden.enable = true;
       DavidCAL.enable = true;

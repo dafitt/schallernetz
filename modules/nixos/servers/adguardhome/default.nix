@@ -3,12 +3,12 @@
 with lib;
 with lib.schallernetz;
 let
-  cfg = config.schallernetz.containers.adguardhome;
+  cfg = config.schallernetz.servers.adguardhome;
 in
 {
-  options.schallernetz.containers.adguardhome = with types; {
-    enable = mkBoolOpt false "Enable container adguardhome.";
-    name = mkOpt str "adguardhome" "The name of the container.";
+  options.schallernetz.servers.adguardhome = with types; {
+    enable = mkBoolOpt false "Enable server adguardhome.";
+    name = mkOpt str "adguardhome" "The name of the server.";
     ipv6Address = mkOpt str "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***" "IPv6 address of the container.";
   };
 
@@ -36,7 +36,7 @@ in
               dns = {
                 bind_hosts = [ "***REMOVED_IPv4***" "${cfg.ipv6Address}" ];
                 enable_dnssec = true;
-                upstream_dns = [ hostConfig.schallernetz.containers.unbound.ipv6Address ];
+                upstream_dns = [ hostConfig.schallernetz.servers.unbound.ipv6Address ];
               };
               users = [
                 { name = "admin"; password = "***REMOVED_HASH***"; }
@@ -60,7 +60,7 @@ in
     })
     {
       # entry in main reverse proxy
-      schallernetz.containers.haproxy = {
+      schallernetz.servers.haproxy = {
         frontends.www.extraConfig = [ "use_backend ${cfg.name} if { req.hdr(host) -i ${cfg.name}.${config.networking.domain} }" ];
         backends.extraConfig = [
           ''

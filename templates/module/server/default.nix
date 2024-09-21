@@ -3,18 +3,18 @@
 with lib;
 with lib.schallernetz;
 let
-  cfg = config.schallernetz.containers.CONTAINERMODULE;
+  cfg = config.schallernetz.servers.MYSERVER;
 in
 {
-  options.schallernetz.containers.CONTAINERMODULE = with types; {
-    enable = mkBoolOpt false "Enable container CONTAINERMODULE.";
-    name = mkOpt str "CONTAINERMODULE" "The name of the container.";
+  options.schallernetz.servers.MYSERVER = with types; {
+    enable = mkBoolOpt false "Enable server MYSERVER.";
+    name = mkOpt str "MYSERVER" "The name of the server.";
     ipv6Address = mkOpt str "" "IPv6 address of the container.";
   };
 
   config = mkIf cfg.enable {
-    #$ sudo nixos-container start CONTAINERMODULE
-    #$ sudo nixos-container root-login CONTAINERMODULE
+    #$ sudo nixos-container start MYSERVER
+    #$ sudo nixos-container root-login MYSERVER
     containers.${cfg.name} = {
       autoStart = true;
 
@@ -33,5 +33,5 @@ in
 }
 
 # Dont forget to
-# - add `schallernetz.containers.CONTAINERMODULE.enable = true;` to the hosts configuration!
+# - add `schallernetz.servers.MYSERVER.enable = true;` to the hosts configuration!
 # - add a DNS entry in case of a website!

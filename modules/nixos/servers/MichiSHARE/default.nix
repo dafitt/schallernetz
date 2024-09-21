@@ -3,12 +3,12 @@
 with lib;
 with lib.schallernetz;
 let
-  cfg = config.schallernetz.containers.MichiSHARE;
+  cfg = config.schallernetz.servers.MichiSHARE;
 in
 {
-  options.schallernetz.containers.MichiSHARE = with types; {
-    enable = mkBoolOpt false "Enable container MichiSHARE.";
-    name = mkOpt str "MichiSHARE" "The name of the container.";
+  options.schallernetz.servers.MichiSHARE = with types; {
+    enable = mkBoolOpt false "Enable server MichiSHARE.";
+    name = mkOpt str "MichiSHARE" "The name of the server.";
     ipv6Address = mkOpt str "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***" "IPv6 address of the container.";
   };
 

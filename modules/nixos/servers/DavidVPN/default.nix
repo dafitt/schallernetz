@@ -3,12 +3,12 @@
 with lib;
 with lib.schallernetz;
 let
-  cfg = config.schallernetz.containers.DavidVPN;
+  cfg = config.schallernetz.servers.DavidVPN;
 in
 {
-  options.schallernetz.containers.DavidVPN = with types; {
-    enable = mkBoolOpt false "Enable container DavidVPN.";
-    name = mkOpt str "DavidVPN" "The name of the container.";
+  options.schallernetz.servers.DavidVPN = with types; {
+    enable = mkBoolOpt false "Enable server DavidVPN.";
+    name = mkOpt str "DavidVPN" "The name of the server.";
   };
 
   config = mkIf cfg.enable {

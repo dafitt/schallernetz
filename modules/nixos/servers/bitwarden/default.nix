@@ -3,12 +3,12 @@
 with lib;
 with lib.schallernetz;
 let
-  cfg = config.schallernetz.containers.bitwarden;
+  cfg = config.schallernetz.servers.bitwarden;
 in
 {
-  options.schallernetz.containers.bitwarden = with types; {
-    enable = mkBoolOpt false "Enable container bitwarden.";
-    name = mkOpt str "bitwarden" "The name of the container.";
+  options.schallernetz.servers.bitwarden = with types; {
+    enable = mkBoolOpt false "Enable server bitwarden.";
+    name = mkOpt str "bitwarden" "The name of the server.";
     ipv6Address = mkOpt str "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***" "IPv6 address of the container.";
   };
 
@@ -79,7 +79,7 @@ in
     })
     {
       # entry in main reverse proxy
-      schallernetz.containers.haproxy = {
+      schallernetz.servers.haproxy = {
         frontends.www.extraConfig = [ "use_backend ${cfg.name} if { req.hdr(host) -i ${cfg.name}.${config.networking.domain} }" ];
         backends.extraConfig = [
           ''

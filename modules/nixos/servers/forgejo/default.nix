@@ -3,12 +3,12 @@
 with lib;
 with lib.schallernetz;
 let
-  cfg = config.schallernetz.containers.forgejo;
+  cfg = config.schallernetz.servers.forgejo;
 in
 {
-  options.schallernetz.containers.forgejo = with types; {
-    enable = mkBoolOpt false "Enable container forgejo.";
-    name = mkOpt str "forgejo" "The name of the container.";
+  options.schallernetz.servers.forgejo = with types; {
+    enable = mkBoolOpt false "Enable server forgejo.";
+    name = mkOpt str "forgejo" "The name of the server.";
     ipv6Address = mkOpt str "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***" "IPv6 address of the container.";
   };
 
@@ -99,7 +99,7 @@ in
             # for acme
             enableIPv6 = true; # automatically get IPv6 and default route6
             useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
-            nameservers = [ hostConfig.schallernetz.containers.unbound.ipv6Address ];
+            nameservers = [ hostConfig.schallernetz.servers.unbound.ipv6Address ];
 
             firewall.interfaces."eth0" = {
               allowedTCPPorts = [ 443 ];

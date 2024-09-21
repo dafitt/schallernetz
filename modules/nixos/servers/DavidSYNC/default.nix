@@ -3,12 +3,12 @@
 with lib;
 with lib.schallernetz;
 let
-  cfg = config.schallernetz.containers.DavidSYNC;
+  cfg = config.schallernetz.servers.DavidSYNC;
 in
 {
-  options.schallernetz.containers.DavidSYNC = with types; {
-    enable = mkBoolOpt false "Enable container DavidSYNC.";
-    name = mkOpt str "DavidSYNC" "The name of the container.";
+  options.schallernetz.servers.DavidSYNC = with types; {
+    enable = mkBoolOpt false "Enable server DavidSYNC.";
+    name = mkOpt str "DavidSYNC" "The name of the server.";
     ipv6Address = mkOpt str "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***" "IPv6 address of the container.";
   };
 
@@ -95,7 +95,7 @@ in
     })
     {
       # entry in main reverse proxy
-      schallernetz.containers.haproxy = {
+      schallernetz.servers.haproxy = {
         frontends.www.extraConfig = [ "use_backend ${cfg.name} if { req.hdr(host) -i ${cfg.name}.${config.networking.domain} }" ];
         backends.extraConfig = [
           ''

@@ -3,12 +3,12 @@
 with lib;
 with lib.schallernetz;
 let
-  cfg = config.schallernetz.containers.searx;
+  cfg = config.schallernetz.servers.searx;
 in
 {
-  options.schallernetz.containers.searx = with types; {
-    enable = mkBoolOpt false "Enable container searx.";
-    name = mkOpt str "searx" "The name of the container.";
+  options.schallernetz.servers.searx = with types; {
+    enable = mkBoolOpt false "Enable server searx.";
+    name = mkOpt str "searx" "The name of the server.";
     ipv6Address = mkOpt str "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***" "IPv6 address of the container.";
   };
 
@@ -143,7 +143,7 @@ in
           networking = {
             enableIPv6 = true; # automatically get IPv6 and default route6
             useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
-            nameservers = [ hostConfig.schallernetz.containers.unbound.ipv6Address ];
+            nameservers = [ hostConfig.schallernetz.servers.unbound.ipv6Address ];
 
             firewall.interfaces."eth0" = {
               allowedTCPPorts = [ 80 ];
@@ -156,7 +156,7 @@ in
     })
     {
       # entry in main reverse proxy
-      schallernetz.containers.haproxy = {
+      schallernetz.servers.haproxy = {
         frontends.www.extraConfig = [
           "use_backend ${cfg.name} if { hdr(host) -i ${cfg.name}.${config.networking.domain} }"
         ];
