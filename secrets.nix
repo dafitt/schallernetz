@@ -22,11 +22,11 @@ in
   # 4. Use it with: `config.age.secrets."FILE".path;`
 
   "modules/nixos/backups/minisforumhm80.age".publicKeys = [ minisforumhm80 ] ++ david;
+  "modules/nixos/servers/ACME_DODE.age".publicKeys = [ minisforumhm80 ] ++ david;
   "modules/nixos/servers/DavidCAL/DavidCAL-backup.age".publicKeys = [ minisforumhm80 ] ++ david;
   "modules/nixos/servers/DavidCAL/DavidCAL-users.age".publicKeys = [ minisforumhm80 ] ++ david;
   "modules/nixos/servers/DavidVPN/DDNS-K57174-49283.age".publicKeys = [ minisforumhm80 ] ++ david;
   "modules/nixos/servers/DavidVPN/private.key.age".publicKeys = [ minisforumhm80 ] ++ david;
-  "modules/nixos/servers/haproxy/acme_dode.age".publicKeys = [ minisforumhm80 ] ++ david;
   "modules/nixos/servers/searx/searx.age".publicKeys = [ minisforumhm80 ] ++ david;
 
   # Edit #$ nix run github:ryantm/agenix -- -e FILE -i PRIVATE_KEY

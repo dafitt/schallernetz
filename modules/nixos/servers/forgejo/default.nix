@@ -22,7 +22,7 @@ in
         "/var/lib/nixos-containers/${cfg.name}${config.containers.${cfg.name}.config.services.forgejo.stateDir}"
       ];
 
-      age.secrets."acme_dode" = { file = ../haproxy/acme_dode.age; };
+      age.secrets."ACME_DODE" = { file = ../ACME_DODE.age; };
 
       #$ sudo nixos-container start forgejo
       #$ sudo nixos-container root-login forgejo
@@ -33,7 +33,7 @@ in
         hostBridge = "br_lan";
         localAddress6 = "${cfg.ipv6Address}/64";
 
-        bindMounts.${config.age.secrets."acme_dode".path}.isReadOnly = true;
+        bindMounts.${config.age.secrets."ACME_DODE".path}.isReadOnly = true;
 
         specialArgs = { hostConfig = config; };
         config = { hostConfig, config, lib, pkgs, ... }: {
@@ -69,7 +69,7 @@ in
             # DNS-01 challenge
             certs."${config.services.forgejo.settings.server.DOMAIN}" = {
               dnsProvider = "dode";
-              environmentFile = hostConfig.age.secrets."acme_dode".path;
+              environmentFile = hostConfig.age.secrets."ACME_DODE".path;
               dnsResolver = "ns1.domainoffensive.de";
 
               #extraDomainNames = [ "forgejo.***REMOVED_DOMAIN***" ];

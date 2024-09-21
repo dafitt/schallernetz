@@ -76,7 +76,7 @@ in
           '';
         };
 
-        age.secrets."acme_dode" = { file = ./acme_dode.age; };
+        age.secrets."ACME_DODE" = { file = ../ACME_DODE.age; };
         # https://wiki.nixos.org/wiki/ACME
         security.acme = {
           acceptTerms = true;
@@ -85,7 +85,7 @@ in
           certs."***REMOVED_DOMAIN***" = {
             extraDomainNames = [ "*.***REMOVED_DOMAIN***" ];
             dnsProvider = "dode";
-            environmentFile = config.age.secrets."acme_dode".path;
+            environmentFile = config.age.secrets."ACME_DODE".path;
 
             group = config.services.haproxy.group;
           };
