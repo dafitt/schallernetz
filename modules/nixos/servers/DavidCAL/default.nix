@@ -35,8 +35,12 @@ in
 
         specialArgs = { hostConfig = config; };
         config = { hostConfig, config, lib, pkgs, ... }: {
+          imports = with inputs; [
+            agenix.nixosModules.default
+            self.nixosModules."ntfy-systemd"
+          ];
+
           # agenix secrets
-          imports = with inputs; [ agenix.nixosModules.default ];
           age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
           age.secrets."DavidCAL-backup" = { file = ./DavidCAL-backup.age; };
           age.secrets."DavidCAL-users" = { file = ./DavidCAL-users.age; owner = "radicale"; };
@@ -70,7 +74,7 @@ in
               };
             };
           };
-          systemd.services."radicale".preStart =
+          systemd.services.radicale.preStart =
             let cfg = config.services.radicale.settings; in
             # Initialize Git
             ''
@@ -84,6 +88,10 @@ in
                 fi
               fi
             '';
+          systemd.services.radicale.unitConfig = {
+            OnFailure = [ "ntfy-failure@%i.service" ];
+            OnSuccess = [ "ntfy-success@%i.service" ];
+          };
 
           networking.firewall.interfaces."eth0" = {
             allowedTCPPorts = [ 5232 ];

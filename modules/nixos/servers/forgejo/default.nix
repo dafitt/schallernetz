@@ -36,7 +36,7 @@ in
 
       specialArgs = { hostConfig = config; };
       config = { hostConfig, config, lib, pkgs, ... }: {
-        imports = [ inputs.self.nixosModules."ntfy-systemd" ];
+        imports = with inputs;[ self.nixosModules."ntfy-systemd" ];
 
         services.forgejo = {
           enable = true;
@@ -50,7 +50,7 @@ in
             session.COOKIE_SECURE = true; # We're assuming SSL-only connectivity
           };
         };
-        systemd.services."forgejo".unitConfig = {
+        systemd.services.forgejo.unitConfig = {
           OnFailure = [ "ntfy-failure@%i.service" ];
           OnSuccess = [ "ntfy-success@%i.service" ];
         };

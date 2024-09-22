@@ -31,6 +31,7 @@ in
 
         specialArgs = { hostConfig = config; };
         config = { hostConfig, config, lib, pkgs, ... }: {
+          imports = with inputs; [ self.nixosModules."ntfy-systemd" ];
 
           # SearXNG is a free internet metasearch engine which aggregates results from various search services and databases. Users are neither tracked nor profiled.
           # https://github.com/searxng/searxng
@@ -114,6 +115,10 @@ in
                 "yep".disabled = false;
               };
             };
+          };
+          systemd.services.searx.unitConfig = {
+            OnFailure = [ "ntfy-failure@%i.service" ];
+            OnSuccess = [ "ntfy-success@%i.service" ];
           };
 
           # Local reverse proxy for IPv6

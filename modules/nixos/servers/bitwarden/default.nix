@@ -1,4 +1,4 @@
-{ options, config, lib, pkgs, ... }:
+{ options, config, lib, pkgs, inputs, ... }:
 
 with lib;
 with lib.schallernetz;
@@ -34,6 +34,7 @@ in
 
         specialArgs = { hostConfig = config; };
         config = { hostConfig, config, lib, pkgs, ... }: {
+          imports = with inputs; [ self.nixosModules."ntfy-systemd" ];
 
           services.vaultwarden = {
             enable = true;
@@ -44,6 +45,10 @@ in
               ROCKET_ADDRESS = "***REMOVED_IPv4***";
               ROCKET_PORT = 8222;
             };
+          };
+          systemd.services.vaultwarden.unitConfig = {
+            OnFailure = [ "ntfy-failure@%i.service" ];
+            OnSuccess = [ "ntfy-success@%i.service" ];
           };
 
           # Local reverse proxy for IPv6

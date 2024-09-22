@@ -39,8 +39,11 @@ in
 
       specialArgs = { hostConfig = config; };
       config = { hostConfig, config, lib, pkgs, ... }: {
-        # agenix secrets
-        imports = with inputs; [ agenix.nixosModules.default ];
+        imports = with inputs; [
+          agenix.nixosModules.default
+          self.nixosModules."ntfy-systemd"
+        ];
+
         age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
 
         # Reverse Proxy before the application servers
@@ -75,6 +78,10 @@ in
             ${concatStringsSep "\n" cfg.backends.extraConfig}
           '';
         };
+        systemd.services.haproxy.unitConfig = {
+          OnFailure = [ "ntfy-failure@%i.service" ];
+          OnSuccess = [ "ntfy-success@%i.service" ];
+        };
 
         age.secrets."ACME_DODE" = { file = ../ACME_DODE.age; };
         # https://wiki.nixos.org/wiki/ACME
@@ -89,6 +96,10 @@ in
 
             group = config.services.haproxy.group;
           };
+        };
+        systemd.services."acme-***REMOVED_DOMAIN***".unitConfig = {
+          OnFailure = [ "ntfy-failure@%i.service" ];
+          OnSuccess = [ "ntfy-success@%i.service" ];
         };
 
         networking = {

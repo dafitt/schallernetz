@@ -1,4 +1,4 @@
-{ options, config, lib, pkgs, ... }:
+{ options, config, lib, pkgs, inputs, ... }:
 
 with lib;
 with lib.schallernetz;
@@ -26,6 +26,7 @@ in
 
         specialArgs = { hostConfig = config; };
         config = { hostConfig, config, lib, pkgs, ... }: {
+          imports = with inputs;[ self.nixosModules."ntfy-systemd" ];
 
           services.adguardhome = {
             enable = true;
@@ -48,6 +49,10 @@ in
 
             port = 3000;
             openFirewall = true;
+          };
+          systemd.services.adguardhome.unitConfig = {
+            OnFailure = [ "ntfy-failure@%i.service" ];
+            OnSuccess = [ "ntfy-success@%i.service" ];
           };
 
           networking.firewall.interfaces."eth0" = {

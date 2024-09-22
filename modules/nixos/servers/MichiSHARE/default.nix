@@ -25,7 +25,6 @@ in
 
       specialArgs = { hostConfig = config; };
       config = { hostConfig, config, lib, pkgs, ... }: {
-
         users.users."michi" = {
           isNormalUser = true;
           hashedPassword = "***REMOVED_HASH***";

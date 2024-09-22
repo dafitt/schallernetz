@@ -24,7 +24,11 @@ in
 
       specialArgs = { hostConfig = config; };
       config = { hostConfig, config, lib, pkgs, ... }: {
-        imports = [ inputs.agenix.nixosModules.default ];
+        imports = with inputs; [
+          agenix.nixosModules.default
+          self.nixosModules."ntfy-systemd"
+        ];
+
         age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
 
         age.secrets."private.key" = { file = ./private.key.age; };
@@ -94,6 +98,10 @@ in
               }
             ];
           };
+        };
+        systemd.services."wireguard-wg0".unitConfig = {
+          OnFailure = [ "ntfy-failure@%i.service" ];
+          OnSuccess = [ "ntfy-success@%i.service" ];
         };
 
         age.secrets."DDNS-K57174-49283" = {
