@@ -1,8 +1,4 @@
-#nix-repl> nixosConfigurations.minisforumhm80.config
-
-#$ nix build .#nixosConfigurations.minisforumhm80.config.system.build.toplevel
-
-#$ nixos-rebuild --flake .#minisforumhm80 --fast --use-remote-sudo --target-host rebuild@minisforumhm80.host.***REMOVED_DOMAIN*** <test|boot|switch>
+#$ nixos-rebuild --fast --flake .#minisforumhm80 --use-remote-sudo --target-host rebuild@minisforumhm80.host.***REMOVED_DOMAIN*** <test|boot|switch>
 
 { config, lib, pkgs, inputs, ... }:
 

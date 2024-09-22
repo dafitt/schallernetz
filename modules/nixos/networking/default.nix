@@ -48,7 +48,7 @@ in
         #address = [];
         #gateway = []; # not for ipv6
         #dns = [];
-        #domains = [ ];
+        #domains = [];
       };
     };
   };
