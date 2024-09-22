@@ -17,6 +17,7 @@ in
       description = "URL to the ntfy server.";
       example = "https://ntfy.sh";
     };
+    topic = mkOpt str "administration" "The topic to publish the notifications to.";
   };
 
   config = {
@@ -29,10 +30,10 @@ in
           Type = "oneshot";
           ExecStart = ''${pkgs.bash}/bin/bash -c ' \
           ${pkgs.ntfy-sh}/bin/ntfy publish \
-            --title "[%u] %i.service failed" \
+            --title "[%H] %i.service failed" \
             --priority 5 \
             --tags red_circle \
-            ${cfg.url}/%H \
+            ${cfg.url}/${cfg.topic} \
             "$(${pkgs.systemd}/bin/journalctl --unit %i --lines 10 --reverse --no-pager --boot | ${pkgs.coreutils}/bin/head -c 4096)"'
         '';
         };
@@ -47,8 +48,8 @@ in
             ${pkgs.ntfy-sh}/bin/ntfy publish \
               --priority 2 \
               --tags green_circle \
-              ${cfg.url}/%H \
-              "[%u] %i.service succeeded"
+              ${cfg.url}/${cfg.topic} \
+              "[%H] %i.service succeeded"
           '';
         };
       };
