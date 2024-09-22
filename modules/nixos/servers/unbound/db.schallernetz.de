@@ -25,7 +25,7 @@ haproxy IN AAAA ***REMOVED_IPv6***
 MichiSHARE IN A ***REMOVED_IPv4***
 MichiSHARE IN AAAA ***REMOVED_IPv6***
 minisforumhm80 in AAAA ***REMOVED_IPv6***
-nfty IN CNAME haproxy
+ntfy IN CNAME haproxy
 searx IN CNAME haproxy
 unbound IN A ***REMOVED_IPv4***
 unbound IN AAAA ***REMOVED_IPv6***
