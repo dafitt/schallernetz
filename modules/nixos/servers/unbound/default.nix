@@ -34,6 +34,7 @@ in
         services.unbound = {
           enable = true;
 
+          # https://unbound.docs.nlnetlabs.nl/en/latest/manpages/unbound.conf.html
           settings.server = {
             # the interface ip's that is used to connect to the network
             interface = [
@@ -50,7 +51,8 @@ in
           settings.auth-zone = [
             {
               name = "***REMOVED_DOMAIN***";
-              zonefile = "${./db.***REMOVED_DOMAIN***}";
+                # TODO primary: with AXFR and IXFR records
+              zonefile = "${./***REMOVED_DOMAIN***.zone}";
             }
           ];
         };
