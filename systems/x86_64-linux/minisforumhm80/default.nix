@@ -20,13 +20,13 @@ with lib.schallernetz; {
       bitwarden.enable = true;
       DavidCAL.enable = true;
       DavidSYNC.enable = true;
-      DavidVPN.enable = true;
       forgejo.enable = true;
       haproxy.enable = true;
       MichiSHARE.enable = true;
       ntfy.enable = true;
       searx.enable = true;
       unbound.enable = true;
+      wireguard.enable = true;
     };
   };
 
