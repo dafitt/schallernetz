@@ -16,7 +16,7 @@ echo -ne "$ACTION Hostname/FQDN/Identifier of the device [client]> " && read nam
 filepath="$(dirname $0)/$name.conf"
 
 if [ ! -f "$filepath" ]; then
-  ip6Address="fc01::$(hexdump -n 2 -e '"%03x"' </dev/urandom | cut -c1-3)/64"
+  ip6Address="fc01::$(hexdump -n 2 -e '"%03x"' </dev/urandom | cut -c1-3)"
   privateKey="$(wg genkey)"
   publicKey="$(echo $privateKey | wg pubkey)"
   presharedKey="$(wg genpsk)"
@@ -43,7 +43,7 @@ config.wireguard.interfaces.<name>.peers = [
     # $name
     publicKey = "$publicKey";
     presharedKey = "$presharedKey";
-    allowedIPs = [ "$ip6Address" ];
+    allowedIPs = [ "$ip6Address/128" ];
   }
 ];
 EOL

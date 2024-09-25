@@ -88,13 +88,14 @@ in
               {
                 # DavidLEGION
                 publicKey = "***REMOVED_WIREGUARD-KEY***";
+                presharedKey = "***REMOVED_WIREGUARD-KEY***";
                 allowedIPs = [ "***REMOVED_IPv6***/128" ];
               }
               {
                 # DavidPIXEL3a
                 publicKey = "***REMOVED_WIREGUARD-KEY***";
                 presharedKey = "***REMOVED_WIREGUARD-KEY***";
-                allowedIPs = [ "***REMOVED_IPv6***/64" ];
+                allowedIPs = [ "***REMOVED_IPv6***/128" ];
               }
             ];
           };
