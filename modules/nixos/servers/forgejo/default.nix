@@ -72,16 +72,16 @@ in
           acceptTerms = true;
 
           # DNS-01 challenge
-          certs."${config.services.forgejo.settings.server.DOMAIN}" = {
+          certs."${cfg.name}.${hostConfig.networking.domain}" = {
+            extraDomainNames = [ "${cfg.name}.lan.${hostConfig.networking.domain}" ];
             dnsProvider = "dode";
-            environmentFile = hostConfig.age.secrets."ACME_DODE".path;
             dnsResolver = "ns1.domainoffensive.de";
+            environmentFile = hostConfig.age.secrets."ACME_DODE".path;
 
-            #extraDomainNames = [ "forgejo.***REMOVED_DOMAIN***" ];
             group = "nginx";
           };
         };
-        systemd.services."acme-${config.services.forgejo.settings.server.DOMAIN}".unitConfig = {
+        systemd.services."acme-${cfg.name}.${hostConfig.networking.domain}".unitConfig = {
           OnFailure = [ "ntfy-failure@%i.service" ];
           OnSuccess = [ "ntfy-success@%i.service" ];
         };
@@ -94,9 +94,9 @@ in
           recommendedProxySettings = true;
           clientMaxBodySize = "10G";
 
-          virtualHosts."${config.services.forgejo.settings.server.DOMAIN}" = {
+          virtualHosts."${cfg.name}.${hostConfig.networking.domain}" = {
             forceSSL = true;
-            useACMEHost = "${config.services.forgejo.settings.server.DOMAIN}"; # DNS-01 challenge
+            useACMEHost = "${cfg.name}.${hostConfig.networking.domain}"; # DNS-01 challenge
             extraConfig = ''add_header Strict-Transport-Security "max-age=15552000; includeSubDomains" always;'';
 
             # to localhost

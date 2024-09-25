@@ -102,7 +102,10 @@ in
     {
       # entry in main reverse proxy
       schallernetz.servers.haproxy = {
-        frontends.www.extraConfig = [ "use_backend ${cfg.name} if { req.hdr(host) -i ${cfg.name}.${config.networking.domain} }" ];
+        frontends.www.extraConfig = [
+          "use_backend ${cfg.name} if { req.hdr(host) -i ${cfg.name}.${config.networking.domain} }"
+          "use_backend ${cfg.name} if { req.hdr(host) -i ${cfg.name}.lan.${config.networking.domain} }"
+        ];
         backends.extraConfig = [
           ''
             backend ${cfg.name}

@@ -67,8 +67,8 @@ in
             frontend www
               mode http
               bind [::]:80 v4v6
-              bind [::]:443 v4v6 ssl crt /var/lib/acme/***REMOVED_DOMAIN***/full.pem
               http-request redirect scheme https unless { ssl_fc }
+              bind [::]:443 v4v6 ssl crt /var/lib/acme/***REMOVED_DOMAIN***/full.pem
 
               # HSTS (HTTPS-Strict-Transport-Security) against man-in-the-middle attacks
               http-response set-header Strict-Transport-Security "max-age=16000000; includeSubDomains; preload;"
@@ -90,8 +90,9 @@ in
           defaults.email = "admin@***REMOVED_DOMAIN***";
 
           certs."***REMOVED_DOMAIN***" = {
-            extraDomainNames = [ "*.***REMOVED_DOMAIN***" ];
+            extraDomainNames = [ "*.***REMOVED_DOMAIN***" "*.lan.***REMOVED_DOMAIN***" ];
             dnsProvider = "dode";
+            dnsResolver = "ns1.domainoffensive.de";
             environmentFile = config.age.secrets."ACME_DODE".path;
 
             group = config.services.haproxy.group;

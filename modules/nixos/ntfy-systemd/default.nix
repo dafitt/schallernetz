@@ -31,7 +31,7 @@ in
           ExecStart = ''${pkgs.bash}/bin/bash -c ' \
           ${pkgs.ntfy-sh}/bin/ntfy publish \
             --title "[%H] %i.service failed" \
-            --priority 5 \
+            --priority 4 \
             --tags red_circle \
             ${cfg.url}/${cfg.topic} \
             "$(${pkgs.systemd}/bin/journalctl --unit %i --lines 10 --reverse --no-pager --boot | ${pkgs.coreutils}/bin/head -c 4096)"'
