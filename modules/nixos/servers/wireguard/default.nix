@@ -65,16 +65,18 @@ in
 
           # Wireguard Network
           wireguard.interfaces."wg0" = {
-            ips = [ "***REMOVED_IPv6***/64" ];
+            ips = [ "***REMOVED_IPv6***/64" "***REMOVED_IPv4***/8" ];
             listenPort = 123;
 
             # This allows the wireguard server to route your traffic to the internet and hence be like a VPN
             # For this to work you have to set the dnsserver IP of your router (or dnsserver of choice) in your clients
             postSetup = ''
               ${pkgs.iptables}/bin/ip6tables -t nat -A POSTROUTING -s fc01::/64 -o eth0 -j MASQUERADE
+              ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s ***REMOVED_IPv4***/8 -o eth0 -j MASQUERADE
             '';
             postShutdown = ''
               ${pkgs.iptables}/bin/ip6tables -t nat -D POSTROUTING -s fc01::/64 -o eth0 -j MASQUERADE
+              ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s ***REMOVED_IPv4***/8 -o eth0 -j MASQUERADE
             '';
 
             #$ (umask 0077; wg genkey > /var/lib/wireguard/private.key)
@@ -89,25 +91,25 @@ in
                 # DavidLEGION
                 publicKey = "***REMOVED_WIREGUARD-KEY***";
                 presharedKey = "***REMOVED_WIREGUARD-KEY***";
-                allowedIPs = [ "***REMOVED_IPv6***/128" ];
+                allowedIPs = [ "***REMOVED_IPv6***/128" "***REMOVED_IPv4***/32" ];
               }
               {
                 # DavidPIXEL3a
                 publicKey = "***REMOVED_WIREGUARD-KEY***";
                 presharedKey = "***REMOVED_WIREGUARD-KEY***";
-                allowedIPs = [ "***REMOVED_IPv6***/128" ];
+                allowedIPs = [ "***REMOVED_IPv6***/128" "***REMOVED_IPv4***/32" ];
               }
               {
                 # MichiPHONE
                 publicKey = "***REMOVED_WIREGUARD-KEY***";
                 presharedKey = "***REMOVED_WIREGUARD-KEY***";
-                allowedIPs = [ "***REMOVED_IPv6***/128" ];
+                allowedIPs = [ "***REMOVED_IPv6***/128" "***REMOVED_IPv4***/32" ];
               }
               {
                 # MichiWORK
                 publicKey = "***REMOVED_WIREGUARD-KEY***";
                 presharedKey = "***REMOVED_WIREGUARD-KEY***";
-                allowedIPs = [ "***REMOVED_IPv6***/128" ];
+                allowedIPs = [ "***REMOVED_IPv6***/128" "***REMOVED_IPv4***/32" ];
               }
             ];
           };

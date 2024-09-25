@@ -16,6 +16,7 @@ echo -ne "$ACTION Hostname/FQDN/Identifier of the device [client]> " && read nam
 filepath="$(dirname $0)/$name.conf"
 
 if [ ! -f "$filepath" ]; then
+  ip4Address="10.0.$((RANDOM % 128)).$((RANDOM % 256))"
   ip6Address="fc01::$(hexdump -n 2 -e '"%03x"' </dev/urandom | cut -c1-3)"
   privateKey="$(wg genkey)"
   publicKey="$(echo $privateKey | wg pubkey)"
@@ -24,7 +25,7 @@ if [ ! -f "$filepath" ]; then
   echo -e "$INFO File:\n$filepath"
   cat <<EOL >$filepath
 [Interface]
-Address = $ip6Address/64
+Address = $ip6Address/64, $ip4Address/8
 ListenPort = 51820
 PrivateKey = $privateKey
 DNS = ***REMOVED_IPv6***
@@ -43,7 +44,7 @@ config.wireguard.interfaces.<name>.peers = [
     # $name
     publicKey = "$publicKey";
     presharedKey = "$presharedKey";
-    allowedIPs = [ "$ip6Address/128" ];
+    allowedIPs = [ "$ip6Address/128" "$ip4Address/32" ];
   }
 ];
 EOL
