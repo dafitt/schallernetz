@@ -97,6 +97,18 @@ in
                 presharedKey = "***REMOVED_WIREGUARD-KEY***";
                 allowedIPs = [ "***REMOVED_IPv6***/128" ];
               }
+              {
+                # MichiPHONE
+                publicKey = "***REMOVED_WIREGUARD-KEY***";
+                presharedKey = "***REMOVED_WIREGUARD-KEY***";
+                allowedIPs = [ "***REMOVED_IPv6***/128" ];
+              }
+              {
+                # MichiWORK
+                publicKey = "***REMOVED_WIREGUARD-KEY***";
+                presharedKey = "***REMOVED_WIREGUARD-KEY***";
+                allowedIPs = [ "***REMOVED_IPv6***/128" ];
+              }
             ];
           };
         };
