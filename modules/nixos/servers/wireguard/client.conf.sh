@@ -14,13 +14,15 @@ HELP="[\e[1;36m HELP \e[0m]"     # [ HELP ]
 
 echo -ne "$ACTION Hostname/FQDN/Identifier of the device [client]> " && read name && [ -z "$name" ] && name="client"
 filepath="$(dirname $0)/$name.conf"
-ip6Address="fc01::$(hexdump -n 2 -e '"%03x"' </dev/urandom | cut -c1-3)/64"
-privateKey="$(wg genkey)"
-publicKey="$(echo $privateKey | wg pubkey)"
-presharedKey="$(wg genpsk)"
 
-echo -e "$INFO File:\n$filepath"
-cat <<EOL >$filepath
+if [ ! -f "$filepath" ]; then
+  ip6Address="fc01::$(hexdump -n 2 -e '"%03x"' </dev/urandom | cut -c1-3)/64"
+  privateKey="$(wg genkey)"
+  publicKey="$(echo $privateKey | wg pubkey)"
+  presharedKey="$(wg genpsk)"
+
+  echo -e "$INFO File:\n$filepath"
+  cat <<EOL >$filepath
 [Interface]
 Address = $ip6Address
 ListenPort = 51902
@@ -33,11 +35,8 @@ AllowedIPs = ***REMOVED_IPv6***::/56, ***REMOVED_IPv4***/23
 Endpoint = wireguard.***REMOVED_DOMAIN***:123
 EOL
 
-echo -e "$INFO QR-Code:"
-qrencode -t ansiutf8 -r $filepath
-
-echo -e "$ACTION NixOS configuration:"
-cat <<EOL
+  echo -e "$ACTION Add the NixOS configuration:"
+  cat <<EOL
 config.wireguard.interfaces.<name>.peers = [
   {
     # $name
@@ -47,6 +46,12 @@ config.wireguard.interfaces.<name>.peers = [
   }
 ];
 EOL
+
+  read -p "wireguard: added client $name"
+fi
+
+echo -e "$INFO QR-Code:"
+qrencode -t ansiutf8 -r $filepath
 
 echo -e $HELP
 cat <<EOL
