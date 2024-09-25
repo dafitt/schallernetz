@@ -7,13 +7,11 @@
     snowfall-lib = { url = "github:snowfallorg/lib/dev"; inputs.nixpkgs.follows = "nixpkgs"; }; # https://github.com/snowfallorg/lib
 
     agenix.url = "github:ryantm/agenix"; # https://github.com/ryantm/agenix
-
-    nixinate.url = "github:matthewcroughan/nixinate"; # https://github.com/MatthewCroughan/nixinate
   };
 
   # [Snowfall framework](https://snowfall.org/guides/lib/quickstart/)
   #$ nix flake check --keep-going
-  outputs = inputs: (inputs.snowfall-lib.mkFlake {
+  outputs = inputs: inputs.snowfall-lib.mkFlake {
     inherit inputs;
     src = ./.;
 
@@ -37,8 +35,6 @@
     ];
 
     templates = import ./templates { };
-  }) // {
-    apps = inputs.nixinate.nixinate.x86_64-linux inputs.self;
   };
 
   description = "The schallernetz servers.";

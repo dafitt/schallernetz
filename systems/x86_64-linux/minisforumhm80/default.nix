@@ -6,14 +6,6 @@ with lib;
 with lib.schallernetz; {
   imports = [ ./hardware-configuration.nix ];
 
-  #$ nix run .#apps.nixinate.minisforumhm80[-dry-run]
-  _module.args.nixinate = {
-    host = "minisforumhm80.lan.***REMOVED_DOMAIN***";
-    sshUser = "rebuild";
-    buildOn = "local";
-    substituteOnTarget = true;
-  };
-
   schallernetz = {
     servers = {
       adguardhome.enable = true;
