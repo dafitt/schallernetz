@@ -91,9 +91,10 @@ in
                 allowedIPs = [ "***REMOVED_IPv6***/128" ];
               }
               {
-                # DavidPIXEL
+                # DavidPIXEL3a
                 publicKey = "***REMOVED_WIREGUARD-KEY***";
-                allowedIPs = [ "***REMOVED_IPv6***/128" ];
+                presharedKey = "***REMOVED_WIREGUARD-KEY***";
+                allowedIPs = [ "***REMOVED_IPv6***/64" ];
               }
             ];
           };

@@ -24,12 +24,13 @@ if [ ! -f "$filepath" ]; then
   echo -e "$INFO File:\n$filepath"
   cat <<EOL >$filepath
 [Interface]
-Address = $ip6Address
-ListenPort = 51902
+Address = $ip6Address/64
+ListenPort = 51820
 PrivateKey = $privateKey
+DNS = ***REMOVED_IPv6***
 
 [Peer]
-PublicKey = D90wpk+4Hwpvnmq8JUqcjoph1tswJ5sZRKwvmKSlLnw
+PublicKey = ***REMOVED_WIREGUARD-KEY***
 PresharedKey = $presharedKey
 AllowedIPs = ***REMOVED_IPv6***::/56, ***REMOVED_IPv4***/23
 Endpoint = wireguard.***REMOVED_DOMAIN***:123
