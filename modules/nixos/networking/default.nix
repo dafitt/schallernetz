@@ -31,6 +31,8 @@ in
     networking.useDHCP = false;
     systemd.network = {
       enable = true;
+      wait-online.anyInterface = true; # don't wait for all managed interfaces to come online and reach timeout
+
       # bridge
       netdevs."20-br_lan".netdevConfig = {
         Kind = "bridge";
