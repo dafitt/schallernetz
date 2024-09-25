@@ -50,9 +50,8 @@ in
 
           settings.auth-zone = [
             {
-              name = "***REMOVED_DOMAIN***";
-                # TODO primary: with AXFR and IXFR records
-              zonefile = "${./***REMOVED_DOMAIN***.zone}";
+              name = "lan.***REMOVED_DOMAIN***";
+              zonefile = "${./de.***REMOVED_DOMAIN***.zone}";
             }
           ];
         };
