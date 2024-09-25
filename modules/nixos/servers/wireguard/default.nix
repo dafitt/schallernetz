@@ -112,7 +112,7 @@ in
         services.inadyn = {
           enable = true;
 
-          interval = "10minutes";
+          interval = "*-*-* *:0/***REMOVED_IPv6***";
           logLevel = "info";
           settings = {
             allow-ipv6 = true;
