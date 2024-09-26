@@ -1,5 +1,4 @@
-#$ nix build .#install-isoConfigurations.firewall
-#$ cp result/iso/nixos-<version>.iso /dev/sdX
+#$ nix run github:nix-community/nixos-anywhere -- --flake .#router --vm-test
 
 { config, lib, pkgs, inputs, ... }:
 
@@ -23,12 +22,8 @@ with lib.schallernetz; {
     };
   };
 
-  # iso-configuration
-  isoImage.squashfsCompression = "zstd -Xcompression-level 5";
-  boot.kernelParams = [ "copytoram" ];
-  boot.supportedFilesystems = pkgs.lib.mkForce [ "btrfs" "vfat" "xfs" "ntfs" "cifs" ]; # remove ZFS support
-
   # improve performance
+  boot.supportedFilesystems = pkgs.lib.mkForce [ "btrfs" "vfat" "xfs" "ntfs" "cifs" ]; # remove ZFS support
   boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
   services.irqbalance.enable = true;
   powerManagement.cpuFreqGovernor = "ondemand";

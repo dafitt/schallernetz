@@ -306,18 +306,18 @@ in
         matchConfig.Name = "management-vlan";
         linkConfig.RequiredForOnline = "carrier";
         networkConfig = {
-          Bridge = "management-bridge";
+          Bridge = "management-br";
           LinkLocalAddressing = "no";
         };
       };
-      netdevs."20-management-bridge" = {
+      netdevs."20-management-br" = {
         netdevConfig = {
           Kind = "bridge";
-          Name = "management-bridge";
+          Name = "management-br";
         };
       };
-      networks."60-management-bridge" = {
-        matchConfig.Name = "management-bridge";
+      networks."60-management-br" = {
+        matchConfig.Name = "management-br";
         linkConfig.RequiredForOnline = "routable";
         bridgeConfig = { };
 
@@ -355,7 +355,7 @@ in
         matchConfig.Name = "enp3s0";
         linkConfig.RequiredForOnline = "enslaved";
         networkConfig = {
-          Bridge = "management-bridge"; # untagged
+          Bridge = "management-br"; # untagged
           LinkLocalAddressing = "no";
           #ConfigureWithoutCarrier = true;
         };
@@ -388,7 +388,7 @@ in
 
             iifname { "lo" } accept  comment "Accept everything from loopback interface. Allows itself to reach the internet."
 
-            iifname { "management-bridge" } accept  comment "Allow management-network to access the router"
+            iifname { "management-br" } accept  comment "Allow management-network to access the router"
           }
 
           chain forward {
