@@ -58,20 +58,10 @@ in
         ];
         networkConfig = {
           ConfigureWithoutCarrier = true;
-          DHCPPrefixDelegation = true;
-          IPv6AcceptRA = false;
           IPv6SendRA = true;
+          DHCPPrefixDelegation = true;
         };
         dhcpPrefixDelegationConfig.SubnetId = "1";
-        ipv6SendRAConfig = {
-          RouterLifetimeSec = 1800;
-          #EmitDNS = true;
-          #DNS = "***REMOVED_IPv6***";
-          #EmitDomains = true;
-          #Domains = [
-          #  "guest.lossy.network"
-          #];
-        };
       };
 
       ### lan
@@ -108,25 +98,13 @@ in
         ];
         networkConfig = {
           ConfigureWithoutCarrier = true;
-          DHCPPrefixDelegation = true;
-          IPv6AcceptRA = false;
           IPv6SendRA = true;
+          DHCPPrefixDelegation = true;
+          DNS = "***REMOVED_IPv6***";
+          Domains = [ "***REMOVED_DOMAIN***" "lan.***REMOVED_DOMAIN***" ];
         };
         dhcpPrefixDelegationConfig.SubnetId = "2";
-        ipv6Prefixes = [{
-          ipv6PrefixConfig = {
-            Prefix = "***REMOVED_IPv6***::/64";
-          };
-        }];
-        ipv6SendRAConfig = {
-          RouterLifetimeSec = 1800;
-          #EmitDNS = true;
-          #DNS = "***REMOVED_IPv6***";
-          #EmitDomains = true;
-          #Domains = [
-          #  "lan.lossy.network"
-          #];
-        };
+        ipv6Prefixes = [{ ipv6PrefixConfig.Prefix = "***REMOVED_IPv6***::/64"; }];
       };
 
       ### server
@@ -163,25 +141,11 @@ in
         ];
         networkConfig = {
           ConfigureWithoutCarrier = true;
-          DHCPPrefixDelegation = true;
-          IPv6AcceptRA = false;
           IPv6SendRA = true;
+          DHCPPrefixDelegation = true;
         };
         dhcpPrefixDelegationConfig.SubnetId = "c";
-        ipv6Prefixes = [{
-          ipv6PrefixConfig = {
-            Prefix = "***REMOVED_IPv6***::/64";
-          };
-        }];
-        ipv6SendRAConfig = {
-          RouterLifetimeSec = 1800;
-          #EmitDNS = true;
-          #DNS = "***REMOVED_IPv6***";
-          #EmitDomains = true;
-          #Domains = [
-          #  "lan.lossy.network"
-          #];
-        };
+        ipv6Prefixes = [{ ipv6PrefixConfig.Prefix = "***REMOVED_IPv6***::/64"; }];
       };
 
       ### dmz
@@ -218,25 +182,11 @@ in
         ];
         networkConfig = {
           ConfigureWithoutCarrier = true;
-          DHCPPrefixDelegation = true;
-          IPv6AcceptRA = false;
           IPv6SendRA = true;
+          DHCPPrefixDelegation = true;
         };
         dhcpPrefixDelegationConfig.SubnetId = "d";
-        ipv6Prefixes = [{
-          ipv6PrefixConfig = {
-            Prefix = "***REMOVED_IPv6***::/64";
-          };
-        }];
-        ipv6SendRAConfig = {
-          RouterLifetimeSec = 1800;
-          #EmitDNS = true;
-          #DNS = "***REMOVED_IPv6***";
-          #EmitDomains = true;
-          #Domains = [
-          #  "lan.lossy.network"
-          #];
-        };
+        ipv6Prefixes = [{ ipv6PrefixConfig.Prefix = "***REMOVED_IPv6***::/64"; }];
       };
 
       ### lab
@@ -273,25 +223,11 @@ in
         ];
         networkConfig = {
           ConfigureWithoutCarrier = true;
-          DHCPPrefixDelegation = true;
-          IPv6AcceptRA = false;
           IPv6SendRA = true;
+          DHCPPrefixDelegation = true;
         };
         dhcpPrefixDelegationConfig.SubnetId = "e";
-        ipv6Prefixes = [{
-          ipv6PrefixConfig = {
-            Prefix = "***REMOVED_IPv6***::/64";
-          };
-        }];
-        ipv6SendRAConfig = {
-          RouterLifetimeSec = 1800;
-          #EmitDNS = true;
-          #DNS = "***REMOVED_IPv6***";
-          #EmitDomains = true;
-          #Domains = [
-          #  "lan.lossy.network"
-          #];
-        };
+        ipv6Prefixes = [{ ipv6PrefixConfig.Prefix = "***REMOVED_IPv6***::/64"; }];
       };
 
       ### management
@@ -383,11 +319,10 @@ in
 
             ct state { established, related } accept  comment "Allow established traffic."
 
-            #ip protocol icmp icmp type { destination-unreachable, echo-request, time-exceeded, parameter-problem } accept  comment "Allow select ICMP."
+            ip protocol icmp icmp type { destination-unreachable, echo-request, time-exceeded, parameter-problem } accept  comment "Allow select ICMP."
             ip6 nexthdr icmpv6 icmpv6 type { destination-unreachable, echo-request, time-exceeded, parameter-problem, packet-too-big } accept  comment "Allow select ICMPv6."
 
             iifname { "lo" } accept  comment "Accept everything from loopback interface. Allows itself to reach the internet."
-
             iifname { "management-br" } accept  comment "Allow management-network to access the router"
           }
 
@@ -396,8 +331,8 @@ in
 
             ct state { established, related }  comment "Allow established traffic."
 
-            iifname { "lan-bridge" } oifname { "enp4s0" } accept
-            iifname { "enp4s0" } oifname { "lan-bridge" } ct state { established, related } accept  comment "Allow established back to LANs"
+            iifname { "lan-bridge" } oifname { "enp4s0" } accept  comment "Allow LAN to WAN"
+            iifname { "enp4s0" } oifname { "lan-bridge" } ct state { established, related } accept  comment "Allow established WAN back to LAN"
           }
         }
 
