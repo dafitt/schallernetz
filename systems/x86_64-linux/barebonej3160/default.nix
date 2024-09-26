@@ -1,7 +1,7 @@
 # Installation
-#$ nix run github:nix-community/nixos-anywhere -- --flake .#router root@<ip>
+#$ nix run github:nix-community/nixos-anywhere -- --flake .#barebonej3160 root@<ip>
 # Rebuild
-#$ nixos-rebuild --fast --flake .#router --use-remote-sudo --target-host rebuild@router.lan.***REMOVED_DOMAIN*** <test|boot|switch>
+#$ nixos-rebuild --fast --flake .#barebonej3160 --use-remote-sudo --target-host rebuild@barebonej3160.lan.***REMOVED_DOMAIN*** <test|boot|switch>
 
 { config, lib, pkgs, inputs, ... }:
 
