@@ -1,6 +1,5 @@
-{ lib, ... }:
-
-with lib; {
+# [Examples](https://github.com/nix-community/disko/tree/master/example)
+{ lib, ... }: with lib; {
   disko.devices = {
     disk.main = {
       type = "disk";
