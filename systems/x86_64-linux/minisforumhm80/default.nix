@@ -4,7 +4,7 @@
 
 with lib;
 with lib.schallernetz; {
-  imports = [ ./hardware-configuration.nix ];
+  imports = with inputs; [ ./hardware-configuration.nix ];
 
   schallernetz = {
     servers = {
