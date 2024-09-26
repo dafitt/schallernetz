@@ -1,4 +1,7 @@
-#$ nix run github:nix-community/nixos-anywhere -- --flake .#router --vm-test
+# Installation
+#$ nix run github:nix-community/nixos-anywhere -- --flake .#router root@<ip>
+# Rebuild
+#$ nixos-rebuild --fast --flake .#router --use-remote-sudo --target-host rebuild@router.lan.***REMOVED_DOMAIN*** <test|boot|switch>
 
 { config, lib, pkgs, inputs, ... }:
 

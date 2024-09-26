@@ -1,9 +1,9 @@
 # [Examples](https://github.com/nix-community/disko/tree/master/example)
-{ lib, ... }: with lib; {
+{
   disko.devices = {
     disk.main = {
       type = "disk";
-      device = mkDefault "/dev/disk/by-diskseq/1";
+      device = "/dev/disk/by-id/ata-FORESEE_128GB_SSD_AA000000000000000794";
       content = {
         type = "gpt";
         partitions = {
