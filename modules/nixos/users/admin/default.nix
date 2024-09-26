@@ -13,8 +13,8 @@ in
   config = mkIf cfg.enable {
     users.users."admin" = {
       description = "Administrator";
-
       isNormalUser = true;
+      hashedPassword = "***REMOVED_HASH***";
 
       extraGroups = [ "wheel" ];
 
