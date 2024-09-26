@@ -8,8 +8,8 @@ in
 {
   options.schallernetz.backups = with types;
     {
-      localhost = mkBoolOpt true "Enable backups to localhost.";
-      NAS4 = mkBoolOpt true "Enable backups to NAS4.";
+      localhost = mkBoolOpt false "Enable backups to localhost.";
+      NAS4 = mkBoolOpt false "Enable backups to NAS4.";
 
       paths = mkOption {
         description = "Which paths to backup.";

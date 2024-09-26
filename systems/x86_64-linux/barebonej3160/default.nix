@@ -1,5 +1,5 @@
 # Installation
-#$ nix run github:nix-community/nixos-anywhere -- --flake .#barebonej3160 root@<ip>
+#$ nix run github:nix-community/nixos-anywhere -- --flake .#barebonej3160 root@***REMOVED_IPv6***%<enp?s0>
 # Rebuild
 #$ nixos-rebuild --fast --flake .#barebonej3160 --use-remote-sudo --target-host rebuild@barebonej3160.lan.***REMOVED_DOMAIN*** <test|boot|switch>
 
@@ -15,9 +15,6 @@ with lib.schallernetz; {
   ];
 
   schallernetz = {
-    backups.localhost = false;
-    backups.NAS4 = false;
-
     networking.router.enable = true;
 
     servers = {

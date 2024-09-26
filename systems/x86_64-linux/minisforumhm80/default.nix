@@ -7,6 +7,11 @@ with lib.schallernetz; {
   imports = with inputs; [ ./hardware-configuration.nix ];
 
   schallernetz = {
+    backups = {
+      localhost = true;
+      NAS4 = true;
+    };
+
     servers = {
       adguardhome.enable = true;
       bitwarden.enable = true;

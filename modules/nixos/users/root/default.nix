@@ -12,7 +12,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    users.users."root" = {
+    users.users.root = {
       packages = with pkgs; [ ];
 
       openssh.authorizedKeys.keys = [
