@@ -18,8 +18,6 @@ in
     };
 
     systemd.network = {
-      wait-online.anyInterface = true; # don't wait for all managed interfaces to come online and reach timeout
-
       # 10 = wan-interface
       # 20 = netdevs: bond, vlan, bridge
       # 30 = interfaces
@@ -38,7 +36,10 @@ in
       networks."50-untrusted-vlan" = {
         matchConfig.Name = "untrusted-vlan";
         linkConfig.RequiredForOnline = "carrier";
-        networkConfig.LinkLocalAddressing = "no";
+        networkConfig = {
+          Bridge = "untrusted-bridge";
+          LinkLocalAddressing = "no";
+        };
       };
       netdevs."20-untrusted-bridge" = {
         netdevConfig = {
@@ -84,7 +85,10 @@ in
       networks."50-lan-vlan" = {
         matchConfig.Name = "lan-vlan";
         linkConfig.RequiredForOnline = "carrier";
-        networkConfig.LinkLocalAddressing = "no";
+        networkConfig = {
+          Bridge = "lan-bridge";
+          LinkLocalAddressing = "no";
+        };
       };
       netdevs."20-lan-bridge" = {
         netdevConfig = {
@@ -136,7 +140,10 @@ in
       networks."50-server-vlan" = {
         matchConfig.Name = "server-vlan";
         linkConfig.RequiredForOnline = "carrier";
-        networkConfig.LinkLocalAddressing = "no";
+        networkConfig = {
+          Bridge = "server-bridge";
+          LinkLocalAddressing = "no";
+        };
       };
       netdevs."20-server-bridge" = {
         netdevConfig = {
@@ -188,7 +195,10 @@ in
       networks."50-dmz-vlan" = {
         matchConfig.Name = "dmz-vlan";
         linkConfig.RequiredForOnline = "carrier";
-        networkConfig.LinkLocalAddressing = "no";
+        networkConfig = {
+          Bridge = "dmz-bridge";
+          LinkLocalAddressing = "no";
+        };
       };
       netdevs."20-dmz-bridge" = {
         netdevConfig = {
@@ -240,7 +250,10 @@ in
       networks."50-lab-vlan" = {
         matchConfig.Name = "lab-vlan";
         linkConfig.RequiredForOnline = "carrier";
-        networkConfig.LinkLocalAddressing = "no";
+        networkConfig = {
+          Bridge = "lab-bridge";
+          LinkLocalAddressing = "no";
+        };
       };
       netdevs."20-lab-bridge" = {
         netdevConfig = {
@@ -292,7 +305,10 @@ in
       networks."50-management-vlan" = {
         matchConfig.Name = "management-vlan";
         linkConfig.RequiredForOnline = "carrier";
-        networkConfig.LinkLocalAddressing = "no";
+        networkConfig = {
+          Bridge = "management-bridge";
+          LinkLocalAddressing = "no";
+        };
       };
       netdevs."20-management-bridge" = {
         netdevConfig = {
