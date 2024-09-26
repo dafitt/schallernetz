@@ -26,7 +26,6 @@ with lib.schallernetz; {
   };
 
   # improve performance
-  boot.supportedFilesystems = pkgs.lib.mkForce [ "btrfs" "vfat" "xfs" "ntfs" "cifs" ]; # remove ZFS support
   boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
   services.irqbalance.enable = true;
   powerManagement.cpuFreqGovernor = "ondemand";
