@@ -312,37 +312,19 @@ in
 
     networking.nftables = {
       enable = true;
-      ruleset = ''
-        table inet filter {
-          chain input {
-            type filter hook input priority 0; policy drop;
-
-            ct state { established, related } accept  comment "Allow established traffic."
-
-            ip protocol icmp icmp type { destination-unreachable, echo-request, time-exceeded, parameter-problem } accept  comment "Allow select ICMP."
-            ip6 nexthdr icmpv6 icmpv6 type { destination-unreachable, echo-request, time-exceeded, parameter-problem, packet-too-big } accept  comment "Allow select ICMPv6."
-
-            iifname { "lo" } accept  comment "Accept everything from loopback interface. Allows itself to reach the internet."
-            iifname { "management-br" } accept  comment "Allow management-network to access the router"
-          }
-
-          chain forward {
-            type filter hook forward priority filter; policy drop;
-
-            ct state { established, related }  comment "Allow established traffic."
-
-            iifname { "lan-bridge" } oifname { "enp4s0" } accept  comment "Allow LAN to WAN"
-            iifname { "enp4s0" } oifname { "lan-bridge" } ct state { established, related } accept  comment "Allow established WAN back to LAN"
-          }
-        }
-
-        #table ip nat {
-        #  chain postrouting {
-        #    type nat hook postrouting priority 100; policy accept;
-        #    oifname { "enp4s0" } masquerade
-        #  }
-        #}
-      '';
+      tables."schallernetzFIREWALL" = {
+        family = "inet";
+        content = readFile ./schallernetzFIREWALL.nft;
+      };
+      #tables."schallernetzNATv4" = {
+      #  family = "ip";
+      #  content = ''
+      #    chain postrouting {
+      #      type nat hook postrouting priority srcnat; policy accept;
+      #      oifname { "enp4s0" } masquerade
+      #    }
+      #  '';
+      #};
     };
   };
 }

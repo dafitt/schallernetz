@@ -1,0 +1,43 @@
+chain input {
+    type filter hook input priority filter; policy drop;
+
+    ct state { invalid } drop  comment "Drop invalid connections"
+    ct state { established, related } accept  comment "Allow established traffic."
+
+    icmp type {
+        destination-unreachable,
+        echo-request,
+        time-exceeded,
+        parameter-problem,
+    } accept  comment "Allow selected ICMP."
+    icmpv6 type {
+        destination-unreachable,
+        echo-request,
+        time-exceeded,
+        parameter-problem,
+        packet-too-big,
+        mld-listener-query,
+        nd-neighbor-solicit,
+        nd-neighbor-advert,
+    } accept  comment "Allow selected ICMPv6."
+
+    ip6 nexthdr icmpv6 icmpv6 type echo-request accept  comment "Allow ping v6."
+    ip protocol icmp icmp type echo-request accept  comment "Allow ping v4."
+
+    meta iifname { "lo" } accept  comment "Accept everything from loopback interface. Allows itself to reach the internet."
+    meta iifname { "management-br" } accept  comment "Allow management-network to access the router."
+}
+
+chain forward {
+    type filter hook forward priority filter; policy drop;
+
+    ct state { invalid } drop  comment "Drop invalid connections"
+    ct state { established, related }  comment "Allow established traffic."
+
+    meta iifname { "enp4s0" } oifname { "lan-br" } ct state { established, related } accept  comment "Allow established WAN back to LAN."
+
+    meta iifname { "management-br" } oifname { "lan-br" } accept  comment "Allow MANAGEMENT to LAN."
+
+    meta iifname { "lan-br" } oifname { "enp4s0" } accept  comment "Allow LAN to WAN."
+    meta iifname { "lan-br" } oifname { "management-br" } accept  comment "Allow LAN to MANAGEMENT."
+}
