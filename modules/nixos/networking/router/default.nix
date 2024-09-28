@@ -37,18 +37,19 @@ in
         matchConfig.Name = "untrusted-vlan";
         linkConfig.RequiredForOnline = "carrier";
         networkConfig = {
-          Bridge = "untrusted-bridge";
+          ConfigureWithoutCarrier = true;
+          Bridge = "untrusted-br";
           LinkLocalAddressing = "no";
         };
       };
-      netdevs."20-untrusted-bridge" = {
+      netdevs."20-untrusted-br" = {
         netdevConfig = {
           Kind = "bridge";
-          Name = "untrusted-bridge";
+          Name = "untrusted-br";
         };
       };
-      networks."60-untrusted-bridge" = {
-        matchConfig.Name = "untrusted-bridge";
+      networks."60-untrusted-br" = {
+        matchConfig.Name = "untrusted-br";
         linkConfig.RequiredForOnline = "routable";
         bridgeConfig = { };
 
@@ -76,18 +77,23 @@ in
         matchConfig.Name = "lan-vlan";
         linkConfig.RequiredForOnline = "carrier";
         networkConfig = {
-          Bridge = "lan-bridge";
+          Bridge = "lan-br";
           LinkLocalAddressing = "no";
         };
       };
-      netdevs."20-lan-bridge" = {
+      netdevs."20-lan-br" = {
         netdevConfig = {
           Kind = "bridge";
-          Name = "lan-bridge";
+          Name = "lan-br";
         };
+        #bridgeConfig = {
+        #  # https://docs.bisdn.de/network_configuration/vlan_bridging.html#systemd-networkd-1
+        #  VLANFiltering = true;
+        #  DefaultPVID = 2;
+        #};
       };
-      networks."60-lan-bridge" = {
-        matchConfig.Name = "lan-bridge";
+      networks."60-lan-br" = {
+        matchConfig.Name = "lan-br";
         linkConfig.RequiredForOnline = "routable";
         bridgeConfig = { };
 
@@ -119,18 +125,19 @@ in
         matchConfig.Name = "server-vlan";
         linkConfig.RequiredForOnline = "carrier";
         networkConfig = {
-          Bridge = "server-bridge";
+          ConfigureWithoutCarrier = true;
+          Bridge = "server-br";
           LinkLocalAddressing = "no";
         };
       };
-      netdevs."20-server-bridge" = {
+      netdevs."20-server-br" = {
         netdevConfig = {
           Kind = "bridge";
-          Name = "server-bridge";
+          Name = "server-br";
         };
       };
-      networks."60-server-bridge" = {
-        matchConfig.Name = "server-bridge";
+      networks."60-server-br" = {
+        matchConfig.Name = "server-br";
         linkConfig.RequiredForOnline = "routable";
         bridgeConfig = { };
 
@@ -160,18 +167,18 @@ in
         matchConfig.Name = "dmz-vlan";
         linkConfig.RequiredForOnline = "carrier";
         networkConfig = {
-          Bridge = "dmz-bridge";
+          Bridge = "dmz-br";
           LinkLocalAddressing = "no";
         };
       };
-      netdevs."20-dmz-bridge" = {
+      netdevs."20-dmz-br" = {
         netdevConfig = {
           Kind = "bridge";
-          Name = "dmz-bridge";
+          Name = "dmz-br";
         };
       };
-      networks."60-dmz-bridge" = {
-        matchConfig.Name = "dmz-bridge";
+      networks."60-dmz-br" = {
+        matchConfig.Name = "dmz-br";
         linkConfig.RequiredForOnline = "routable";
         bridgeConfig = { };
 
@@ -201,18 +208,18 @@ in
         matchConfig.Name = "lab-vlan";
         linkConfig.RequiredForOnline = "carrier";
         networkConfig = {
-          Bridge = "lab-bridge";
+          Bridge = "lab-br";
           LinkLocalAddressing = "no";
         };
       };
-      netdevs."20-lab-bridge" = {
+      netdevs."20-lab-br" = {
         netdevConfig = {
           Kind = "bridge";
-          Name = "lab-bridge";
+          Name = "lab-br";
         };
       };
-      networks."60-lab-bridge" = {
-        matchConfig.Name = "lab-bridge";
+      networks."60-lab-br" = {
+        matchConfig.Name = "lab-br";
         linkConfig.RequiredForOnline = "routable";
         bridgeConfig = { };
 
@@ -272,9 +279,8 @@ in
         matchConfig.Name = "enp1s0";
         linkConfig.RequiredForOnline = "enslaved";
         networkConfig = {
-          Bridge = "lan-bridge"; # untagged
+          Bridge = "lan-br"; # untagged
           LinkLocalAddressing = "no";
-          #ConfigureWithoutCarrier = true;
         };
       };
       networks."30-enp2s0" = {
@@ -282,9 +288,8 @@ in
         linkConfig.RequiredForOnline = "enslaved";
         vlan = [ "server-vlan" "dmz-vlan" ]; # tagged
         networkConfig = {
-          Bridge = "lan-bridge"; # untagged
+          Bridge = "lan-br"; # untagged
           LinkLocalAddressing = "no";
-          #ConfigureWithoutCarrier = true;
         };
       };
       networks."30-enp3s0" = {
@@ -293,7 +298,6 @@ in
         networkConfig = {
           Bridge = "management-br"; # untagged
           LinkLocalAddressing = "no";
-          #ConfigureWithoutCarrier = true;
         };
       };
       ### wan

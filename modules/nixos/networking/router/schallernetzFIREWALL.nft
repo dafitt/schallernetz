@@ -1,43 +1,26 @@
 chain input {
-    type filter hook input priority filter; policy drop;
+    type filter hook input priority filter + 1; policy drop;  # Drop all packets sent to the router itself by default.
 
-    ct state { invalid } drop  comment "Drop invalid connections"
-    ct state { established, related } accept  comment "Allow established traffic."
+    ct state invalid drop  # "Drop invalid connections."
+    ct state { established, related } accept  # "Allow established traffic."
 
-    icmp type {
-        destination-unreachable,
-        echo-request,
-        time-exceeded,
-        parameter-problem,
-    } accept  comment "Allow selected ICMP."
-    icmpv6 type {
-        destination-unreachable,
-        echo-request,
-        time-exceeded,
-        parameter-problem,
-        packet-too-big,
-        mld-listener-query,
-        nd-neighbor-solicit,
-        nd-neighbor-advert,
-    } accept  comment "Allow selected ICMPv6."
+    icmp type echo-request accept # "Allow ping."
+    icmpv6 type != { nd-redirect, 139 } accept # "Accept all ICMPv6 messages except redirects and node information queries (type 139).  See RFC 4890, section 4.4."
 
-    ip6 nexthdr icmpv6 icmpv6 type echo-request accept  comment "Allow ping v6."
-    ip protocol icmp icmp type echo-request accept  comment "Allow ping v4."
-
-    meta iifname { "lo" } accept  comment "Accept everything from loopback interface. Allows itself to reach the internet."
-    meta iifname { "management-br" } accept  comment "Allow management-network to access the router."
+    meta iifname lo accept  # "Accept everything from loopback interface. Allows itself to reach the internet."
+    meta iifname management-br accept  # "Allow MANAGEMENT to access the router."
 }
 
 chain forward {
     type filter hook forward priority filter; policy drop;
 
-    ct state { invalid } drop  comment "Drop invalid connections"
-    ct state { established, related }  comment "Allow established traffic."
+    ct state invalid drop  # "Drop invalid connections."
+    ct state { established, related } accept  # "Allow established traffic."
 
-    meta iifname { "enp4s0" } oifname { "lan-br" } ct state { established, related } accept  comment "Allow established WAN back to LAN."
+    meta iifname enp4s0 oifname lan-br ct state { established, related } accept  # "Allow established WAN back to LAN."
 
-    meta iifname { "management-br" } oifname { "lan-br" } accept  comment "Allow MANAGEMENT to LAN."
+    meta iifname management-br oifname lan-br accept  # "Allow MANAGEMENT to LAN."
 
-    meta iifname { "lan-br" } oifname { "enp4s0" } accept  comment "Allow LAN to WAN."
-    meta iifname { "lan-br" } oifname { "management-br" } accept  comment "Allow LAN to MANAGEMENT."
+    meta iifname lan-br oifname enp4s0 accept  # "Allow LAN to WAN."
+    meta iifname lan-br oifname management-br accept  # "Allow LAN to MANAGEMENT."
 }
