@@ -17,10 +17,10 @@ with lib.schallernetz; {
   schallernetz = {
     networking.router.enable = true;
 
-    servers = {
-      unbound.enable = true;
-    };
+    servers = { };
   };
+
+  boot.loader.timeout = 0;
 
   # improve performance
   boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
