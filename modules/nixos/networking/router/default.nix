@@ -57,12 +57,12 @@ in
           "***REMOVED_IPv4***/24"
           "***REMOVED_IPv6***/64"
         ];
+        dhcpPrefixDelegationConfig.SubnetId = "1";
         networkConfig = {
           ConfigureWithoutCarrier = true;
           IPv6SendRA = true;
           DHCPPrefixDelegation = true;
         };
-        dhcpPrefixDelegationConfig.SubnetId = "1";
       };
 
       ### lan
@@ -102,6 +102,8 @@ in
           "***REMOVED_IPv6***/64"
           "***REMOVED_IPv6***/64"
         ];
+        dhcpPrefixDelegationConfig.SubnetId = "2";
+        ipv6Prefixes = [{ ipv6PrefixConfig.Prefix = "***REMOVED_IPv6***::/64"; }];
         networkConfig = {
           ConfigureWithoutCarrier = true;
           IPv6SendRA = true;
@@ -109,8 +111,6 @@ in
           DNS = "***REMOVED_IPv6***";
           Domains = [ "***REMOVED_DOMAIN***" "lan.***REMOVED_DOMAIN***" ];
         };
-        dhcpPrefixDelegationConfig.SubnetId = "2";
-        ipv6Prefixes = [{ ipv6PrefixConfig.Prefix = "***REMOVED_IPv6***::/64"; }];
       };
 
       ### server
@@ -146,13 +146,13 @@ in
           "***REMOVED_IPv6***/64"
           "***REMOVED_IPv6***/64"
         ];
+        dhcpPrefixDelegationConfig.SubnetId = "c";
+        ipv6Prefixes = [{ ipv6PrefixConfig.Prefix = "***REMOVED_IPv6***::/64"; }];
         networkConfig = {
           ConfigureWithoutCarrier = true;
           IPv6SendRA = true;
           DHCPPrefixDelegation = true;
         };
-        dhcpPrefixDelegationConfig.SubnetId = "c";
-        ipv6Prefixes = [{ ipv6PrefixConfig.Prefix = "***REMOVED_IPv6***::/64"; }];
       };
 
       ### dmz
@@ -187,13 +187,13 @@ in
           "***REMOVED_IPv6***/64"
           "***REMOVED_IPv6***/64"
         ];
+        dhcpPrefixDelegationConfig.SubnetId = "d";
+        ipv6Prefixes = [{ ipv6PrefixConfig.Prefix = "***REMOVED_IPv6***::/64"; }];
         networkConfig = {
           ConfigureWithoutCarrier = true;
           IPv6SendRA = true;
           DHCPPrefixDelegation = true;
         };
-        dhcpPrefixDelegationConfig.SubnetId = "d";
-        ipv6Prefixes = [{ ipv6PrefixConfig.Prefix = "***REMOVED_IPv6***::/64"; }];
       };
 
       ### lab
@@ -228,13 +228,13 @@ in
           "***REMOVED_IPv6***/64"
           "***REMOVED_IPv6***/64"
         ];
+        dhcpPrefixDelegationConfig.SubnetId = "e";
+        ipv6Prefixes = [{ ipv6PrefixConfig.Prefix = "***REMOVED_IPv6***::/64"; }];
         networkConfig = {
           ConfigureWithoutCarrier = true;
           IPv6SendRA = true;
           DHCPPrefixDelegation = true;
         };
-        dhcpPrefixDelegationConfig.SubnetId = "e";
-        ipv6Prefixes = [{ ipv6PrefixConfig.Prefix = "***REMOVED_IPv6***::/64"; }];
       };
 
       ### management
@@ -269,8 +269,11 @@ in
           "***REMOVED_IPv6***/64"
           "***REMOVED_IPv6***/64"
         ];
+        dhcpPrefixDelegationConfig.SubnetId = "f";
+        ipv6Prefixes = [{ ipv6PrefixConfig.Prefix = "***REMOVED_IPv6***::/64"; }]; # to be able to ping ***REMOVED_IPv6*** from a client (automatic route configuration)
         networkConfig = {
           ConfigureWithoutCarrier = true;
+          IPv6SendRA = true;
         };
       };
 
@@ -316,6 +319,7 @@ in
 
     networking.nftables = {
       enable = true;
+
       tables."schallernetzFIREWALL" = {
         family = "inet";
         content = readFile ./schallernetzFIREWALL.nft;
