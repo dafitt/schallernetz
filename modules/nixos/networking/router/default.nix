@@ -308,11 +308,15 @@ in
         matchConfig.Name = "enp4s0";
         linkConfig.RequiredForOnline = "routable"; # make routing on this interface a dependency for network-online.target
         networkConfig = {
-          DHCP = "ipv4"; # start a DHCP Client for IPv4 Addressing/Routing
+          DHCP = "yes";
+          IPv6AcceptRA = true;
+          IPv6PrivacyExtensions = true;
           DNSOverTLS = true;
           DNSSEC = true;
-          IPv6PrivacyExtensions = true;
           IPForward = true;
+        };
+        dhcpV6Config = {
+          PrefixDelegationHint = "::/60"; # ask for prefix delegation
         };
       };
     };
