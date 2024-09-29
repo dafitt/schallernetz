@@ -145,7 +145,7 @@ in
 
       tables."schallernetzFIREWALL" = {
         family = "inet";
-        content = readFile ./schallernetzFIREWALL.nft;
+        content = readFile ./schallernetzWALL.nft;
       };
       #tables."schallernetzNATv4" = {
       #  family = "ip";
