@@ -1,5 +1,13 @@
 # https://wiki.nftables.org/wiki-nftables/index.php/Quick_reference-nftables_in_10_minutes
 
+# wan --
+# untrusted ***REMOVED_IPv6***::
+# lan ***REMOVED_IPv6***::
+# server ***REMOVED_IPv6***::
+# dmz ***REMOVED_IPv6***::
+# lab ***REMOVED_IPv6***::
+# management ***REMOVED_IPv6***::
+
 chain input { # Everything that is beeing sent to this host.
         type filter hook input priority filter + 1; policy drop;
 
