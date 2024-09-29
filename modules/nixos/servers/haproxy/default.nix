@@ -9,7 +9,10 @@ in
   options.schallernetz.servers.haproxy = with types; {
     enable = mkBoolOpt false "Enable server haproxy.";
     name = mkOpt str "haproxy" "The name of the server.";
-    ipv6Address = mkOpt str "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***" "IPv6 address of the container.";
+
+    subnet = mkOpt str "server" "The name of the subnet which the container should be part of.";
+    ip6Host = mkOpt str ":7" "The ipv6's host part.";
+    ip6Address = mkOpt str "${config.schallernetz.networking.subnets.${cfg.subnet}.uniqueLocalPrefix}:${cfg.ip6Host}" "Full IPv6 address of the container.";
 
     frontends.extraConfig = mkOpt (listOf str) [ ] "List of additional frontends (config).";
     frontends.www.extraConfig = mkOption {
@@ -31,9 +34,8 @@ in
       autoStart = true;
 
       privateNetwork = true;
-      hostBridge = "br_lan";
-      localAddress = "***REMOVED_IPv4***/23";
-      localAddress6 = "${cfg.ipv6Address}/64";
+      hostBridge = cfg.subnet;
+      localAddress6 = "${cfg.ip6Address}/64";
 
       bindMounts."/etc/ssh/ssh_host_ed25519_key".isReadOnly = true; # mount host's ssh key for agenix secrets in the container
 
@@ -107,7 +109,7 @@ in
           # for acme
           enableIPv6 = true; # automatically get IPv6 and default route6
           useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
-          nameservers = [ hostConfig.schallernetz.servers.unbound.ipv6Address ];
+          nameservers = [ hostConfig.schallernetz.servers.unbound.ip6Address ];
 
           firewall.interfaces."eth0" = {
             allowedTCPPorts = [ 80 443 ];

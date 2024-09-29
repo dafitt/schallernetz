@@ -9,7 +9,10 @@ in
   options.schallernetz.servers.MYSERVER = with types; {
     enable = mkBoolOpt false "Enable server MYSERVER.";
     name = mkOpt str "MYSERVER" "The name of the server.";
-    ipv6Address = mkOpt str "" "IPv6 address of the container.";
+
+    subnet = mkOpt str "" "The name of the subnet which the container should be part of.";
+    ip6Host = mkOpt str "" "The ipv6's host part.";
+    ip6Address = mkOpt str "${config.schallernetz.networking.subnets.${cfg.subnet}.uniqueLocalPrefix}:${cfg.ip6Host}" "Full IPv6 address of the container.";
   };
 
   config = mkIf cfg.enable {
@@ -19,9 +22,8 @@ in
       autoStart = true;
 
       privateNetwork = true;
-      #hostBridge = "br_lan";
-      #localAddress = "192.168.178.x/24";
-      localAddress6 = "${cfg.ipv6Address}/64";
+      hostBridge = cfg.subnet;
+      localAddress6 = "${cfg.ip6Address}/64";
 
       specialArgs = { hostConfig = config; };
       config = { hostConfig, config, lib, pkgs, ... }: {

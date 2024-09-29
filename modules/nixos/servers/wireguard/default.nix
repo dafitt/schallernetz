@@ -9,6 +9,8 @@ in
   options.schallernetz.servers.wireguard = with types; {
     enable = mkBoolOpt false "Enable server wireguard.";
     name = mkOpt str "wireguard" "The name of the server.";
+
+    subnet = mkOpt str "lan" "The name of the subnet which the container should be part of.";
   };
 
   config = mkIf cfg.enable {
@@ -19,7 +21,7 @@ in
       ephemeral = true;
 
       privateNetwork = true;
-      hostBridge = "br_lan";
+      hostBridge = cfg.subnet;
 
       bindMounts."/etc/ssh/ssh_host_ed25519_key".isReadOnly = true;
 

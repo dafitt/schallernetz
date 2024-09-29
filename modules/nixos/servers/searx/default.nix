@@ -9,7 +9,10 @@ in
   options.schallernetz.servers.searx = with types; {
     enable = mkBoolOpt false "Enable server searx.";
     name = mkOpt str "searx" "The name of the server.";
-    ipv6Address = mkOpt str "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***" "IPv6 address of the container.";
+
+    subnet = mkOpt str "server" "The name of the subnet which the container should be part of.";
+    ip6Host = mkOpt str ":a" "The ipv6's host part.";
+    ip6Address = mkOpt str "${config.schallernetz.networking.subnets.${cfg.subnet}.uniqueLocalPrefix}:${cfg.ip6Host}" "Full IPv6 address of the container.";
   };
 
   config = mkMerge [
@@ -23,8 +26,8 @@ in
         autoStart = true;
 
         privateNetwork = true;
-        hostBridge = "br_lan";
-        localAddress6 = "${cfg.ipv6Address}/64";
+        hostBridge = cfg.subnet;
+        localAddress6 = "${cfg.ip6Address}/64";
 
         # Mount secret environmentFile `/run/agenix.d/3/searx`
         bindMounts.${config.age.secrets."searx".path}.isReadOnly = true;
@@ -148,7 +151,7 @@ in
           networking = {
             enableIPv6 = true; # automatically get IPv6 and default route6
             useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
-            nameservers = [ hostConfig.schallernetz.servers.unbound.ipv6Address ];
+            nameservers = [ hostConfig.schallernetz.servers.unbound.ip6Address ];
 
             firewall.interfaces."eth0" = {
               allowedTCPPorts = [ 80 ];
@@ -170,7 +173,7 @@ in
           ''
             backend ${cfg.name}
               mode http
-              server _0 [${cfg.ipv6Address}]:80 maxconn 32 check
+              server _0 [${cfg.ip6Address}]:80 maxconn 32 check
           ''
         ];
       };
