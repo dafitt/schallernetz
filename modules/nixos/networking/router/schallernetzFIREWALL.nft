@@ -1,26 +1,32 @@
-chain input {
-    type filter hook input priority filter + 1; policy drop;  # Drop all packets sent to the router itself by default.
+# https://wiki.nftables.org/wiki-nftables/index.php/Quick_reference-nftables_in_10_minutes
 
-    ct state invalid drop  # "Drop invalid connections."
-    ct state { established, related } accept  # "Allow established traffic."
+chain input { # Everything that is beeing sent to this host.
+    type filter hook input priority filter + 1; policy drop;
 
-    icmp type echo-request accept # "Allow ping."
-    icmpv6 type != { nd-redirect, 139 } accept # "Accept all ICMPv6 messages except redirects and node information queries (type 139).  See RFC 4890, section 4.4."
+    ct state invalid drop # Drop invalid connections.
+    ct state { established, related } accept # Allow established traffic.
 
-    meta iifname lo accept  # "Accept everything from loopback interface. Allows itself to reach the internet."
-    meta iifname management-br accept  # "Allow MANAGEMENT to access the router."
+    icmp type echo-request accept # Allow ping.
+    icmpv6 type != { nd-redirect, 139 } accept # Accept all ICMPv6 messages except redirects and node information queries (type 139).  See RFC 4890, section 4.4.
+
+    meta iifname enp4s0 drop # Making sure to block access to this host from the internet.
+    meta iifname lo accept # Accept everything from loopback interface. Allows itself to reach the internet.
+    meta iifname management-br accept # Allow MANAGEMENT to access this host.
 }
 
-chain forward {
+chain forward { # Everything that is beeing forwarded.
     type filter hook forward priority filter; policy drop;
 
-    ct state invalid drop  # "Drop invalid connections."
-    ct state { established, related } accept  # "Allow established traffic."
+    ct state invalid drop # Drop invalid connections.
+    ct state { established, related } accept # Allow established traffic.
 
-    meta iifname enp4s0 oifname lan-br ct state { established, related } accept  # "Allow established WAN back to LAN."
+    meta iifname untrusted-br oifname enp4s0 accept # Allow UNTRUSTED to access WAN.
 
-    meta iifname management-br oifname lan-br accept  # "Allow MANAGEMENT to LAN."
+    meta iifname lan-br oifname enp4s0 accept # Allow LAN to access WAN.
+    meta iifname lan-br oifname untrusted-br accept # Allow LAN to access UNTRUSTED.
+    meta iifname lan-br oifname server-br tcp dport { 80, 443 } accept # Allow LAN to access SERVER web servers.
 
-    meta iifname lan-br oifname enp4s0 accept  # "Allow LAN to WAN."
-    meta iifname lan-br oifname management-br accept  # "Allow LAN to MANAGEMENT."
+    meta oifname server-br ip6 daddr ***REMOVED_IPv6*** udp dport 53 accept # Allow access to dns server unbound.***REMOVED_DOMAIN***.
+
+    meta oifname dmz-br tcp dport 443 accept # Allow access to DMZ web servers.
 }
