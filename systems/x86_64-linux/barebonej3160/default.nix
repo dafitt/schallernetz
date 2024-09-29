@@ -27,6 +27,7 @@ with lib.schallernetz; {
       linkConfig.RequiredForOnline = "routable"; # make routing on this interface a dependency for network-online.target
       networkConfig = {
         Bridge = "wan"; # untagged
+        LinkLocalAddressing = "no";
       };
     };
     networks."30-enp2s0" = {

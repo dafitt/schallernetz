@@ -127,24 +127,6 @@ in
           IPv6SendRA = true;
         };
       };
-
-      ## NOTE don't forget to configure the interfaces in systems/
-      #networks."10-enp1s0" = {
-      #  matchConfig.Name = "enp1s0";
-      #  linkConfig.RequiredForOnline = "routable"; # make routing on this interface a dependency for network-online.target
-      #  networkConfig = {
-      #    Bridge = "wan"; # untagged
-      #  };
-      #};
-      #networks."30-enp2s0" = {
-      #  matchConfig.Name = "enp2s0";
-      #  linkConfig.RequiredForOnline = "enslaved";
-      #  vlan = [ "lan-vlan" "server-vlan" "dmz-vlan" ]; # tagged
-      #  networkConfig = {
-      #    Bridge = "management"; # untagged
-      #    LinkLocalAddressing = "no";
-      #  };
-      #};
     };
 
     networking.nftables = {
