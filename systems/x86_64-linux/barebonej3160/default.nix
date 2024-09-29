@@ -20,6 +20,42 @@ with lib.schallernetz; {
     servers = { };
   };
 
+  # connect the physical interfaces to the right bridge and/or vlan
+  systemd.network = {
+    networks."10-enp1s0" = {
+      matchConfig.Name = "enp1s0";
+      linkConfig.RequiredForOnline = "routable"; # make routing on this interface a dependency for network-online.target
+      networkConfig = {
+        Bridge = "wan"; # untagged
+      };
+    };
+    networks."30-enp2s0" = {
+      matchConfig.Name = "enp2s0";
+      linkConfig.RequiredForOnline = "enslaved";
+      networkConfig = {
+        Bridge = "lan"; # untagged
+        LinkLocalAddressing = "no";
+      };
+    };
+    networks."30-enp3s0" = {
+      matchConfig.Name = "enp3s0";
+      linkConfig.RequiredForOnline = "enslaved";
+      vlan = [ "server-vlan" "dmz-vlan" ]; # tagged
+      networkConfig = {
+        Bridge = "lan"; # untagged
+        LinkLocalAddressing = "no";
+      };
+    };
+    networks."30-enp4s0" = {
+      matchConfig.Name = "enp4s0";
+      linkConfig.RequiredForOnline = "enslaved";
+      networkConfig = {
+        Bridge = "management"; # untagged
+        LinkLocalAddressing = "no";
+      };
+    };
+  };
+
   boot.loader.timeout = 0;
 
   # improve performance

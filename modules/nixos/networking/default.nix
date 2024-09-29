@@ -10,13 +10,67 @@ in
     enable = mkBoolOpt true "Enable network configuration.";
 
     uniqueLocalPrefix = mkOption {
-      type = types.str;
+      type = str;
       default = "***REMOVED_IPv6***";
       example = "***REMOVED_IPv6***";
-      description = lib.mdDoc ''
-        IPv6 Unique Local Address prefix (ULA prefix). Only intended
-        for usage in your config: `$\{config.schallernetz.networking.uniqueLocalPrefix}`
+      description = ''
+        IPv6 Unique Local Address prefix (ULA prefix).
+        Something from fc00::/7.
       '';
+    };
+
+    subnets = mkOption {
+      type = attrsOf (submodule ({ name, ... }:
+        let
+          cfg = config.schallernetz.networking.subnets.${name};
+        in
+        {
+          options = {
+            name = mkOption {
+              type = strMatching "[a-zA-Z0-9_-]{1,10}";
+              default = name;
+              example = "server";
+              description = "Name of the subnet. Must not exceed 11 characters.";
+            };
+
+            prefixId = mkOption {
+              type = nullOr str;
+              default = null;
+              example = "c";
+              description = "The subnet's ipv6 prefix id.";
+            };
+
+            uniqueLocalPrefix = mkOption {
+              type = nullOr str;
+              default = if cfg.prefixId != null then "${config.schallernetz.networking.uniqueLocalPrefix}${cfg.prefixId}" else null;
+              description = ''
+                The prefix of the subnet. It is generated automatically
+                from the uniqueLocalPrefix and the prefixId.
+              '';
+            };
+
+            vlan = mkOption {
+              type = ints.between 1 4094;
+              example = 12;
+              description = "The subnet's vlan id.";
+            };
+          };
+        }));
+      default = {
+        "wan" = { vlan = 16; };
+        "untrusted" = { prefixId = "1"; vlan = 1; };
+        "lan" = { prefixId = "2"; vlan = 2; };
+        "server" = { prefixId = "c"; vlan = 12; };
+        "dmz" = { prefixId = "d"; vlan = 13; };
+        "lab" = { prefixId = "e"; vlan = 14; };
+        "management" = { prefixId = "f"; vlan = 15; };
+      };
+      example = {
+        "wan" = { vlan = 100; };
+        "lan" = { prefixId = "02"; vlan = 2; };
+        "guest" = { prefixId = "0a"; vlan = 10; };
+      };
+      description = "The subnets of the network.";
     };
   };
 
@@ -25,7 +79,7 @@ in
       hostName = host;
       domain = "***REMOVED_DOMAIN***";
 
-      nameservers = [ config.schallernetz.servers.unbound.ipv6Address ];
+      nameservers = [ config.schallernetz.servers.unbound.ip6Address ];
     };
 
     networking.useDHCP = false;
@@ -33,25 +87,107 @@ in
       enable = true;
       wait-online.anyInterface = true; # don't wait for all managed interfaces to come online and reach timeout
 
-      # bridge
-      netdevs."20-br_lan".netdevConfig = {
-        Kind = "bridge";
-        Name = "br_lan";
-      };
-      networks."40-br_lan" = {
-        matchConfig.Name = "br_lan";
-        bridgeConfig = { };
-        linkConfig.RequiredForOnline = "routable";
+      # Priority:
+      # 10 = wan-interface
+      # 20 = netdevs: bond, vlan, bridge
+      # 30 = interfaces
+      # 40 = bond-networks
+      # 50 = vlan-networks
+      # 60 = bridge-networks
 
-        networkConfig = {
-          IPv6AcceptRA = true; # for ipv6 dynamic gateway route
-        };
-        # NOTE completion of bridge per host required:
-        #address = [];
-        #gateway = []; # not for ipv6
-        #dns = [];
-        #domains = [];
-      };
+      #netdevs."20-${subnet.name}-vlan" = {
+      #  netdevConfig = {
+      #    Kind = "vlan";
+      #    Name = "${subnet.name}-vlan";
+      #  };
+      #  vlanConfig.Id = ${subnet.vlan};
+      #};
+      #netdevs."20-${subnet.bridge}" = {
+      #  netdevConfig = {
+      #    Kind = "bridge";
+      #    Name = "${subnet.bridge}";
+      #  };
+      #};
+      netdevs = listToAttrs (
+        (forEach (attrValues cfg.subnets) (subnet: {
+          name = "20-${subnet.name}-vlan";
+          value = {
+            netdevConfig = {
+              Kind = "vlan";
+              Name = "${subnet.name}-vlan";
+            };
+            vlanConfig.Id = subnet.vlan;
+          };
+        }))
+        ++
+        (forEach (attrValues cfg.subnets) (subnet: {
+          name = "20-${subnet.name}";
+          value = {
+            netdevConfig = {
+              Kind = "bridge";
+              Name = "${subnet.name}";
+            };
+          };
+        }))
+      );
+
+      #networks."50-${s.name}-vlan" = {
+      #  matchConfig.Name = "${s.name}-vlan";
+      #  linkConfig.RequiredForOnline = "carrier";
+      #  networkConfig = {
+      #    ConfigureWithoutCarrier = true;
+      #    Bridge = "${s.bridge}";
+      #    LinkLocalAddressing = "no";
+      #  };
+      #};
+      #networks."60-${s.bridge}" = {
+      #  matchConfig.Name = "${s.bridge}";
+      #  linkConfig.RequiredForOnline = "routable";
+      #
+      #  # NOTE completion of bridge per host required:
+      #  address = [];
+      #  gateway = []; # not for ipv6
+      #  dns = [];
+      #  domains = [ ];
+      #  networkConfig = {
+      #    IPv6AcceptRA = true; # for ipv6 dynamic gateway route
+      #  };
+      #};
+      networks = listToAttrs (
+        (forEach (attrValues cfg.subnets) (subnet: {
+          name = "50-${subnet.name}-vlan";
+          value = {
+            matchConfig.Name = "${subnet.name}-vlan";
+            linkConfig.RequiredForOnline = "carrier";
+            networkConfig = {
+              ConfigureWithoutCarrier = true;
+              Bridge = "${subnet.name}";
+              LinkLocalAddressing = "no";
+            };
+          };
+        }))
+        ++
+        (forEach (attrValues cfg.subnets) (subnet: {
+          name = "60-${subnet.name}";
+          value = {
+            matchConfig.Name = "${subnet.name}";
+            linkConfig.RequiredForOnline = "routable";
+
+            domains = [ "lan.${config.networking.domain}" ];
+          };
+        }))
+      );
+
+      ## NOTE don't forget to configure the interfaces in systems/
+      #networks."30-enp2s0" = {
+      #  matchConfig.Name = "enp2s0";
+      #  linkConfig.RequiredForOnline = "enslaved";
+      #  vlan = [ "lan-vlan" "server-vlan" "dmz-vlan" ]; # tagged
+      #  networkConfig = {
+      #    Bridge = "management"; # untagged
+      #    LinkLocalAddressing = "no";
+      #  };
+      #};
     };
   };
 }

@@ -9,9 +9,9 @@ chain input { # Everything that is beeing sent to this host.
     icmp type echo-request accept # Allow ping.
     icmpv6 type != { nd-redirect, 139 } accept # Accept all ICMPv6 messages except redirects and node information queries (type 139).  See RFC 4890, section 4.4.
 
-    meta iifname enp4s0 drop # Making sure to block access to this host from the internet.
+    meta iifname wan drop # Making sure to block access to this host from the internet.
     meta iifname lo accept # Accept everything from loopback interface. Allows itself to reach the internet.
-    meta iifname management-br accept # Allow MANAGEMENT to access this host.
+    meta iifname management accept # Allow MANAGEMENT to access this host.
 }
 
 chain forward { # Everything that is beeing forwarded.
@@ -20,13 +20,13 @@ chain forward { # Everything that is beeing forwarded.
     ct state invalid drop # Drop invalid connections.
     ct state { established, related } accept # Allow established traffic.
 
-    meta iifname untrusted-br oifname enp4s0 accept # Allow UNTRUSTED to access WAN.
+    meta iifname untrusted oifname wan accept # Allow UNTRUSTED to access WAN.
 
-    meta iifname lan-br oifname enp4s0 accept # Allow LAN to access WAN.
-    meta iifname lan-br oifname untrusted-br accept # Allow LAN to access UNTRUSTED.
-    meta iifname lan-br oifname server-br tcp dport { 80, 443 } accept # Allow LAN to access SERVER web servers.
+    meta iifname lan oifname wan accept # Allow LAN to access WAN.
+    meta iifname lan oifname untrusted accept # Allow LAN to access UNTRUSTED.
+    meta iifname lan oifname server tcp dport { 80, 443 } accept # Allow LAN to access SERVER web servers.
 
-    meta oifname server-br ip6 daddr ***REMOVED_IPv6*** udp dport 53 accept # Allow access to dns server unbound.***REMOVED_DOMAIN***.
+    meta oifname server ip6 daddr ***REMOVED_IPv6*** udp dport 53 accept # Allow access to dns server unbound.***REMOVED_DOMAIN***.
 
-    meta oifname dmz-br tcp dport 443 accept # Allow access to DMZ web servers.
+    meta oifname dmz tcp dport 443 accept # Allow access to DMZ web servers.
 }
