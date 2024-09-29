@@ -4,6 +4,7 @@ with lib;
 with lib.schallernetz;
 let
   cfg = config.schallernetz.networking.router;
+  subnetsCfg = config.schallernetz.networking.subnets;
 in
 {
   options.schallernetz.networking.router = with types; {
@@ -33,13 +34,13 @@ in
         };
       };
 
-      networks."60-untrusted" = {
+      networks."60-untrusted" = with subnetsCfg.untrusted; {
         # NOTE completion of bridge
         address = [
           "***REMOVED_IPv4***/24"
           "***REMOVED_IPv6***/64"
         ];
-        dhcpPrefixDelegationConfig.SubnetId = "1";
+        dhcpPrefixDelegationConfig.SubnetId = prefixId;
         networkConfig = {
           ConfigureWithoutCarrier = true;
           IPv6SendRA = true;
@@ -47,15 +48,17 @@ in
         };
       };
 
-      networks."60-lan" = {
+      networks."60-lan" = with subnetsCfg.lan; {
         # NOTE completion of bridge
         address = [
           "***REMOVED_IPv4***/24"
-          "***REMOVED_IPv6***/64"
+          "${uniqueLocalPrefix}***REMOVED_IPv6***/64"
           "***REMOVED_IPv6***/64"
         ];
-        dhcpPrefixDelegationConfig.SubnetId = "2";
-        ipv6Prefixes = [{ ipv6PrefixConfig.Prefix = "***REMOVED_IPv6***::/64"; }];
+        dhcpPrefixDelegationConfig.SubnetId = prefixId;
+        ipv6Prefixes = [{
+          ipv6PrefixConfig.Prefix = "${uniqueLocalPrefix}::/64";
+        }];
         networkConfig = {
           ConfigureWithoutCarrier = true;
           IPv6SendRA = true;
@@ -65,15 +68,17 @@ in
         };
       };
 
-      networks."60-server" = {
+      networks."60-server" = with subnetsCfg.server; {
         # NOTE completion of bridge
         address = [
           "***REMOVED_IPv4***/24"
-          "***REMOVED_IPv6***/64"
+          "${uniqueLocalPrefix}***REMOVED_IPv6***/64"
           "***REMOVED_IPv6***/64"
         ];
-        dhcpPrefixDelegationConfig.SubnetId = "c";
-        ipv6Prefixes = [{ ipv6PrefixConfig.Prefix = "***REMOVED_IPv6***::/64"; }];
+        dhcpPrefixDelegationConfig.SubnetId = prefixId;
+        ipv6Prefixes = [{
+          ipv6PrefixConfig.Prefix = "${uniqueLocalPrefix}::/64";
+        }];
         networkConfig = {
           ConfigureWithoutCarrier = true;
           IPv6SendRA = true;
@@ -81,15 +86,17 @@ in
         };
       };
 
-      networks."60-dmz" = {
+      networks."60-dmz" = with subnetsCfg.dmz; {
         # NOTE completion of bridge
         address = [
           "***REMOVED_IPv4***/24"
-          "***REMOVED_IPv6***/64"
+          "${uniqueLocalPrefix}***REMOVED_IPv6***/64"
           "***REMOVED_IPv6***/64"
         ];
-        dhcpPrefixDelegationConfig.SubnetId = "d";
-        ipv6Prefixes = [{ ipv6PrefixConfig.Prefix = "***REMOVED_IPv6***::/64"; }];
+        dhcpPrefixDelegationConfig.SubnetId = prefixId;
+        ipv6Prefixes = [{
+          ipv6PrefixConfig.Prefix = "${uniqueLocalPrefix}::/64";
+        }];
         networkConfig = {
           ConfigureWithoutCarrier = true;
           IPv6SendRA = true;
@@ -97,15 +104,17 @@ in
         };
       };
 
-      networks."60-lab" = {
+      networks."60-lab" = with subnetsCfg.lab; {
         # NOTE completion of bridge
         address = [
           "***REMOVED_IPv4***/24"
-          "***REMOVED_IPv6***/64"
+          "${uniqueLocalPrefix}***REMOVED_IPv6***/64"
           "***REMOVED_IPv6***/64"
         ];
-        dhcpPrefixDelegationConfig.SubnetId = "e";
-        ipv6Prefixes = [{ ipv6PrefixConfig.Prefix = "***REMOVED_IPv6***::/64"; }];
+        dhcpPrefixDelegationConfig.SubnetId = prefixId;
+        ipv6Prefixes = [{
+          ipv6PrefixConfig.Prefix = "${uniqueLocalPrefix}::/64";
+        }];
         networkConfig = {
           ConfigureWithoutCarrier = true;
           IPv6SendRA = true;
@@ -113,15 +122,17 @@ in
         };
       };
 
-      networks."60-management" = {
+      networks."60-management" = with subnetsCfg.management; {
         # NOTE completion of bridge
         address = [
           "***REMOVED_IPv4***/24"
-          "***REMOVED_IPv6***/64"
+          "${uniqueLocalPrefix}***REMOVED_IPv6***/64"
           "***REMOVED_IPv6***/64"
         ];
-        dhcpPrefixDelegationConfig.SubnetId = "f";
-        ipv6Prefixes = [{ ipv6PrefixConfig.Prefix = "***REMOVED_IPv6***::/64"; }]; # to be able to ping ***REMOVED_IPv6*** from a client (automatic route configuration)
+        dhcpPrefixDelegationConfig.SubnetId = prefixId;
+        ipv6Prefixes = [{
+          ipv6PrefixConfig.Prefix = "${uniqueLocalPrefix}::/64";
+        }]; # to be able to ping ***REMOVED_IPv6*** from a client (automatic route configuration)
         networkConfig = {
           ConfigureWithoutCarrier = true;
           IPv6SendRA = true;
