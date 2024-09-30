@@ -27,7 +27,6 @@ in
           IPv6PrivacyExtensions = true;
           DNSOverTLS = true;
           DNSSEC = true;
-          IPForward = true;
         };
         dhcpV6Config = {
           PrefixDelegationHint = "::/60"; # ask for prefix delegation
@@ -45,6 +44,7 @@ in
           ConfigureWithoutCarrier = true;
           IPv6SendRA = true;
           DHCPPrefixDelegation = true;
+          DNS = [ config.schallernetz.servers.adguardhome.ip6Address ];
         };
       };
 
@@ -63,8 +63,7 @@ in
           ConfigureWithoutCarrier = true;
           IPv6SendRA = true;
           DHCPPrefixDelegation = true;
-          DNS = "***REMOVED_IPv6***";
-          Domains = [ "***REMOVED_DOMAIN***" "lan.***REMOVED_DOMAIN***" ];
+          DNS = [ config.schallernetz.servers.adguardhome.ip6Address ];
         };
       };
 
@@ -83,28 +82,11 @@ in
           ConfigureWithoutCarrier = true;
           IPv6SendRA = true;
           DHCPPrefixDelegation = true;
+          DNS = [ config.schallernetz.servers.unbound.ip6Address ];
         };
       };
 
       networks."60-dmz" = with subnetsCfg.dmz; {
-        # NOTE completion of bridge
-        address = [
-          "***REMOVED_IPv4***/16"
-          "${uniqueLocalPrefix}***REMOVED_IPv6***/64"
-          "***REMOVED_IPv6***/64"
-        ];
-        dhcpPrefixDelegationConfig.SubnetId = prefixId;
-        ipv6Prefixes = [{
-          ipv6PrefixConfig.Prefix = "${uniqueLocalPrefix}::/64";
-        }];
-        networkConfig = {
-          ConfigureWithoutCarrier = true;
-          IPv6SendRA = true;
-          DHCPPrefixDelegation = true;
-        };
-      };
-
-      networks."60-lab" = with subnetsCfg.lab; {
         # NOTE completion of bridge
         address = [
           "***REMOVED_IPv4***/16"

@@ -62,7 +62,6 @@ in
         "lan" = { prefixId = "2"; vlan = 2; };
         "server" = { prefixId = "c"; vlan = 12; };
         "dmz" = { prefixId = "d"; vlan = 13; };
-        "lab" = { prefixId = "e"; vlan = 14; };
         "management" = { prefixId = "f"; vlan = 15; };
       };
       example = {

@@ -17,7 +17,10 @@ with lib.schallernetz; {
   schallernetz = {
     networking.router.enable = true;
 
-    servers = { };
+    servers = {
+      unbound.enable = true;
+      adguardhome.enable = true;
+    };
   };
 
   # connect the physical interfaces to the right bridge and/or vlan
