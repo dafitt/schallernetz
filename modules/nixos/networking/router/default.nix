@@ -12,6 +12,10 @@ in
   };
 
   config = mkIf cfg.enable {
+    environment.systemPackages = with pkgs; [
+      termshark
+    ];
+
     # enable routing
     boot.kernel.sysctl = {
       "net.ipv4.conf.all.forwarding" = false;

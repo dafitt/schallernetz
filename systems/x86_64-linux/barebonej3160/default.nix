@@ -23,6 +23,9 @@ with lib.schallernetz; {
     };
   };
 
+  environment.systemPackages = with pkgs; [
+  ];
+
   # connect the physical interfaces to the right bridge and/or vlan
   systemd.network = {
     networks."10-enp1s0" = {
