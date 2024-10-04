@@ -50,11 +50,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1727359191,
+        "lastModified": 1727977578,
         "narHash": "sha256-***REMOVED_WIREGUARD-KEY***",
         "owner": "nix-community",
         "repo": "disko",
-        "rev": "67dc29be3036cc888f0b9d4f0a788ee0f6768700",
+        "rev": "574400001b3ffe555c7a21e0ff846230759be2ed",
         "type": "github"
       },
       "original": {
@@ -139,11 +139,11 @@
     },
     "nixlib": {
       "locked": {
-        "lastModified": 1726966855,
+        "lastModified": 1727571693,
         "narHash": "sha256-***REMOVED_WIREGUARD-KEY***",
         "owner": "nix-community",
         "repo": "nixpkgs.lib",
-        "rev": "575704ff85d3a41dc5bfef7b55380cbc7b87f3c2",
+        "rev": "bb58a3bf239e03fca9d51062e2fe028a4ea5a3d1",
         "type": "github"
       },
       "original": {
@@ -160,11 +160,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1727053438,
+        "lastModified": 1727917377,
         "narHash": "sha256-***REMOVED_WIREGUARD-KEY***",
         "owner": "nix-community",
         "repo": "nixos-generators",
-        "rev": "e8c1cd886cc17e31e424f915efd32e84d8af0ce9",
+        "rev": "9ae128172f823956e54947fe471bc6dfa670ecb4",
         "type": "github"
       },
       "original": {
@@ -191,11 +191,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1726447378,
+        "lastModified": 1727907660,
         "narHash": "sha256-***REMOVED_WIREGUARD-KEY***",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "086b448a5d54fd117f4dc2dee55c9f0ff461bdc1",
+        "rev": "5966581aa04be7eff830b9e1457d56dc70a0b798",
         "type": "github"
       },
       "original": {
