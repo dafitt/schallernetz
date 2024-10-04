@@ -40,7 +40,7 @@ in
       networks."60-untrusted" = with subnetsCfg.untrusted; {
         # NOTE completion of bridge
         address = [
-          "***REMOVED_IPv4***/16"
+          #"***REMOVED_IPv4***/16"
           "***REMOVED_IPv6***/64"
         ];
         dhcpPrefixDelegationConfig.SubnetId = prefixId;
@@ -55,7 +55,7 @@ in
       networks."60-lan" = with subnetsCfg.lan; {
         # NOTE completion of bridge
         address = [
-          "***REMOVED_IPv4***/16"
+          #" ***REMOVED_IPv4***/16 "
           "${uniqueLocalPrefix}***REMOVED_IPv6***/64"
           "***REMOVED_IPv6***/64"
         ];
@@ -74,7 +74,7 @@ in
       networks."60-server" = with subnetsCfg.server; {
         # NOTE completion of bridge
         address = [
-          "***REMOVED_IPv4***/16"
+          #"***REMOVED_IPv4***/16"
           "${uniqueLocalPrefix}***REMOVED_IPv6***/64"
           "***REMOVED_IPv6***/64"
         ];
@@ -93,7 +93,7 @@ in
       networks."60-dmz" = with subnetsCfg.dmz; {
         # NOTE completion of bridge
         address = [
-          "***REMOVED_IPv4***/16"
+          #"***REMOVED_IPv4***/16"
           "${uniqueLocalPrefix}***REMOVED_IPv6***/64"
           "***REMOVED_IPv6***/64"
         ];
@@ -111,7 +111,7 @@ in
       networks."60-management" = with subnetsCfg.management; {
         # NOTE completion of bridge
         address = [
-          "***REMOVED_IPv4***/16"
+          #"***REMOVED_IPv4***/16"
           "${uniqueLocalPrefix}***REMOVED_IPv6***/64"
           "***REMOVED_IPv6***/64"
         ];
@@ -125,6 +125,7 @@ in
         };
       };
     };
+#systemd.services.systemd-networkd.environment.SYSTEMD_LOG_LEVEL = "debug";
 
     networking = {
       nat.enable = false;
