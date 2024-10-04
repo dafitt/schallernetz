@@ -122,7 +122,10 @@ in
       };
     };
 
-    networking.nftables = {
+    networking = {
+      nat.enable = false;
+      firewall.enable = false; # Use nftables instead.
+      nftables = {
       enable = true;
 
       tables."schallernetzFIREWALL" = {
@@ -138,6 +141,7 @@ in
       #    }
       #  '';
       #};
+      };
     };
   };
 }
