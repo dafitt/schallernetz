@@ -11,7 +11,8 @@ chain input { # Everything that is beeing sent to this host.
         icmp type echo-request accept # Allow ping.
         icmpv6 type != { nd-redirect, 139 } accept # Accept all ICMPv6 messages except redirects and node information queries (type 139).  See RFC 4890, section 4.4.
 
-        iifname wan drop # Making double sure to block access to this host from the internet.
+        iifname enp1s0 udp dport 546 accept # dhcpv6-client
+        iifname enp1s0 drop # Making double sure to block access to this host from the internet.
 
         iifname lo accept # Accept everything from loopback interface. Allows itself to reach the internet.
 
@@ -27,7 +28,7 @@ chain forward { # Everything that is beeing forwarded.
 
         # https://wiki.nftables.org/wiki-nftables/index.php/Classic_perimetral_firewall_example
         oifname vmap {
-                wan: jump wan_in,
+                enp1s0: jump enp1s0_in,
                 untrusted: jump untrusted_in,
                 lan: jump lan_in,
                 server: jump server_in,
@@ -36,7 +37,7 @@ chain forward { # Everything that is beeing forwarded.
         }
 }
 
-chain wan_in { # what to allow to the internet (into wan)... except already established traffic from the internet (from wan)
+chain enp1s0_in { # what to allow to the internet (into enp1s0)... except already established traffic from the internet (from enp1s0)
         iifname != management accept
 }
 chain untrusted_in { # what to allow into untrusted... except already established traffic from untrusted
@@ -45,7 +46,7 @@ chain untrusted_in { # what to allow into untrusted... except already establishe
 chain lan_in { # what to allow into lan... except already established traffic from lan
 }
 chain server_in { # what to allow into server... except already established traffic from server
-        iifname wan drop
+        iifname enp1s0 drop
         # ---
         udp dport 53 limit rate 70/second accept # dns
         tcp dport 443 limit rate 35/second accept # https

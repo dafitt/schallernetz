@@ -27,7 +27,7 @@ in
 
       specialArgs = { hostConfig = config; };
       config = { hostConfig, config, lib, pkgs, ... }: {
-        imports = with inputs;[ self.nixosModules."ntfy-systemd" ];
+        imports = with inputs; [ self.nixosModules."ntfy-systemd" ];
 
         environment.systemPackages = with pkgs; [ dig ];
 

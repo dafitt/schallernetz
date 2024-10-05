@@ -57,7 +57,6 @@ in
           };
         }));
       default = {
-        "wan" = { vlan = 16; };
         "untrusted" = { prefixId = "1"; vlan = 1; };
         "lan" = { prefixId = "2"; vlan = 2; };
         "server" = { prefixId = "c"; vlan = 12; };
@@ -65,7 +64,6 @@ in
         "management" = { prefixId = "f"; vlan = 15; };
       };
       example = {
-        "wan" = { vlan = 100; };
         "lan" = { prefixId = "02"; vlan = 2; };
         "guest" = { prefixId = "0a"; vlan = 10; };
       };
@@ -172,7 +170,7 @@ in
             matchConfig.Name = "${subnet.name}";
             linkConfig.RequiredForOnline = "routable";
 
-            domains = [ "lan.${config.networking.domain}" ];
+            domains = [ "${config.networking.domain}" "lan.${config.networking.domain}" ];
           };
         }))
       );
