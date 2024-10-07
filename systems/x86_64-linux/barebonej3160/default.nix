@@ -59,6 +59,7 @@ with lib.schallernetz; {
   };
 
   boot.loader.timeout = 0;
+  boot.loader.grub.configurationLimit = 5;
 
   # improve performance
   boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
