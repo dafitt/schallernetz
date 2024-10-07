@@ -38,7 +38,7 @@ in
           # https://unbound.docs.nlnetlabs.nl/en/latest/manpages/unbound.conf.html
           settings.server = {
             # the interface ip's that is used to connect to the network
-            interface = [ "${cfg.ip6Address}" ];
+            interface = [ "${cfg.ip6Address}" "***REMOVED_IPv6***" ];
 
             qname-minimisation = true;
           };
