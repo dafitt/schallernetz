@@ -12,11 +12,11 @@ in
     uniqueLocalPrefix = mkOption {
       type = str;
       default = "***REMOVED_IPv6***";
-      example = "***REMOVED_IPv6***";
       description = ''
         IPv6 Unique Local Address prefix (ULA prefix).
         Something from fc00::/7.
       '';
+      example = "***REMOVED_IPv6***";
     };
 
     subnets = mkOption {

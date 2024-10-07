@@ -9,6 +9,12 @@ in
 {
   options.schallernetz.networking.router = with types; {
     enable = mkBoolOpt false "Enable the schallernetz router configuration.";
+
+    wan = mkOption {
+      type = str;
+      description = "The name of the WAN interface.";
+      example = "eth0";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -25,9 +31,9 @@ in
 
     systemd.network = {
       networks."10-wan" = {
-        linkConfig = {
-          RequiredForOnline = "routable"; # make routing on this interface a dependency for network-online.target
-        };
+        matchConfig.Name = cfg.wan;
+        linkConfig.RequiredForOnline = "routable"; # make routing on this interface a dependency for network-online.target
+
         networkConfig = {
           DHCP = "ipv6";
           IPv6AcceptRA = true;
@@ -50,8 +56,6 @@ in
           Announce = false;
         };
       };
-      # NOTE don't forget to assign the wan network to the port in systems/ e.g.
-      #networks."10-wan".matchConfig.Name = "enp1s0";
 
       networks."60-untrusted" = with subnetsCfg.untrusted; {
         # NOTE completion of bridge
@@ -160,17 +164,8 @@ in
 
         tables."schallernetzFIREWALL" = {
           family = "inet";
-          content = readFile ./schallernetzWALL.nft;
+          content = "define wan = ${cfg.wan}\n\n" + (readFile ./schallernetzWALL.nft);
         };
-        #tables."schallernetzNATv4" = {
-        #  family = "ip";
-        #  content = ''
-        #    chain postrouting {
-        #      type nat hook postrouting priority srcnat; policy accept;
-        #      oifname { "wan" } masquerade
-        #    }
-        #  '';
-        #};
       };
     };
   };
