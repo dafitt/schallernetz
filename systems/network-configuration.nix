@@ -36,5 +36,10 @@
         vlan = 15;
       };
     };
+
+    router.nfrules_in = [
+      "iifname lan tcp dport 22 accept"
+      "iifname management accept"
+    ];
   };
 }

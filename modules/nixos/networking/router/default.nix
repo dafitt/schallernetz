@@ -15,6 +15,16 @@ in
       description = "The name of the WAN interface.";
       example = "eth0";
     };
+
+    nfrules_in = mkOption {
+      type = listOf str;
+      default = [ ];
+      description = "nftables rules of what to allow into the router.";
+      example = [
+        "iifname lan tcp dport 22 accept"
+        "iifname management accept"
+      ];
+    };
   };
 
   config = mkIf cfg.enable {
@@ -174,12 +184,11 @@ in
               icmpv6 type != { nd-redirect, 139 } accept # Accept all ICMPv6 messages except redirects and node information queries (type 139).  See RFC 4890, section 4.4.
 
               iifname ${cfg.wan} udp dport 546 accept # dhcpv6-client
-              iifname ${cfg.wan} drop # Making double sure to block access to this host from the internet.
+              iifname ${cfg.wan} drop # Making early sure to block access to this host from the internet.
 
               iifname lo accept # Accept everything from loopback interface. Allows itself to reach the internet.
 
-              iifname lan tcp dport 22 accept
-              iifname management accept
+              ${concatStringsSep "\n" cfg.nfrules_in}
             }
 
             # Everything that is beeing forwarded from one interface to another.
