@@ -9,14 +9,34 @@ in
   options.schallernetz.networking = with types; {
     enable = mkBoolOpt true "Enable network configuration.";
 
-    uniqueLocalPrefix = mkOption {
-      type = str;
-      default = "***REMOVED_IPv6***";
-      description = ''
-        IPv6 Unique Local Address prefix (ULA prefix).
-        Something from fc00::/7.
-      '';
-      example = "***REMOVED_IPv6***";
+    uniqueLocal = {
+      prefix_ = mkOption {
+        type = str;
+        default = "***REMOVED_IPv6***";
+        description = ''
+          The incomplete IPv6 Unique Local Address prefix (ULA prefix).
+          Something from fc00::/7.
+        '';
+        example = "***REMOVED_IPv6***";
+      };
+      prefix = mkOption {
+        type = str;
+        default = "${config.schallernetz.networking.uniqueLocal.prefix_}0";
+        description = ''
+          The complete IPv6 Unique Local Address prefix (ULA prefix).
+          Something from fc00::/7.
+        '';
+        example = "${config.schallernetz.networking.uniqueLocal.prefix_}00";
+      };
+      suffix = mkOption {
+        type = ints.between 7 64;
+        default = 60;
+        description = ''
+          IPv6 Unique Local Address suffix (ULA suffix).
+          Something between /7 and /64.
+        '';
+        example = 56;
+      };
     };
 
     subnets = mkOption {
@@ -40,13 +60,20 @@ in
               description = "The subnet's ipv6 prefix id.";
             };
 
-            uniqueLocalPrefix = mkOption {
-              type = nullOr str;
-              default = if cfg.prefixId != null then "${config.schallernetz.networking.uniqueLocalPrefix}${cfg.prefixId}" else null;
-              description = ''
-                The prefix of the subnet. It is generated automatically
-                from the uniqueLocalPrefix and the prefixId.
-              '';
+            uniqueLocal = {
+              prefix = mkOption {
+                type = nullOr str;
+                default = if cfg.prefixId != null then "${config.schallernetz.networking.uniqueLocal.prefix_}${cfg.prefixId}" else null;
+                description = ''
+                  The prefix of the subnet. It is generated automatically
+                  from the uniqueLocal.prefix and the prefixId.
+                '';
+              };
+              suffix = mkOption {
+                type = ints.between 7 64;
+                default = 64;
+                description = "One subnet is usually /64.";
+              };
             };
 
             vlan = mkOption {

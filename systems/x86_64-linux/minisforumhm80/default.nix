@@ -48,7 +48,7 @@ with lib.schallernetz; {
     "40-br_lan" = {
       # NOTE completion of bridge
       address = [
-        "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***/64"
+        "${config.schallernetz.networking.uniqueLocal.prefix}***REMOVED_IPv6***/64"
       ];
       #domains = [ ];
     };

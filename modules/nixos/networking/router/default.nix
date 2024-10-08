@@ -71,7 +71,7 @@ in
       networks."60-lan" = with subnetsCfg.lan; {
         # NOTE completion of bridge
         address = [
-          "${uniqueLocalPrefix}***REMOVED_IPv6***/64"
+          "${uniqueLocal.prefix}***REMOVED_IPv6***/64"
           "***REMOVED_IPv6***/64"
         ];
         networkConfig = {
@@ -86,14 +86,14 @@ in
           Token = "***REMOVED_IPv6***";
         };
         ipv6Prefixes = [{
-          ipv6PrefixConfig.Prefix = "${uniqueLocalPrefix}::/64";
+          ipv6PrefixConfig.Prefix = "${uniqueLocal.prefix}::/64";
         }];
       };
 
       networks."60-server" = with subnetsCfg.server; {
         # NOTE completion of bridge
         address = [
-          "${uniqueLocalPrefix}***REMOVED_IPv6***/64"
+          "${uniqueLocal.prefix}***REMOVED_IPv6***/64"
           "***REMOVED_IPv6***/64"
         ];
         networkConfig = {
@@ -109,14 +109,14 @@ in
           Token = "***REMOVED_IPv6***";
         };
         ipv6Prefixes = [{
-          ipv6PrefixConfig.Prefix = "${uniqueLocalPrefix}::/64";
+          ipv6PrefixConfig.Prefix = "${uniqueLocal.prefix}::/64";
         }];
       };
 
       networks."60-dmz" = with subnetsCfg.dmz; {
         # NOTE completion of bridge
         address = [
-          "${uniqueLocalPrefix}***REMOVED_IPv6***/64"
+          "${uniqueLocal.prefix}***REMOVED_IPv6***/64"
           "***REMOVED_IPv6***/64"
         ];
         networkConfig = {
@@ -130,14 +130,14 @@ in
           Token = "***REMOVED_IPv6***";
         };
         ipv6Prefixes = [{
-          ipv6PrefixConfig.Prefix = "${uniqueLocalPrefix}::/64";
+          ipv6PrefixConfig.Prefix = "${uniqueLocal.prefix}::/64";
         }];
       };
 
       networks."60-management" = with subnetsCfg.management; {
         # NOTE completion of bridge
         address = [
-          "${uniqueLocalPrefix}***REMOVED_IPv6***/64"
+          "${uniqueLocal.prefix}***REMOVED_IPv6***/64"
           "***REMOVED_IPv6***/64"
         ];
         networkConfig = {
@@ -146,7 +146,7 @@ in
           IPv6AcceptRA = false;
         };
         ipv6Prefixes = [{
-          ipv6PrefixConfig.Prefix = "${uniqueLocalPrefix}::/64";
+          ipv6PrefixConfig.Prefix = "${uniqueLocal.prefix}::/64";
         }]; # to be able to ping ***REMOVED_IPv6*** from a client (automatic route configuration)
       };
     };

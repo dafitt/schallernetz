@@ -12,7 +12,7 @@ in
 
     subnet = mkOpt str "server" "The name of the subnet which the container should be part of.";
     ip6Host = mkOpt str ":9" "The ipv6's host part.";
-    ip6Address = mkOpt str "${config.schallernetz.networking.subnets.${cfg.subnet}.uniqueLocalPrefix}:${cfg.ip6Host}" "Full IPv6 address of the container.";
+    ip6Address = mkOpt str "${config.schallernetz.networking.subnets.${cfg.subnet}.uniqueLocal.prefix}:${cfg.ip6Host}" "Full IPv6 address of the container.";
   };
 
   config = mkIf cfg.enable {
@@ -39,16 +39,15 @@ in
           settings.server = {
             # the interface ip's that is used to connect to the network
             interface = [ "${cfg.ip6Address}" "***REMOVED_IPv6***" ];
+            access-control = [ "${hostConfig.schallernetz.networking.uniqueLocal.prefix}::/56 allow" ];
 
             qname-minimisation = true;
           };
 
-          settings.auth-zone = [
-            {
-              name = "lan.***REMOVED_DOMAIN***";
-              zonefile = "${./de.***REMOVED_DOMAIN***.zone}";
-            }
-          ];
+          settings.auth-zone = [{
+            name = "lan.***REMOVED_DOMAIN***";
+            zonefile = "${./de.***REMOVED_DOMAIN***.zone}";
+          }];
         };
         systemd.services.unbound.unitConfig = {
           OnFailure = [ "ntfy-failure@%i.service" ];
@@ -61,6 +60,7 @@ in
           useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
 
           firewall.interfaces."eth0" = {
+            allowedTCPPorts = [ 53 ];
             allowedUDPPorts = [ 53 ];
           };
         };

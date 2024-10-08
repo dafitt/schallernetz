@@ -12,7 +12,7 @@ in
 
     subnet = mkOpt str "server" "The name of the subnet which the container should be part of.";
     ip6Host = mkOpt str ":7" "The ipv6's host part.";
-    ip6Address = mkOpt str "${config.schallernetz.networking.subnets.${cfg.subnet}.uniqueLocalPrefix}:${cfg.ip6Host}" "Full IPv6 address of the container.";
+    ip6Address = mkOpt str "${config.schallernetz.networking.subnets.${cfg.subnet}.uniqueLocal.prefix}:${cfg.ip6Host}" "Full IPv6 address of the container.";
 
     frontends.extraConfig = mkOpt (listOf str) [ ] "List of additional frontends (config).";
     frontends.www.extraConfig = mkOption {

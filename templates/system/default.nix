@@ -23,36 +23,28 @@ with lib.schallernetz; {
 
     servers.adguardhome.enable = false;
     servers.adguardhome.name = "adguardhome";
-    servers.adguardhome.ipv6Address = "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***";
+    servers.adguardhome.subnet = "server";
+    servers.adguardhome.ip6Host = ":8";
     servers.bitwarden.enable = false;
     servers.bitwarden.name = "bitwarden";
-    servers.bitwarden.ipv6Address = "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***";
     servers.DavidCAL.enable = false;
     servers.DavidCAL.name = "DavidCAL";
-    servers.DavidCAL.ipv6Address = "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***";
     servers.DavidSYNC.enable = false;
     servers.DavidSYNC.name = "DavidSYNC";
-    servers.DavidSYNC.ipv6Address = "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***";
     servers.DavidVPN.enable = false;
     servers.DavidVPN.name = "DavidVPN";
     servers.forgejo.enable = false;
     servers.forgejo.name = "forgejo";
-    servers.forgejo.ipv6Address = "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***";
     servers.haproxy.enable = false;
     servers.haproxy.name = "haproxy";
-    servers.haproxy.ipv6Address = "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***";
     servers.MichiSHARE.enable = false;
     servers.MichiSHARE.name = "MichiSHARE";
-    servers.MichiSHARE.ipv6Address = "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***";
     servers.ntfy.enable = false;
     servers.ntfy.name = "ntfy";
-    servers.ntfy.ipv6Address = "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***";
     servers.searx.enable = false;
     servers.searx.name = "searx";
-    servers.searx.ipv6Address = "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***";
     servers.unbound.enable = false;
     servers.unbound.name = "unbound";
-    servers.unbound.ipv6Address = "${config.schallernetz.networking.uniqueLocalPrefix}***REMOVED_IPv6***";
 
     environment.enable = true;
 
