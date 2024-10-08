@@ -1,4 +1,4 @@
-{
+{ lib, ... }: with lib; {
   schallernetz.networking = {
     enable = true;
     domain = "***REMOVED_DOMAIN***";
@@ -13,7 +13,7 @@
       "untrusted" = {
         prefixId = "1";
         vlan = 1;
-        nfrules_in = [ "iifname lan accept" ];
+        nfrules_in = mkBefore [ "iifname lan accept" ];
       };
       "lan" = {
         prefixId = "2";
@@ -22,7 +22,7 @@
       "server" = {
         prefixId = "c";
         vlan = 12;
-        nfrules_in = [
+        nfrules_in = mkBefore [
           "iifname lan tcp dport 22 accept"
           "iifname lan tcp dport 80 accept"
         ];
