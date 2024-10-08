@@ -1,7 +1,5 @@
 # https://wiki.nftables.org/wiki-nftables/index.php/Quick_reference-nftables_in_10_minutes
 
-# ula ***REMOVED_IPv6***
-
 chain input { # Everything that is beeing sent to this host.
         type filter hook input priority filter + 1; policy drop;
 
@@ -48,7 +46,8 @@ chain lan_in { # what to allow into lan... except already established traffic fr
 chain server_in { # what to allow into server... except already established traffic from server
         iifname $wan drop
         # ---
-        udp dport 53 limit rate 70/second accept # dns
+        ip6 daddr & ***REMOVED_IPv6*** == ***REMOVED_IPv6*** udp dport 53 limit rate 70/second accept # dns
+        ip6 daddr & ***REMOVED_IPv6*** == ***REMOVED_IPv6*** udp dport 53 limit rate 70/second accept # dns
         tcp dport 443 limit rate 35/second accept # https
         iifname lan tcp dport 22 accept # ssh
         iifname lan tcp dport 80 accept # http
