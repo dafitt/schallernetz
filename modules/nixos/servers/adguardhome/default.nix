@@ -28,7 +28,7 @@ in
 
         specialArgs = { hostConfig = config; };
         config = { hostConfig, config, lib, pkgs, ... }: {
-          imports = with inputs;[ self.nixosModules."ntfy-systemd" ];
+          imports = with inputs; [ self.nixosModules."ntfy-systemd" ];
 
           services.adguardhome = {
             enable = true;
@@ -37,7 +37,7 @@ in
               # https://github.com/AdguardTeam/AdGuardHome/wiki/Configuration#configuration-file
               safebrowsing_enabled = true;
               dns = {
-                bind_hosts = [ "***REMOVED_IPv4***" "${cfg.ip6Address}" ];
+                bind_hosts = [ "${cfg.ip6Address}" ];
                 enable_dnssec = true;
                 upstream_dns = [ hostConfig.schallernetz.servers.unbound.ip6Address ];
               };
@@ -58,6 +58,7 @@ in
           };
 
           networking.firewall.interfaces."eth0" = {
+            allowedTCPPorts = [ 53 ];
             allowedUDPPorts = [ 53 ];
           };
 
