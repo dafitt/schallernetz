@@ -39,6 +39,10 @@ in
             # <https://nixos.wiki/wiki/Syncthing>
             enable = true;
 
+            # Syncthing ports: 8384 for remote access to GUI
+            # 22000 TCP and/or UDP for sync traffic
+            # 21027/UDP for discovery
+            # https://docs.syncthing.net/users/firewall.html
             openDefaultPorts = true;
             guiAddress = "[::]:8384"; # remote access
 
@@ -46,7 +50,7 @@ in
             overrideFolders = false; # whether to override folders, manually added or deleted through the WebUI
 
             settings = {
-              # https://192.168.19.***REMOVED_IPv6***/rest/config with X-API-Key
+              # https://<ip/fqdn>:8384/rest/config with X-API-Key
 
               gui = {
                 enabled = true;

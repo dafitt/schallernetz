@@ -23,8 +23,7 @@
         prefixId = "c";
         vlan = 12;
         nfrules_in = mkBefore [
-          "iifname lan tcp dport 22 accept"
-          "iifname lan tcp dport 80 accept"
+          "iifname lan accept"
         ];
       };
       "dmz" = {
