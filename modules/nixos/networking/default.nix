@@ -104,6 +104,7 @@ in
         "server" = { prefixId = "c"; vlan = 12; };
         "dmz" = { prefixId = "d"; vlan = 13; };
         "management" = { prefixId = "f"; vlan = 15; };
+        "wan" = { prefixId = "0"; vlan = 16; };
       };
     };
   };

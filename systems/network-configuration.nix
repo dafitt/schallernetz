@@ -35,6 +35,11 @@
         prefixId = "f";
         vlan = 15;
       };
+      "wan" = {
+        prefixId = "0";
+        vlan = 16;
+        nfrules_in = mkBefore [ "iifname != management accept" ];
+      };
     };
 
     router.nfrules_in = [

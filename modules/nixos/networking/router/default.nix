@@ -12,13 +12,18 @@ in
 
     wan = mkOption {
       type = str;
-      description = "The name of the WAN interface.";
+      default = "wan";
+      description = "The name of the wan network (interface or bridge).";
       example = "eth0";
     };
 
     nfrules_in = mkOption {
       type = listOf str;
-      default = [ ];
+      # Some default, if you forget to set it. Hopefully you also picked "lan" as your subnet-name, then.
+      default = [
+        "iifname lan tcp dport 22 accept"
+        "iifname management accept"
+      ];
       description = "nftables rules of what to allow into the router.";
       example = [
         "iifname lan tcp dport 22 accept"
@@ -200,16 +205,11 @@ in
 
               # https://wiki.nftables.org/wiki-nftables/index.php/Classic_perimetral_firewall_example
               oifname vmap {
-                ${cfg.wan}: jump wan_in,
                 ${concatStrings (forEach (attrValues config.schallernetz.networking.subnets) (subnet: ''
                   ${subnet.name}: jump ${subnet.name}_in,''))}
               }
             }
 
-            # what to allow to the internet (into wan)... except already established traffic from the internet (from wan)
-            chain wan_in {
-              iifname != management accept
-            }
             ${concatStringsSep "\n" (forEach (attrValues config.schallernetz.networking.subnets) (subnet: ''
               chain ${subnet.name}_in {
                 ${concatStringsSep "\n" subnet.nfrules_in}

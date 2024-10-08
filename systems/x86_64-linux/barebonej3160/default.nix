@@ -19,7 +19,6 @@ with lib.schallernetz; {
   schallernetz = {
     networking.router = {
       enable = true;
-      wan = "enp1s0";
     };
 
     servers = {
@@ -33,6 +32,14 @@ with lib.schallernetz; {
 
   # connect the physical interfaces to the right bridge and/or vlan
   systemd.network = {
+    networks."30-enp1s0" = {
+      matchConfig.Name = "enp1s0";
+      linkConfig.RequiredForOnline = "enslaved";
+      networkConfig = {
+        Bridge = "wan"; # untagged
+        LinkLocalAddressing = "no";
+      };
+    };
     networks."30-enp2s0" = {
       matchConfig.Name = "enp2s0";
       linkConfig.RequiredForOnline = "enslaved";
