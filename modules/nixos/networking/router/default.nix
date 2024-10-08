@@ -160,7 +160,10 @@ in
 
         tables."schallernetzFIREWALL" = {
           family = "inet";
-          content = "define wan = ${cfg.wan}\n\n" + (readFile ./schallernetzWALL.nft);
+          content = concatStringsSep "\n\n" [
+            ''define wan = ${cfg.wan}''
+            (readFile ./schallernetzWALL.nft)
+          ];
         };
       };
     };
