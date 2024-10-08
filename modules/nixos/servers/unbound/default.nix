@@ -57,6 +57,7 @@ in
 
         networking = {
           enableIPv6 = true; # automatically get IP6 and default route6
+          interfaces."eth0".tempAddress = "default"; # IPv6 temporary address (aka privacy extensions)
           useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
 
           firewall.interfaces."eth0" = {

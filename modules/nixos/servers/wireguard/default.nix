@@ -48,10 +48,8 @@ in
           # Log in to the network like a normal client
           useDHCP = mkForce true; # automatically get IPv4 and default route
           enableIPv6 = true; # automatically get IPv6 and default route6
+          interfaces."eth0".tempAddress = "default"; # IPv6 temporary address (aka privacy extensions)
           useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
-
-          # use ramdom IPv6 addresses (privacy extensions)
-          interfaces."eth0".tempAddress = "default";
 
           # Enable NAT
           nat = {
