@@ -15,58 +15,65 @@ in
     ip6Address = mkOpt str "${config.schallernetz.networking.subnets.${cfg.subnet}.uniqueLocal.prefix}:${cfg.ip6Host}" "Full IPv6 address of the container.";
   };
 
-  config = mkIf cfg.enable {
-    #$ sudo nixos-container start unbound
-    #$ sudo nixos-container root-login unbound
-    containers.${cfg.name} = {
-      autoStart = true;
+  config = mkMerge [
+    (mkIf cfg.enable {
+      #$ sudo nixos-container start unbound
+      #$ sudo nixos-container root-login unbound
+      containers.${cfg.name} = {
+        autoStart = true;
 
-      privateNetwork = true;
-      hostBridge = cfg.subnet;
-      localAddress6 = "${cfg.ip6Address}/64";
+        privateNetwork = true;
+        hostBridge = cfg.subnet;
+        localAddress6 = "${cfg.ip6Address}/64";
 
-      specialArgs = { hostConfig = config; };
-      config = { hostConfig, config, lib, pkgs, ... }: {
-        imports = with inputs; [ self.nixosModules."ntfy-systemd" ];
+        specialArgs = { hostConfig = config; };
+        config = { hostConfig, config, lib, pkgs, ... }: {
+          imports = with inputs; [ self.nixosModules."ntfy-systemd" ];
 
-        environment.systemPackages = with pkgs; [ dig ];
+          environment.systemPackages = with pkgs; [ dig ];
 
-        # Unbound is a validating, recursive, caching DNS resolver (like ***REMOVED_IPv4***).
-        services.unbound = {
-          enable = true;
+          # Unbound is a validating, recursive, caching DNS resolver (like ***REMOVED_IPv4***).
+          services.unbound = {
+            enable = true;
 
-          # https://unbound.docs.nlnetlabs.nl/en/latest/manpages/unbound.conf.html
-          settings.server = {
-            # the interface ip's that is used to connect to the network
-            interface = [ "${cfg.ip6Address}" "***REMOVED_IPv6***" ];
-            access-control = [ "${hostConfig.schallernetz.networking.uniqueLocal.prefix}::/56 allow" ];
+            # https://unbound.docs.nlnetlabs.nl/en/latest/manpages/unbound.conf.html
+            settings.server = {
+              # the interface ip's that is used to connect to the network
+              interface = [ "${cfg.ip6Address}" "***REMOVED_IPv6***" ];
+              access-control = [ "${hostConfig.schallernetz.networking.uniqueLocal.prefix}::/56 allow" ];
 
-            qname-minimisation = true;
+              qname-minimisation = true;
+            };
+
+            settings.auth-zone = [{
+              name = "lan.***REMOVED_DOMAIN***";
+              zonefile = "${./de.***REMOVED_DOMAIN***.zone}";
+            }];
+          };
+          systemd.services.unbound.unitConfig = {
+            OnFailure = [ "ntfy-failure@%i.service" ];
+            OnSuccess = [ "ntfy-success@%i.service" ];
           };
 
-          settings.auth-zone = [{
-            name = "lan.***REMOVED_DOMAIN***";
-            zonefile = "${./de.***REMOVED_DOMAIN***.zone}";
-          }];
-        };
-        systemd.services.unbound.unitConfig = {
-          OnFailure = [ "ntfy-failure@%i.service" ];
-          OnSuccess = [ "ntfy-success@%i.service" ];
-        };
+          networking = {
+            enableIPv6 = true; # automatically get IP6 and default route6
+            interfaces."eth0".tempAddress = "default"; # IPv6 temporary address (aka privacy extensions)
+            useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
 
-        networking = {
-          enableIPv6 = true; # automatically get IP6 and default route6
-          interfaces."eth0".tempAddress = "default"; # IPv6 temporary address (aka privacy extensions)
-          useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
-
-          firewall.interfaces."eth0" = {
-            allowedTCPPorts = [ 53 ];
-            allowedUDPPorts = [ 53 ];
+            firewall.interfaces."eth0" = {
+              allowedTCPPorts = [ 53 ];
+              allowedUDPPorts = [ 53 ];
+            };
           };
-        };
 
-        system.stateVersion = hostConfig.system.stateVersion;
+          system.stateVersion = hostConfig.system.stateVersion;
+        };
       };
-    };
-  };
+    })
+    {
+      schallernetz.networking.subnets.${cfg.subnet}.nfrules_in = [
+        "ip6 daddr & ***REMOVED_IPv6*** == ***REMOVED_IPv6*** udp dport 53 limit rate 70/second accept"
+      ];
+    }
+  ];
 }

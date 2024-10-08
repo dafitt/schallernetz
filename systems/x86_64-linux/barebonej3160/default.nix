@@ -12,6 +12,8 @@ with lib.schallernetz; {
 
     disko.nixosModules.disko
     ./disk-configuration.nix
+
+    ../../network-configuration.nix
   ];
 
   schallernetz = {

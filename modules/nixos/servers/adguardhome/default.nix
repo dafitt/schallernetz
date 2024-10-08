@@ -67,6 +67,10 @@ in
       };
     })
     {
+      schallernetz.networking.subnets.${cfg.subnet}.nfrules_in = [
+        "ip6 daddr ${cfg.ip6Address} udp dport 53 limit rate 70/second accept"
+      ];
+
       # entry in main reverse proxy
       schallernetz.servers.haproxy = {
         frontends.www.extraConfig = [

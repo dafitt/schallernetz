@@ -5,7 +5,9 @@
 
 with lib;
 with lib.schallernetz; {
-  imports = with inputs; [ ];
+  imports = with inputs; [
+    ../../network-configuration.nix
+  ];
 
   schallernetz = {
     backups.localhost = false;

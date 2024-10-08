@@ -160,10 +160,52 @@ in
 
         tables."schallernetzFIREWALL" = {
           family = "inet";
-          content = concatStringsSep "\n\n" [
-            ''define wan = ${cfg.wan}''
-            (readFile ./schallernetzWALL.nft)
-          ];
+
+          # https://wiki.nftables.org/wiki-nftables/index.php/Quick_reference-nftables_in_10_minutes
+          content = ''
+            # Everything that is beeing sent to this host.
+            chain input {
+              type filter hook input priority filter + 1; policy drop;
+
+              ct state invalid drop # Drop invalid connections.
+              ct state { established, related } accept # Allow established traffic.
+
+              icmp type echo-request accept # Allow ping.
+              icmpv6 type != { nd-redirect, 139 } accept # Accept all ICMPv6 messages except redirects and node information queries (type 139).  See RFC 4890, section 4.4.
+
+              iifname ${cfg.wan} udp dport 546 accept # dhcpv6-client
+              iifname ${cfg.wan} drop # Making double sure to block access to this host from the internet.
+
+              iifname lo accept # Accept everything from loopback interface. Allows itself to reach the internet.
+
+              iifname lan tcp dport 22 accept
+              iifname management accept
+            }
+
+            # Everything that is beeing forwarded from one interface to another.
+            chain forward { # Everything that is beeing forwarded.
+              type filter hook forward priority filter; policy drop;
+
+              ct state invalid drop # Drop invalid packets.
+              ct state established,related accept # Allow established traffic.
+
+              # https://wiki.nftables.org/wiki-nftables/index.php/Classic_perimetral_firewall_example
+              oifname vmap {
+                ${cfg.wan}: jump wan_in,
+                ${concatStrings (forEach (attrValues config.schallernetz.networking.subnets) (subnet: ''
+                  ${subnet.name}: jump ${subnet.name}_in,''))}
+              }
+            }
+
+            # what to allow to the internet (into wan)... except already established traffic from the internet (from wan)
+            chain wan_in {
+              iifname != management accept
+            }
+            ${concatStringsSep "\n" (forEach (attrValues config.schallernetz.networking.subnets) (subnet: ''
+              chain ${subnet.name}_in {
+                ${concatStringsSep "\n" subnet.nfrules_in}
+              }''))}
+          '';
         };
       };
     };

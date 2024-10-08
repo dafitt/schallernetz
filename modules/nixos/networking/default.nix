@@ -7,12 +7,22 @@ let
 in
 {
   options.schallernetz.networking = with types; {
-    enable = mkBoolOpt true "Enable network configuration.";
+    enable = mkBoolOpt true ''Enable network configuration.
+      All of my networking options should be set equally for each systems/.
+      Recommendation:
+        1. Define all my networking options in _`systems/network-configuration.nix`_ and
+        2. import this file to each system with `imports = [ ../../network-configuration.nix ];`.
+    '';
+
+    domain = mkOption {
+      type = str;
+      description = "The domain name of the network.";
+      example = "***REMOVED_DOMAIN***";
+    };
 
     uniqueLocal = {
       prefix_ = mkOption {
         type = str;
-        default = "***REMOVED_IPv6***";
         description = ''
           The incomplete IPv6 Unique Local Address prefix (ULA prefix).
           Something from fc00::/7.
@@ -21,21 +31,19 @@ in
       };
       prefix = mkOption {
         type = str;
-        default = "${config.schallernetz.networking.uniqueLocal.prefix_}0";
         description = ''
           The complete IPv6 Unique Local Address prefix (ULA prefix).
           Something from fc00::/7.
         '';
-        example = "${config.schallernetz.networking.uniqueLocal.prefix_}00";
+        example = "${prefix_}0";
       };
       suffix = mkOption {
         type = ints.between 7 64;
-        default = 60;
         description = ''
           IPv6 Unique Local Address suffix (ULA suffix).
           Something between /7 and /64.
         '';
-        example = 56;
+        example = 60;
       };
     };
 
@@ -81,27 +89,29 @@ in
               example = 12;
               description = "The subnet's vlan id.";
             };
+
+            nfrules_in = mkOption {
+              type = listOf str;
+              default = [ ];
+              description = "nftables rules of what to allow into the subnet.";
+            };
           };
         }));
-      default = {
+      description = "The subnets of the network.";
+      example = {
         "untrusted" = { prefixId = "1"; vlan = 1; };
         "lan" = { prefixId = "2"; vlan = 2; };
         "server" = { prefixId = "c"; vlan = 12; };
         "dmz" = { prefixId = "d"; vlan = 13; };
         "management" = { prefixId = "f"; vlan = 15; };
       };
-      example = {
-        "lan" = { prefixId = "02"; vlan = 2; };
-        "guest" = { prefixId = "0a"; vlan = 10; };
-      };
-      description = "The subnets of the network.";
     };
   };
 
   config = mkIf cfg.enable {
     networking = {
       hostName = host;
-      domain = "***REMOVED_DOMAIN***";
+      domain = cfg.domain;
 
       nameservers = [ config.schallernetz.servers.unbound.ip6Address ];
     };
