@@ -32,28 +32,24 @@ in
     systemd.network = {
       networks."10-wan" = {
         matchConfig.Name = cfg.wan;
-        linkConfig.RequiredForOnline = "routable"; # make routing on this interface a dependency for network-online.target
+        linkConfig.RequiredForOnline = "routable";
 
         networkConfig = {
           DHCP = "ipv6";
           IPv6AcceptRA = true;
-          DHCPPrefixDelegation = true;
           #IPMasquerade  = "ipv4";
           #IPv4Forwarding = true;
           #IPv6Forwarding = true;
           IPv6PrivacyExtensions = true;
         };
         ipv6AcceptRAConfig = {
-          UseDNS = false; # I'll handle DNS myself, please.
+          UseDNS = false; # I handle DNS myself.
         };
         dhcpV6Config = {
-          PrefixDelegationHint = "::/60"; # ask for prefix delegation
+          PrefixDelegationHint = "::/60"; # Ask for prefix delegation.
+          UseAddress = false; # Generate my own IPv6.
+          UseDNS = false; # I handle DNS myself.
           WithoutRA = "solicit"; # information-request
-        };
-        dhcpPrefixDelegationConfig = {
-          UplinkInterface = ":self";
-          SubnetId = "0";
-          Announce = false;
         };
       };
 
