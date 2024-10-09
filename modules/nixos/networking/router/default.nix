@@ -34,8 +34,9 @@ in
 
   config = mkIf cfg.enable {
     environment.systemPackages = with pkgs; [
-      termshark
       dig
+      termshark
+      traceroute
     ];
 
     # enable routing
@@ -50,11 +51,10 @@ in
         linkConfig.RequiredForOnline = "routable";
 
         networkConfig = {
-          DHCP = "ipv6";
+          DHCP = "yes";
           IPv6AcceptRA = true;
           #IPMasquerade  = "ipv4";
-          #IPv4Forwarding = true;
-          #IPv6Forwarding = true;
+          IPForward = true; # TODO 24.11: IPv4Forwarding = true;
           IPv6PrivacyExtensions = true;
         };
         ipv6AcceptRAConfig = {
@@ -168,8 +168,13 @@ in
     #systemd.services.systemd-networkd.environment.SYSTEMD_LOG_LEVEL = "debug";
 
     networking = {
-      nat.enable = false;
-      firewall.enable = false; # Use nftables instead.
+      # NAT64 in combination with DNS64 (->unbound).
+      jool = {
+        enable = true;
+        nat64.default.global.pool6 = "***REMOVED_IPv6***::/96";
+      };
+
+      firewall.enable = false; # We use nftables instead.
       nftables = {
         enable = true;
 

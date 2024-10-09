@@ -42,6 +42,7 @@ in
               interface = [ "${cfg.ip6Address}" "***REMOVED_IPv6***" ];
               access-control = [ "${hostConfig.schallernetz.networking.uniqueLocal.prefix}::/56 allow" ];
 
+              module-config = "'dns64 validator iterator'";
               qname-minimisation = true;
             };
 
