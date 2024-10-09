@@ -13,6 +13,16 @@ in
     subnet = mkOpt str "server" "The name of the subnet which the container should be part of.";
     ip6Host = mkOpt str ":9" "The ipv6's host part.";
     ip6Address = mkOpt str "${config.schallernetz.networking.subnets.${cfg.subnet}.uniqueLocal.prefix}:${cfg.ip6Host}" "Full IPv6 address of the container.";
+
+    extraAuthZoneRecords = mkOption {
+      type = listOf str;
+      default = [ ];
+      description = "A list of dns records to add to the authoritative zone.";
+      example = [
+        "example IN AAAA ***REMOVED_IPv6***"
+        "${cfg.name} IN AAAA ${cfg.ip6Address}"
+      ];
+    };
   };
 
   config = mkMerge [
@@ -47,8 +57,24 @@ in
             };
 
             settings.auth-zone = [{
-              name = "lan.***REMOVED_DOMAIN***";
-              zonefile = "${./de.***REMOVED_DOMAIN***.zone}";
+              name = "lan.${hostConfig.networking.domain}";
+              zonefile = "${pkgs.writeText "lan.${hostConfig.networking.domain}.zone" ''
+                $ORIGIN lan.${hostConfig.networking.domain}.
+                $TTL 6h
+
+                @ IN SOA ${cfg.name} admin.***REMOVED_DOMAIN***. (
+                  2024092301 ; serial number YYMMDDNN
+                  12h        ; refresh
+                  2h         ; update retry
+                  1w         ; expire
+                  2h         ; minimum TTL
+                )
+                @ IN NS ${cfg.name}
+                ${cfg.name} IN AAAA ${cfg.ip6Address}
+
+                ${concatStringsSep "\n" cfg.extraAuthZoneRecords}
+                minisforumhm80 in AAAA ***REMOVED_IPv6***
+              '')}";
             }];
           };
           systemd.services.unbound.unitConfig = {

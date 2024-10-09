@@ -81,6 +81,10 @@ in
           ''
         ];
       };
+      schallernetz.servers.unbound.extraAuthZoneRecords = [
+        "adguard IN AAAA ${cfg.ip6Address}"
+        "${cfg.name} IN CNAME ${config.schallernetz.servers.haproxy.name}"
+      ];
       schallernetz.networking.subnets.${cfg.subnet}.nfrules_in = [
         "ip6 daddr ${cfg.ip6Address} udp dport 53 limit rate 70/second accept"
       ];

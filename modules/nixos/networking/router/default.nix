@@ -17,7 +17,7 @@ in
       example = "eth0";
     };
 
-    nfrules_in = mkOption {
+    extraNfrules_in = mkOption {
       type = listOf str;
       # Some default, if you forget to set it. Hopefully you also picked "lan" as your subnet-name, then.
       default = [
@@ -25,10 +25,6 @@ in
         "iifname management accept"
       ];
       description = "Additional nftables rules of what to allow into the router.";
-      example = [
-        "iifname lan tcp dport 22 accept"
-        "iifname management accept"
-      ];
     };
   };
 
@@ -197,7 +193,7 @@ in
 
               iifname lo accept # Accept everything from loopback interface. Allows itself to reach the internet.
 
-              ${concatStringsSep "\n" cfg.nfrules_in}
+              ${concatStringsSep "\n" cfg.extraNfrules_in}
             }
 
             # Everything that is beeing forwarded from one interface to another.

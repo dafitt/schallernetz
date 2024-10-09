@@ -177,6 +177,9 @@ in
           ''
         ];
       };
+      schallernetz.servers.unbound.extraAuthZoneRecords = [
+        "${cfg.name} IN CNAME ${config.schallernetz.servers.haproxy.name}"
+      ];
     }
   ];
 }

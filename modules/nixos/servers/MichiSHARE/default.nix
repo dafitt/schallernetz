@@ -15,63 +15,70 @@ in
     ip6Address = mkOpt str "${config.schallernetz.networking.subnets.${cfg.subnet}.uniqueLocal.prefix}:${cfg.ip6Host}" "Full IPv6 address of the container.";
   };
 
-  config = mkIf cfg.enable {
-    #$ sudo nixos-container start MichiSHARE
-    #$ sudo nixos-container root-login MichiSHARE
-    containers.${cfg.name} = {
-      autoStart = true;
+  config = mkMerge [
+    (mkIf cfg.enable {
+      #$ sudo nixos-container start MichiSHARE
+      #$ sudo nixos-container root-login MichiSHARE
+      containers.${cfg.name} = {
+        autoStart = true;
 
-      privateNetwork = true;
-      hostBridge = cfg.subnet;
-      localAddress6 = "${cfg.ip6Address}/64";
+        privateNetwork = true;
+        hostBridge = cfg.subnet;
+        localAddress6 = "${cfg.ip6Address}/64";
 
-      specialArgs = { hostConfig = config; };
-      config = { hostConfig, config, lib, pkgs, ... }: {
-        users.users."michi" = {
-          isNormalUser = true;
-          hashedPassword = "***REMOVED_HASH***";
-          useDefaultShell = false;
-          shell = null;
-        };
-
-        #$ smbpasswd -a <user>
-
-        services.samba = {
-          enable = true;
-          securityType = "user";
-          extraConfig = ''
-            workgroup = WORKGROUP
-            server string = MichiSHARE
-            netbios name = MichiSHARE
-            security = user
-            use sendfile = yes
-            #max protocol = smb2
-            # note: localhost is the ipv6 localhost ***REMOVED_IPv6***
-            hosts allow = ***REMOVED_IPv4***/***REMOVED_IPv4*** ***REMOVED_IPv4*** localhost
-            hosts deny = ***REMOVED_IPv4***/0
-            guest account = nobody
-            map to guest = bad user
-          '';
-          shares = {
-            "${config.users.users.michi.name}" = {
-              path = config.users.users.michi.home;
-              browseable = "yes";
-              "read only" = "no";
-              "create mask" = "0644";
-            };
+        specialArgs = { hostConfig = config; };
+        config = { hostConfig, config, lib, pkgs, ... }: {
+          users.users."michi" = {
+            isNormalUser = true;
+            hashedPassword = "***REMOVED_HASH***";
+            useDefaultShell = false;
+            shell = null;
           };
-          openFirewall = true;
 
-          # make shares visible for windows 10 clients
-          #services.samba-wsdd.enable = true;
-          #networking.firewall.allowedTCPPorts = [ 5357 ]; # wsdd
-          #networking.firewall.allowedUDPPorts = [ 3702 ]; # wsdd
+          #$ smbpasswd -a <user>
 
-          #$ smbclient --list localhost
+          services.samba = {
+            enable = true;
+            securityType = "user";
+            extraConfig = ''
+              workgroup = WORKGROUP
+              server string = MichiSHARE
+              netbios name = MichiSHARE
+              security = user
+              use sendfile = yes
+              #max protocol = smb2
+              # note: localhost is the ipv6 localhost ***REMOVED_IPv6***
+              hosts allow = ***REMOVED_IPv4***/***REMOVED_IPv4*** ***REMOVED_IPv4*** localhost
+              hosts deny = ***REMOVED_IPv4***/0
+              guest account = nobody
+              map to guest = bad user
+            '';
+            shares = {
+              "${config.users.users.michi.name}" = {
+                path = config.users.users.michi.home;
+                browseable = "yes";
+                "read only" = "no";
+                "create mask" = "0644";
+              };
+            };
+            openFirewall = true;
+
+            # make shares visible for windows 10 clients
+            #services.samba-wsdd.enable = true;
+            #networking.firewall.allowedTCPPorts = [ 5357 ]; # wsdd
+            #networking.firewall.allowedUDPPorts = [ 3702 ]; # wsdd
+
+            #$ smbclient --list localhost
+          };
+
+          system.stateVersion = hostConfig.system.stateVersion;
         };
-
-        system.stateVersion = hostConfig.system.stateVersion;
       };
-    };
-  };
+    })
+    {
+      schallernetz.servers.unbound.extraAuthZoneRecords = [
+        "${cfg.name} IN AAAA ${cfg.ip6Address}"
+      ];
+    }
+  ];
 }

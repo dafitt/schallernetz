@@ -9,7 +9,7 @@
       suffix = 60;
     };
 
-    router.nfrules_in = [
+    router.extraNfrules_in = [
       "iifname management accept"
       "iifname lan tcp dport 22 accept"
       "iifname wan ip6 saddr ***REMOVED_IPv6***::/60 tcp dport 22 accept"
