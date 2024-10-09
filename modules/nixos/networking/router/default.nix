@@ -24,7 +24,7 @@ in
         "iifname lan tcp dport 22 accept"
         "iifname management accept"
       ];
-      description = "nftables rules of what to allow into the router.";
+      description = "Additional nftables rules of what to allow into the router.";
       example = [
         "iifname lan tcp dport 22 accept"
         "iifname management accept"
@@ -190,11 +190,10 @@ in
               ct state invalid drop # Drop invalid connections.
               ct state { established, related } accept # Allow established traffic.
 
+              iifname ${cfg.wan} udp dport 546 accept # dhcpv6-client
+
               icmp type echo-request accept # Allow ping.
               icmpv6 type != { nd-redirect, 139 } accept # Accept all ICMPv6 messages except redirects and node information queries (type 139).  See RFC 4890, section 4.4.
-
-              iifname ${cfg.wan} udp dport 546 accept # dhcpv6-client
-              iifname ${cfg.wan} drop # Making early sure to block access to this host from the internet.
 
               iifname lo accept # Accept everything from loopback interface. Allows itself to reach the internet.
 

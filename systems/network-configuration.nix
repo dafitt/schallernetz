@@ -9,11 +9,19 @@
       suffix = 60;
     };
 
+    router.nfrules_in = [
+      "iifname management accept"
+      "iifname lan tcp dport 22 accept"
+      "iifname wan ip6 saddr ***REMOVED_IPv6***::/60 tcp dport 22 accept"
+    ];
+
     subnets = {
       "untrusted" = {
         prefixId = "1";
         vlan = 1;
-        nfrules_in = mkBefore [ "iifname lan accept" ];
+        nfrules_in = mkBefore [
+          "iifname lan accept"
+        ];
       };
       "lan" = {
         prefixId = "2";
@@ -37,13 +45,10 @@
       "wan" = {
         prefixId = "0";
         vlan = 16;
-        nfrules_in = mkBefore [ "iifname != management accept" ];
+        nfrules_in = mkBefore [
+          "iifname != management accept"
+        ];
       };
     };
-
-    router.nfrules_in = [
-      "iifname lan tcp dport 22 accept"
-      "iifname management accept"
-    ];
   };
 }
