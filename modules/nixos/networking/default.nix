@@ -16,6 +16,7 @@ in
 
     domain = mkOption {
       type = str;
+      default = "example.com";
       description = "The domain name of the network.";
       example = "***REMOVED_DOMAIN***";
     };
