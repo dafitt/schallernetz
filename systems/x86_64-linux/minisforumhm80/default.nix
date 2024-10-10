@@ -2,9 +2,16 @@
 
 { config, lib, pkgs, inputs, ... }:
 
+let
+  ip6Host = ":a80";
+in
 with lib;
 with lib.schallernetz; {
-  imports = with inputs; [ ./hardware-configuration.nix ];
+  imports = with inputs; [
+    ./hardware-configuration.nix
+
+    ../../network-configuration.nix
+  ];
 
   schallernetz = {
     backups = {
@@ -13,7 +20,6 @@ with lib.schallernetz; {
     };
 
     servers = {
-      adguardhome.enable = true;
       bitwarden.enable = true;
       DavidCAL.enable = true;
       DavidSYNC.enable = true;
@@ -22,8 +28,6 @@ with lib.schallernetz; {
       MichiSHARE.enable = true;
       ntfy.enable = true;
       searx.enable = true;
-      unbound.enable = true;
-      wireguard.enable = true;
     };
   };
 
@@ -39,18 +43,29 @@ with lib.schallernetz; {
   services.fstrim.enable = true; # SSD
 
   systemd.network.networks = {
-    # connect physical port to bridge
     "30-enp4s0" = {
       matchConfig.Name = "enp4s0";
-      networkConfig.Bridge = "br_lan";
       linkConfig.RequiredForOnline = "enslaved";
+      vlan = [ "server-vlan" "dmz-vlan" ]; # tagged
+      networkConfig = {
+        Bridge = "management"; # untagged
+        LinkLocalAddressing = "no";
+      };
     };
-    "40-br_lan" = {
+
+    "60-server" = with config.schallernetz.networking.subnets.server; {
       # NOTE completion of bridge
       address = [
-        "${config.schallernetz.networking.uniqueLocal.prefix}***REMOVED_IPv6***/64"
+        "${uniqueLocal.prefix}:${ip6Host}/64"
+        "fe80:${ip6Host}/64"
       ];
-      #domains = [ ];
+    };
+    "60-management" = with config.schallernetz.networking.subnets.management; {
+      # NOTE completion of bridge
+      address = [
+        "${uniqueLocal.prefix}:${ip6Host}/64"
+        "fe80:${ip6Host}/64"
+      ];
     };
   };
 

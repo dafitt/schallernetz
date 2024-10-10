@@ -12,9 +12,16 @@
 
 { config, lib, pkgs, inputs, ... }:
 
+let
+  ip6Host = ":fff";
+in
 with lib;
 with lib.schallernetz; {
-  imports = [ ./hardware-configuration.nix ];
+  imports = [
+    ./hardware-configuration.nix
+
+    ../../network-configuration.nix
+  ];
 
   schallernetz = rec {
     backups.localhost = true;
@@ -69,6 +76,33 @@ with lib.schallernetz; {
 
   environment.systemPackages = with pkgs; [
   ];
+
+  systemd.network.networks = {
+    "30-eth0" = {
+      matchConfig.Name = "eth0";
+      linkConfig.RequiredForOnline = "enslaved";
+      vlan = [ "server-vlan" "dmz-vlan" ]; # tagged
+      networkConfig = {
+        Bridge = "management"; # untagged
+        LinkLocalAddressing = "no";
+      };
+    };
+
+    "60-server" = with config.schallernetz.networking.subnets.server; {
+      # NOTE completion of bridge
+      address = [
+        "${uniqueLocal.prefix}:${ip6Host}/64"
+        "fe80:${ip6Host}/64"
+      ];
+    };
+    "60-management" = with config.schallernetz.networking.subnets.management; {
+      # NOTE completion of bridge
+      address = [
+        "${uniqueLocal.prefix}:${ip6Host}/64"
+        "fe80:${ip6Host}/64"
+      ];
+    };
+  };
 
   # add device-specific nixos configuration here #
 

@@ -181,9 +181,9 @@ in
       #  linkConfig.RequiredForOnline = "routable";
       #
       #  # NOTE completion of bridge per host required:
-      #  address = [];
-      #  gateway = []; # not for ipv6
-      #  dns = [];
+      #  address = [ ];
+      #  gateway = [ ]; # not for ipv6
+      #  dns = [ ];
       #  domains = [ ];
       #  networkConfig = {
       #    IPv6AcceptRA = true; # for ipv6 dynamic gateway route
@@ -215,8 +215,8 @@ in
       );
 
       ## NOTE don't forget to configure the interfaces in systems/
-      #networks."30-enp2s0" = {
-      #  matchConfig.Name = "enp2s0";
+      #networks."30-eth0" = {
+      #  matchConfig.Name = "eth0";
       #  linkConfig.RequiredForOnline = "enslaved";
       #  vlan = [ "lan-vlan" "server-vlan" "dmz-vlan" ]; # tagged
       #  networkConfig = {
