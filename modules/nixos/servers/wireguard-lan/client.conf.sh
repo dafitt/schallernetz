@@ -43,9 +43,9 @@ EOL
     cat <<EOL
                 {
                   # $name
-                  PublicKey = "$publicKey";
-                  PresharedKey = "$presharedKey";
-                  AllowedIPs = [ "$ip6Address/128" "$ipAddress/32" ];
+                  publicKey = "$publicKey";
+                  presharedKey = "$presharedKey";
+                  allowedIPs = [ "$ip6Address/128" "$ipAddress/32" ];
                 }
 EOL
   )

@@ -78,6 +78,24 @@ in
 
               peers = [
                 {
+                  # MichiIPAD
+                  publicKey = "***REMOVED_WIREGUARD-KEY***";
+                  presharedKey = "***REMOVED_WIREGUARD-KEY***";
+                  allowedIPs = [ "***REMOVED_IPv6***/128" "***REMOVED_IPv4***/32" ];
+                }
+                {
+                  # MichiIPHONE
+                  publicKey = "***REMOVED_WIREGUARD-KEY***";
+                  presharedKey = "***REMOVED_WIREGUARD-KEY***";
+                  allowedIPs = [ "***REMOVED_IPv6***/128" "***REMOVED_IPv4***/32" ];
+                }
+                {
+                  # MichiWORK
+                  publicKey = "***REMOVED_WIREGUARD-KEY***";
+                  presharedKey = "***REMOVED_WIREGUARD-KEY***";
+                  allowedIPs = [ "***REMOVED_IPv6***/128" "***REMOVED_IPv4***/32" ];
+                }
+                {
                   # DavidLEGION
                   publicKey = "***REMOVED_WIREGUARD-KEY***";
                   presharedKey = "***REMOVED_WIREGUARD-KEY***";
@@ -85,18 +103,6 @@ in
                 }
                 {
                   # DavidPIXEL3a
-                  publicKey = "***REMOVED_WIREGUARD-KEY***";
-                  presharedKey = "***REMOVED_WIREGUARD-KEY***";
-                  allowedIPs = [ "***REMOVED_IPv6***/128" "***REMOVED_IPv4***/32" ];
-                }
-                {
-                  # MichiPHONE
-                  publicKey = "***REMOVED_WIREGUARD-KEY***";
-                  presharedKey = "***REMOVED_WIREGUARD-KEY***";
-                  allowedIPs = [ "***REMOVED_IPv6***/128" "***REMOVED_IPv4***/32" ];
-                }
-                {
-                  # MichiWORK
                   publicKey = "***REMOVED_WIREGUARD-KEY***";
                   presharedKey = "***REMOVED_WIREGUARD-KEY***";
                   allowedIPs = [ "***REMOVED_IPv6***/128" "***REMOVED_IPv4***/32" ];
