@@ -3,7 +3,7 @@
 { config, lib, pkgs, inputs, ... }:
 
 let
-  ip6Host = ":a80";
+  ip6HostAddress = ":a80";
 in
 with lib;
 with lib.schallernetz; {
@@ -56,15 +56,15 @@ with lib.schallernetz; {
     "60-server" = with config.schallernetz.networking.subnets.server; {
       # NOTE completion of bridge
       address = [
-        "${uniqueLocal.prefix}:${ip6Host}/64"
-        "fe80:${ip6Host}/64"
+        "${uniqueLocal.prefix}:${ip6HostAddress}/64"
+        "fe80:${ip6HostAddress}/64"
       ];
     };
     "60-management" = with config.schallernetz.networking.subnets.management; {
       # NOTE completion of bridge
       address = [
-        "${uniqueLocal.prefix}:${ip6Host}/64"
-        "fe80:${ip6Host}/64"
+        "${uniqueLocal.prefix}:${ip6HostAddress}/64"
+        "fe80:${ip6HostAddress}/64"
       ];
     };
   };

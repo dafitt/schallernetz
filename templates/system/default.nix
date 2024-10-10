@@ -13,7 +13,7 @@
 { config, lib, pkgs, inputs, ... }:
 
 let
-  ip6Host = ":fff";
+  ip6HostAddress = ":fff";
 in
 with lib;
 with lib.schallernetz; {
@@ -31,7 +31,7 @@ with lib.schallernetz; {
     servers.adguardhome.enable = false;
     servers.adguardhome.name = "adguardhome";
     servers.adguardhome.subnet = "server";
-    servers.adguardhome.ip6Host = ":8";
+    servers.adguardhome.ip6HostAddress = ":8";
     servers.bitwarden.enable = false;
     servers.bitwarden.name = "bitwarden";
     servers.DavidCAL.enable = false;
@@ -91,15 +91,15 @@ with lib.schallernetz; {
     "60-server" = with config.schallernetz.networking.subnets.server; {
       # NOTE completion of bridge
       address = [
-        "${uniqueLocal.prefix}:${ip6Host}/64"
-        "fe80:${ip6Host}/64"
+        "${uniqueLocal.prefix}:${ip6HostAddress}/64"
+        "fe80:${ip6HostAddress}/64"
       ];
     };
     "60-management" = with config.schallernetz.networking.subnets.management; {
       # NOTE completion of bridge
       address = [
-        "${uniqueLocal.prefix}:${ip6Host}/64"
-        "fe80:${ip6Host}/64"
+        "${uniqueLocal.prefix}:${ip6HostAddress}/64"
+        "fe80:${ip6HostAddress}/64"
       ];
     };
   };

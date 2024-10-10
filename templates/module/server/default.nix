@@ -11,8 +11,8 @@ in
     name = mkOpt str "MYSERVER" "The name of the server.";
 
     subnet = mkOpt str "" "The name of the subnet which the container should be part of.";
-    ip6Host = mkOpt str "" "The ipv6's host part.";
-    ip6Address = mkOpt str "${config.schallernetz.networking.subnets.${cfg.subnet}.uniqueLocal.prefix}:${cfg.ip6Host}" "Full IPv6 address of the container.";
+    ip6HostAddress = mkOpt str "" "The ipv6's host part.";
+    ip6Address = mkOpt str "${config.schallernetz.networking.subnets.${cfg.subnet}.uniqueLocal.prefix}:${cfg.ip6HostAddress}" "Full IPv6 address of the container.";
   };
 
   config = mkMerge [
@@ -64,7 +64,7 @@ in
       # Open port(s) in the main network firewall for this server?
       schallernetz.networking.subnets.${cfg.subnet}.nfrules_in = [
         "iifname lan ip6 daddr ${cfg.ip6Address} tcp dport 443 limit rate 70/second accept"
-        "ip6 daddr & ***REMOVED_IPv6*** == :${cfg.ip6Host} tcp dport 443 limit rate 70/second accept"
+        "ip6 daddr & ***REMOVED_IPv6*** == :${cfg.ip6HostAddress} tcp dport 443 limit rate 70/second accept"
       ];
     }
   ];
