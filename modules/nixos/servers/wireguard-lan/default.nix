@@ -43,46 +43,38 @@ in
             qrencode
           ];
 
-          boot.kernel.sysctl."net.ipv6.conf.wg0.forwarding" = 1;
-          boot.kernel.sysctl."net.ipv4.conf.wg0.forwarding" = 1;
+          boot.kernel.sysctl = {
+            #"net.ipv4.conf.wg0.forwarding" = true;
+            "net.ipv6.conf.wg0.forwarding" = true;
+          };
 
           systemd.network.networks."30-eth0" = {
             matchConfig.Name = "eth0";
+            #networkConfig.IPv6PrivacyExtensions = true;
             ipv6AcceptRAConfig.Token = ":${cfg.ip6HostAddress}";
           };
 
           networking = {
-            # Log in to the network like a normal client
             useNetworkd = true;
-            interfaces."eth0".tempAddress = "default"; # IPv6 temporary address (aka privacy extensions)
             useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
 
             firewall.interfaces."eth0".allowedUDPPorts = [ 123 ];
 
-            nat = {
-              enable = true;
-              enableIPv6 = true;
-              externalInterface = "eth0";
-              internalInterfaces = [ "wg0" ];
-            };
+            #nat = {
+            #  enable = true;
+            #  externalInterface = "eth0";
+            #  internalInterfaces = [ "wg0" ];
+            #};
 
             wireguard.interfaces."wg0" = {
-              ips = [ "***REMOVED_IPv6***/64" "***REMOVED_IPv4***/8" ];
-              listenPort = 123;
-
-              # This allows the wireguard server to route your traffic to the internet and hence be like a VPN
-              # For this to work you have to set the dnsserver IP of your router (or dnsserver of choice) in your clients
-              postSetup = ''
-                ${pkgs.iptables}/bin/ip6tables -t nat -A POSTROUTING -s fc00::/64 -o eth0 -j MASQUERADE
-                ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s ***REMOVED_IPv4***/8 -o eth0 -j MASQUERADE
-              '';
-              postShutdown = ''
-                ${pkgs.iptables}/bin/ip6tables -t nat -D POSTROUTING -s fc00::/64 -o eth0 -j MASQUERADE
-                ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s ***REMOVED_IPv4***/8 -o eth0 -j MASQUERADE
-              '';
-
               privateKeyFile = config.age.secrets."private.key".path; #$ wg genkey > private.key
               # ***REMOVED_WIREGUARD-KEY*** #$ wg pubkey < private.key
+
+              ips = [ "***REMOVED_IPv6***/80" "***REMOVED_IPv4***/8" ];
+              listenPort = 123;
+
+              #postSetup = "${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s ***REMOVED_IPv4***/8 -o eth0 -j MASQUERADE";
+              #postShutdown = "${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s ***REMOVED_IPv4***/8 -o eth0 -j MASQUERADE";
 
               peers = [
                 {
@@ -137,7 +129,7 @@ in
                 hostname = "lan.wireguard.***REMOVED_DOMAIN***";
                 ddns-server = "ddns.do.de";
                 ddns-path = "/?myip=%i";
-                checkip-command = ''${pkgs.iproute2}/bin/ip -6 addr show dev eth0 scope global -temporary | ${pkgs.gnugrep}/bin/grep -G 'inet6 [2-3]' ''; # get the non-temporary global unicast address
+                checkip-command = "${pkgs.iproute2}/bin/ip -6 addr show dev eth0 scope global -temporary | ${pkgs.gnugrep}/bin/grep -G 'inet6 [2-3]' "; # get the non-temporary global unicast address
               };
             };
           };

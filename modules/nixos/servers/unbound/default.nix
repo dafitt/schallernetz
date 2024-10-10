@@ -98,7 +98,7 @@ in
     })
     {
       schallernetz.networking.subnets.${cfg.subnet}.nfrules_in = [
-        "ip6 daddr & ***REMOVED_IPv6*** == ***REMOVED_IPv6*** udp dport 53 limit rate 70/second accept"
+        "ip6 daddr ${cfg.ip6Address} udp dport 53 limit rate 70/second accept"
       ];
     }
   ];

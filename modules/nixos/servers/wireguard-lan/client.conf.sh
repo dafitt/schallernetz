@@ -18,7 +18,7 @@ filepath="$(dirname $0)/$name.conf"
 
 if [ ! -f "$filepath" ]; then
   ipAddress="10.0.$((RANDOM % 128)).$((RANDOM % 256))"
-  ip6Address="fc00::$(hexdump -n 2 -e '"%03x"' </dev/urandom | cut -c1-3)"
+  ip6Address="***REMOVED_IPv6***::$(hexdump --length 2 --format '"%03x"' /dev/urandom | cut -c1-3)"
   privateKey="$(wg genkey)"
   publicKey="$(echo $privateKey | wg pubkey)"
   presharedKey="$(wg genpsk)"
@@ -27,15 +27,14 @@ if [ ! -f "$filepath" ]; then
   echo -e "$INFO File:\n$filepath"
   cat <<EOL >$filepath
 [Interface]
-Address = $ip6Address/64, $ipAddress/8
-ListenPort = 51820
+Address = $ip6Address/80, $ipAddress/8
 PrivateKey = $privateKey
 DNS = ***REMOVED_IPv6***
 
 [Peer]
 PublicKey = ***REMOVED_WIREGUARD-KEY***
 PresharedKey = $presharedKey
-AllowedIPs = ***REMOVED_IPv6***::/56
+AllowedIPs = ***REMOVED_IPv6***::/60
 Endpoint = lan.wireguard.***REMOVED_DOMAIN***:123
 EOL
 
