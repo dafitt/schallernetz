@@ -17,9 +17,7 @@ with lib.schallernetz; {
   ];
 
   schallernetz = {
-    networking.router = {
-      enable = true;
-    };
+    networking.router.enable = true;
 
     servers = {
       unbound.enable = true;
@@ -30,9 +28,8 @@ with lib.schallernetz; {
   environment.systemPackages = with pkgs; [
   ];
 
-  # connect the physical interfaces to the right bridge and/or vlan
-  systemd.network = {
-    networks."30-enp1s0" = {
+  systemd.network.networks = {
+    "30-enp1s0" = {
       matchConfig.Name = "enp1s0";
       linkConfig.RequiredForOnline = "enslaved";
       networkConfig = {
@@ -40,7 +37,7 @@ with lib.schallernetz; {
         LinkLocalAddressing = "no";
       };
     };
-    networks."30-enp2s0" = {
+    "30-enp2s0" = {
       matchConfig.Name = "enp2s0";
       linkConfig.RequiredForOnline = "enslaved";
       networkConfig = {
@@ -48,7 +45,7 @@ with lib.schallernetz; {
         LinkLocalAddressing = "no";
       };
     };
-    networks."30-enp3s0" = {
+    "30-enp3s0" = {
       matchConfig.Name = "enp3s0";
       linkConfig.RequiredForOnline = "enslaved";
       vlan = [ "server-vlan" "dmz-vlan" ]; # tagged
@@ -57,7 +54,7 @@ with lib.schallernetz; {
         LinkLocalAddressing = "no";
       };
     };
-    networks."30-enp4s0" = {
+    "30-enp4s0" = {
       matchConfig.Name = "enp4s0";
       linkConfig.RequiredForOnline = "enslaved";
       networkConfig = {

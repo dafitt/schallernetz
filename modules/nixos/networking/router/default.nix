@@ -41,8 +41,9 @@ in
       "net.ipv6.conf.all.forwarding" = true;
     };
 
-    systemd.network = {
-      networks."10-wan" = {
+    #systemd.services.systemd-networkd.environment.SYSTEMD_LOG_LEVEL = "debug";
+    systemd.network.networks = {
+      "10-wan" = {
         matchConfig.Name = cfg.wan;
         linkConfig.RequiredForOnline = "routable";
 
@@ -64,7 +65,7 @@ in
         };
       };
 
-      networks."60-untrusted" = with subnetsCfg.untrusted; {
+      "60-untrusted" = with subnetsCfg.untrusted; {
         # NOTE completion of bridge
         networkConfig = {
           ConfigureWithoutCarrier = true;
@@ -79,7 +80,7 @@ in
         };
       };
 
-      networks."60-lan" = with subnetsCfg.lan; {
+      "60-lan" = with subnetsCfg.lan; {
         # NOTE completion of bridge
         address = [
           "${uniqueLocal.prefix}***REMOVED_IPv6***/64"
@@ -101,7 +102,7 @@ in
         }];
       };
 
-      networks."60-server" = with subnetsCfg.server; {
+      "60-server" = with subnetsCfg.server; {
         # NOTE completion of bridge
         address = [
           "${uniqueLocal.prefix}***REMOVED_IPv6***/64"
@@ -124,7 +125,7 @@ in
         }];
       };
 
-      networks."60-dmz" = with subnetsCfg.dmz; {
+      "60-dmz" = with subnetsCfg.dmz; {
         # NOTE completion of bridge
         address = [
           "${uniqueLocal.prefix}***REMOVED_IPv6***/64"
@@ -145,7 +146,7 @@ in
         }];
       };
 
-      networks."60-management" = with subnetsCfg.management; {
+      "60-management" = with subnetsCfg.management; {
         # NOTE completion of bridge
         address = [
           "${uniqueLocal.prefix}***REMOVED_IPv6***/64"
@@ -161,7 +162,6 @@ in
         }]; # to be able to ping ***REMOVED_IPv6*** from a client (automatic route configuration)
       };
     };
-    #systemd.services.systemd-networkd.environment.SYSTEMD_LOG_LEVEL = "debug";
 
     networking = {
       # NAT64 in combination with DNS64 (->unbound).

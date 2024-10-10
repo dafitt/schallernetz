@@ -180,7 +180,7 @@ in
       #  matchConfig.Name = "${s.bridge}";
       #  linkConfig.RequiredForOnline = "routable";
       #
-      #  # NOTE completion of bridge per host required:
+      #  # NOTE completion of bridge per host in systems/ required:
       #  address = [ ];
       #  gateway = [ ]; # not for ipv6
       #  dns = [ ];

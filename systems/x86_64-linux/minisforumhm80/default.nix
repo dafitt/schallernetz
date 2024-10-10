@@ -40,8 +40,6 @@ with lib.schallernetz; {
     timeout = 0;
   };
 
-  services.fstrim.enable = true; # SSD
-
   systemd.network.networks = {
     "30-enp4s0" = {
       matchConfig.Name = "enp4s0";
@@ -68,6 +66,8 @@ with lib.schallernetz; {
       ];
     };
   };
+
+  services.fstrim.enable = true; # SSD
 
   system.stateVersion = "23.11";
 }
