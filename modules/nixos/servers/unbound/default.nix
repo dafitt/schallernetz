@@ -73,8 +73,7 @@ in
                 ${cfg.name} IN AAAA ${cfg.ip6Address}
 
                 ${concatStringsSep "\n" cfg.extraAuthZoneRecords}
-                minisforumhm80 in AAAA ***REMOVED_IPv6***
-              '')}";
+              ''}";
             }];
           };
           systemd.services.unbound.unitConfig = {

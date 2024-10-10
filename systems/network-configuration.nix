@@ -1,4 +1,4 @@
-{ lib, ... }: with lib; {
+{ config, lib, ... }: with lib; {
   schallernetz.networking = {
     enable = true;
     domain = "***REMOVED_DOMAIN***";
@@ -52,4 +52,9 @@
       };
     };
   };
+
+  schallernetz.servers.unbound.extraAuthZoneRecords = with config.schallernetz.networking.subnets; [
+    "barebonej3160 in AAAA ${management.uniqueLocal.prefix}***REMOVED_IPv6***"
+    "minisforumhm80 in AAAA ${server.uniqueLocal.prefix}***REMOVED_IPv6***"
+  ];
 }
