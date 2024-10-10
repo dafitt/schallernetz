@@ -61,11 +61,13 @@ in
 
             firewall.interfaces."eth0".allowedUDPPorts = [ 123 ];
 
-            #nat = {
-            #  enable = true;
-            #  externalInterface = "eth0";
-            #  internalInterfaces = [ "wg0" ];
-            #};
+            nat = {
+              # required for internet (IPv6 GUA Address)
+              enable = true;
+              enableIPv6 = true;
+              externalInterface = "eth0";
+              internalInterfaces = [ "wg0" ];
+            };
 
             wireguard.interfaces."wg0" = {
               privateKeyFile = config.age.secrets."private.key".path; #$ wg genkey > private.key
