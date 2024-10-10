@@ -3,6 +3,7 @@
 #!nix nixpkgs#wireguard-tools
 #!nix nixpkgs#hexdump
 #!nix nixpkgs#qrencode
+#!nix nixpkgs#perl
 #!nix nixpkgs#bash --command bash
 
 # Run this script to generate a new wireguard client: #$ env nix "./client.conf.sh"
@@ -17,11 +18,12 @@ filepath="$(dirname $0)/$name.conf"
 
 if [ ! -f "$filepath" ]; then
   ipAddress="10.0.$((RANDOM % 128)).$((RANDOM % 256))"
-  ip6Address="fc01::$(hexdump -n 2 -e '"%03x"' </dev/urandom | cut -c1-3)"
+  ip6Address="fc00::$(hexdump -n 2 -e '"%03x"' </dev/urandom | cut -c1-3)"
   privateKey="$(wg genkey)"
   publicKey="$(echo $privateKey | wg pubkey)"
   presharedKey="$(wg genpsk)"
 
+  # File
   echo -e "$INFO File:\n$filepath"
   cat <<EOL >$filepath
 [Interface]
@@ -33,28 +35,32 @@ DNS = ***REMOVED_IPv6***
 [Peer]
 PublicKey = ***REMOVED_WIREGUARD-KEY***
 PresharedKey = $presharedKey
-AllowedIPs = ***REMOVED_IPv6***::/56, ***REMOVED_IPv4***/23
-Endpoint = wireguard.***REMOVED_DOMAIN***:123
+AllowedIPs = ***REMOVED_IPv6***::/56
+Endpoint = lan.wireguard.***REMOVED_DOMAIN***:123
 EOL
 
-  echo -e "$ACTION Add the NixOS configuration:"
-  cat <<EOL
-config.wireguard.interfaces.<name>.peers = [
-  {
-    # $name
-    publicKey = "$publicKey";
-    presharedKey = "$presharedKey";
-    allowedIPs = [ "$ip6Address/128" "$ipAddress/32" ];
-  }
-];
+  # NixOS configuration
+  nixosConfiguration=$(
+    cat <<EOL
+                {
+                  # $name
+                  PublicKey = "$publicKey";
+                  PresharedKey = "$presharedKey";
+                  AllowedIPs = [ "$ip6Address/128" "$ipAddress/32" ];
+                }
 EOL
+  )
+  sed --in-place "\|wireguardPeers = \[| r /dev/stdin" $(dirname $0)/default.nix <<<"$nixosConfiguration"
 
-  read -p "wireguard: added client $name"
+  echo -e "$ACTION Commit the supplemented NixOS configuration:"
+  read -p "wireguard.lan: added client $name"
 fi
 
+# QR-Code
 echo -e "$INFO QR-Code:"
 qrencode -t ansiutf8 -r $filepath
 
+# HELP
 echo -e $HELP
 cat <<EOL
 To import into Networkmanager run:

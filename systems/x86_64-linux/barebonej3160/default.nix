@@ -22,6 +22,7 @@ with lib.schallernetz; {
     servers = {
       unbound.enable = true;
       adguardhome.enable = true;
+      wireguard-lan.enable = true;
     };
   };
 
