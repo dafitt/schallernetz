@@ -17,7 +17,7 @@ echo -ne "$ACTION Hostname/FQDN/Identifier of the device [client]> " && read nam
 filepath="$(dirname $0)/$name.conf"
 
 if [ ! -f "$filepath" ]; then
-  ipAddress="10.0.$((RANDOM % 128)).$((RANDOM % 256))"
+  ipAddress="172.28.$((RANDOM % 128)).$((RANDOM % 256))"
   ip6Address="***REMOVED_IPv6***::$(hexdump --length 2 --format '"%03x"' /dev/urandom | cut -c1-3)"
   privateKey="$(wg genkey)"
   publicKey="$(echo $privateKey | wg pubkey)"
@@ -27,7 +27,7 @@ if [ ! -f "$filepath" ]; then
   echo -e "$INFO File:\n$filepath"
   cat <<EOL >$filepath
 [Interface]
-Address = $ip6Address/80, $ipAddress/8
+Address = $ip6Address/80, $ipAddress/20
 PrivateKey = $privateKey
 DNS = ***REMOVED_IPv6***
 
@@ -49,7 +49,7 @@ EOL
                 }
 EOL
   )
-  sed --in-place "\|wireguardPeers = \[| r /dev/stdin" $(dirname $0)/default.nix <<<"$nixosConfiguration"
+  sed --in-place "\|peers = \[| r /dev/stdin" $(dirname $0)/default.nix <<<"$nixosConfiguration"
 
   echo -e "$ACTION Commit the supplemented NixOS configuration:"
   read -p "wireguard.lan: added client $name"

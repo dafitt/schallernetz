@@ -70,7 +70,7 @@ in
               privateKeyFile = config.age.secrets."private.key".path; #$ wg genkey > private.key
               # ***REMOVED_WIREGUARD-KEY*** #$ wg pubkey < private.key
 
-              ips = [ "***REMOVED_IPv6***/80" "***REMOVED_IPv4***/8" ];
+              ips = [ "***REMOVED_IPv6***/80" "***REMOVED_IPv4***/20" ];
               listenPort = 123;
 
               #postSetup = "${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s ***REMOVED_IPv4***/8 -o eth0 -j MASQUERADE";
