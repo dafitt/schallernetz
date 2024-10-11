@@ -94,7 +94,10 @@ in
             nfrules_in = mkOption {
               type = listOf str;
               default = [ ];
-              description = "nftables rules of what to allow into the subnet.";
+              description = ''
+                A list of nftables rules of what to allow into the subnet.
+                Rules are applied to every packet that is beeing forwarded to `oifname ${name}`.
+              '';
             };
           };
         }));
