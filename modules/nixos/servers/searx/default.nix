@@ -11,7 +11,7 @@ in
     name = mkOpt str "searx" "The name of the server.";
 
     subnet = mkOpt str "server" "The name of the subnet which the container should be part of.";
-    ip6HostAddress = mkOpt str ":a" "The ipv6's host part.";
+    ip6HostAddress = mkOpt str ":89c" "The ipv6's host part.";
     ip6Address = mkOpt str "${config.schallernetz.networking.subnets.${cfg.subnet}.uniqueLocal.prefix}:${cfg.ip6HostAddress}" "Full IPv6 address of the container.";
   };
 
