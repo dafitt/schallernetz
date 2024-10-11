@@ -152,6 +152,7 @@ in
     })
     {
       schallernetz.networking.subnets.${cfg.subnet}.nfrules_in = [
+        # Allow to reach this endpoint from the internet.
         "iifname wan ip6 daddr & ***REMOVED_IPv6*** == :${cfg.ip6HostAddress} udp dport 123 accept"
       ];
       systemd.network.networks."60-${cfg.subnet}".routes = [

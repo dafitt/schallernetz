@@ -56,15 +56,15 @@ in
           ''
         ];
       };
-      # Mabe also dns entries?
-      schallernetz.servers.unbound.extraAuthZoneRecords = [
-        "${cfg.name} IN AAAA ${cfg.ip6Address}"
-        "${cfg.name} IN CNAME ${config.schallernetz.servers.haproxy.name}"
-      ];
       # Open port(s) in the main network firewall for this server?
       schallernetz.networking.subnets.${cfg.subnet}.nfrules_in = [
         "iifname lan ip6 daddr ${cfg.ip6Address} tcp dport 443 limit rate 70/second accept"
         "ip6 daddr & ***REMOVED_IPv6*** == :${cfg.ip6HostAddress} tcp dport 443 limit rate 70/second accept"
+      ];
+      # Mabe also dns entries?
+      schallernetz.servers.unbound.extraAuthZoneRecords = [
+        "${cfg.name} IN AAAA ${cfg.ip6Address}"
+        "${cfg.name} IN CNAME ${config.schallernetz.servers.haproxy.name}"
       ];
     }
   ];

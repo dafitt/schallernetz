@@ -176,6 +176,10 @@ in
           ''
         ];
       };
+      schallernetz.networking.subnet.${cfg.subnet}.nfrules_in = [
+        # Don't allow access to connection between server and main reverse proxy from other subnets.
+        "ip6 daddr ${cfg.ip6Address} tcp dport 80 drop"
+      ];
       schallernetz.servers.unbound.extraAuthZoneRecords = [
         "${cfg.name} IN CNAME ${config.schallernetz.servers.haproxy.name}"
       ];
