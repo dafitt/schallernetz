@@ -50,6 +50,14 @@ with lib.schallernetz; {
         LinkLocalAddressing = "no";
       };
     };
+    "30-eno1" = {
+      matchConfig.Name = "eno1";
+      linkConfig.RequiredForOnline = "enslaved";
+      networkConfig = {
+        Bridge = "management"; # untagged
+        LinkLocalAddressing = "no";
+      };
+    };
 
     "60-server" = with config.schallernetz.networking.subnets.server; {
       # NOTE completion of bridge
@@ -66,6 +74,10 @@ with lib.schallernetz; {
       ];
     };
   };
+
+  users.users."admin".openssh.authorizedKeys.keys = [
+    "***REMOVED_SSH-PUBLICKEY*** admin@barebonej3160"
+  ];
 
   services.fstrim.enable = true; # SSD
 

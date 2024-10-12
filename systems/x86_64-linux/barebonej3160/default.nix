@@ -51,7 +51,7 @@ with lib.schallernetz; {
       linkConfig.RequiredForOnline = "enslaved";
       vlan = [ "server-vlan" "dmz-vlan" ]; # tagged
       networkConfig = {
-        Bridge = "lan"; # untagged
+        Bridge = "management"; # untagged
         LinkLocalAddressing = "no";
       };
     };
