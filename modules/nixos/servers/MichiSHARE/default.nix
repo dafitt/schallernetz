@@ -37,6 +37,7 @@ in
 
           #$ smbpasswd -a <user>
 
+          # https://gist.github.com/vy-let/a030c1079f09ecae4135aebf1e121ea6
           services.samba = {
             enable = true;
             enableWinbindd = false;

@@ -31,7 +31,7 @@ in
   "modules/nixos/servers/wireguard-lan/private.key.age".publicKeys = [ barebonej3160 minisforumhm80 ] ++ david;
 
   "modules/nixos/servers/ACME_DODE.age".publicKeys = [ minisforumhm80 ] ++ david;
-  "modules/nixos/servers/DDNS-K57174-51715.age".publicKeys = [ minisforumhm80 ] ++ david;
+  "modules/nixos/servers/DDNS-K57174-51715.age".publicKeys = [ minisforumhm80 ] ++ david; # dmz
 
   # Edit #$ nix run github:ryantm/agenix -- -e FILE -i PRIVATE_KEY
   # Rekey #$ nix run github:ryantm/agenix -- -r -i PRIVATE_KEY
