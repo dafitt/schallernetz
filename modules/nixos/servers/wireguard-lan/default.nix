@@ -61,13 +61,13 @@ in
 
             firewall.interfaces."eth0".allowedUDPPorts = [ 123 ];
 
-            nat = {
-              # required for internet (IPv6 GUA Address)
-              enable = true;
-              enableIPv6 = true;
-              externalInterface = "eth0";
-              internalInterfaces = [ "wg0" ];
-            };
+            #nat = {
+            #  # required for internet (IPv6 GUA Address)
+            #  enable = true;
+            #  enableIPv6 = true;
+            #  externalInterface = "eth0";
+            #  internalInterfaces = [ "wg0" ];
+            #};
 
             wireguard.interfaces."wg0" = {
               privateKeyFile = config.age.secrets."private.key".path; #$ wg genkey > private.key
@@ -75,9 +75,6 @@ in
 
               ips = [ "***REMOVED_IPv6***/80" "***REMOVED_IPv4***/20" ];
               listenPort = 123;
-
-              #postSetup = "${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s ***REMOVED_IPv4***/8 -o eth0 -j MASQUERADE";
-              #postShutdown = "${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s ***REMOVED_IPv4***/8 -o eth0 -j MASQUERADE";
 
               peers = [
                 {
@@ -94,6 +91,12 @@ in
                 }
                 {
                   # MichiWORK
+                  publicKey = "***REMOVED_WIREGUARD-KEY***";
+                  presharedKey = "***REMOVED_WIREGUARD-KEY***";
+                  allowedIPs = [ "***REMOVED_IPv6***/128" "***REMOVED_IPv4***/32" ];
+                }
+                {
+                  # DavidDESKTOP
                   publicKey = "***REMOVED_WIREGUARD-KEY***";
                   presharedKey = "***REMOVED_WIREGUARD-KEY***";
                   allowedIPs = [ "***REMOVED_IPv6***/128" "***REMOVED_IPv4***/32" ];
