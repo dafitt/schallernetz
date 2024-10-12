@@ -41,15 +41,15 @@ EOL
   # NixOS configuration
   nixosConfiguration=$(
     cat <<EOL
-                {
-                  # $name
-                  publicKey = "$publicKey";
-                  presharedKey = "$presharedKey";
-                  allowedIPs = [ "$ip6Address/128" "$ipAddress/32" ];
-                }
+  {
+    # $name
+    publicKey = "$publicKey";
+    presharedKey = "$presharedKey";
+    allowedIPs = [ "$ip6Address/128" "$ipAddress/32" ];
+  }
 EOL
   )
-  sed --in-place "\|peers = \[| r /dev/stdin" $(dirname $0)/default.nix <<<"$nixosConfiguration"
+  sed --in-place "\|\[| r /dev/stdin" $(dirname $0)/clients.nix <<<"$nixosConfiguration"
 
   echo -e "$ACTION Commit the supplemented NixOS configuration:"
   read -p "wireguard.lan: added client $name"
