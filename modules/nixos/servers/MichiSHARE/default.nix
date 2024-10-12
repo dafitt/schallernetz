@@ -10,7 +10,7 @@ in
     enable = mkBoolOpt false "Enable server MichiSHARE.";
     name = mkOpt str "MichiSHARE" "The name of the server.";
 
-    subnet = mkOpt str "lan" "The name of the subnet which the container should be part of.";
+    subnet = mkOpt str "server" "The name of the subnet which the container should be part of.";
     ip6HostAddress = mkOpt str ":c66" "The ipv6's host part.";
     ip6Address = mkOpt str "${config.schallernetz.networking.subnets.${cfg.subnet}.uniqueLocal.prefix}:${cfg.ip6HostAddress}" "Full IPv6 address of the container.";
   };
@@ -39,35 +39,16 @@ in
 
           services.samba = {
             enable = true;
-            securityType = "user";
-            extraConfig = ''
-              workgroup = WORKGROUP
-              server string = MichiSHARE
-              netbios name = MichiSHARE
-              security = user
-              use sendfile = yes
-              #max protocol = smb2
-              # note: localhost is the ipv6 localhost ***REMOVED_IPv6***
-              hosts allow = ***REMOVED_IPv4***/***REMOVED_IPv4*** ***REMOVED_IPv4*** localhost
-              hosts deny = ***REMOVED_IPv4***/0
-              guest account = nobody
-              map to guest = bad user
-            '';
-            shares = {
-              "${config.users.users.michi.name}" = {
-                path = config.users.users.michi.home;
-                browseable = "yes";
-                "read only" = "no";
-                "create mask" = "0644";
-              };
-            };
+            enableWinbindd = false;
+            enableNmbd = false;
             openFirewall = true;
 
-            # make shares visible for windows 10 clients
-            #services.samba-wsdd.enable = true;
-            #networking.firewall.allowedTCPPorts = [ 5357 ]; # wsdd
-            #networking.firewall.allowedUDPPorts = [ 3702 ]; # wsdd
-
+            securityType = "user";
+            shares."${config.users.users.michi.name}" = {
+              path = config.users.users.michi.home;
+              browseable = "yes";
+              writable = "true";
+            };
             #$ smbclient --list localhost
           };
 
