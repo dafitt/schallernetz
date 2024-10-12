@@ -10,15 +10,13 @@ in
     enable = mkBoolOpt false "Enable server searx.";
     name = mkOpt str "searx" "The name of the server.";
 
-    subnet = mkOpt str "server" "The name of the subnet which the container should be part of.";
+    subnet = mkOpt str "dmz" "The name of the subnet which the container should be part of.";
     ip6HostAddress = mkOpt str ":89c" "The ipv6's host part.";
     ip6Address = mkOpt str "${config.schallernetz.networking.subnets.${cfg.subnet}.uniqueLocal.prefix}:${cfg.ip6HostAddress}" "Full IPv6 address of the container.";
   };
 
   config = mkMerge [
     (mkIf cfg.enable {
-      # Get secret file
-      age.secrets."searx" = { file = ./searx.age; };
 
       #$ sudo nixos-container start searx
       #$ sudo nixos-container root-login searx
@@ -29,21 +27,29 @@ in
         hostBridge = cfg.subnet;
         localAddress6 = "${cfg.ip6Address}/64";
 
-        # Mount secret environmentFile `/run/agenix.d/3/searx`
-        bindMounts.${config.age.secrets."searx".path}.isReadOnly = true;
+        bindMounts."/etc/ssh/ssh_host_ed25519_key".isReadOnly = true; # for agenix
 
         specialArgs = { hostConfig = config; };
         config = { hostConfig, config, lib, pkgs, ... }: {
-          imports = with inputs; [ self.nixosModules."ntfy-systemd" ];
+          imports = with inputs; [
+            agenix.nixosModules.default
+            self.nixosModules."ntfy-systemd"
+          ];
+
+          age = {
+            identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+            secrets."searx" = { file = ./searx.age; };
+          };
 
           # SearXNG is a free internet metasearch engine which aggregates results from various search services and databases. Users are neither tracked nor profiled.
           # https://github.com/searxng/searxng
           services.searx = {
             enable = true;
-            environmentFile = hostConfig.age.secrets."searx".path; # SEARX_SECRET_KEY=...
+            environmentFile = config.age.secrets."searx".path; # SEARX_SECRET_KEY=...
 
+            # https://docs.searxng.org/admin/settings/index.html
+            # https://github.com/searxng/searxng/blob/master/searx/settings.yml
             settings = {
-              # https://docs.searxng.org/admin/settings/index.html
               general = {
                 debug = false;
                 instance_name = "searx";
@@ -54,11 +60,18 @@ in
                 method = "GET";
                 image_proxy = false;
               };
-              ui.default_theme = "simple";
-              ui.infinite_scroll = true;
-              ui.query_in_title = true;
-              search.autocomplete = "qwant";
-              search.default_lang = "all"; # de-DE
+              ui = {
+                default_theme = "simple";
+                infinite_scroll = true;
+                query_in_title = true;
+              };
+              search = {
+                autocomplete = "qwant";
+                default_lang = "all"; # de-DE
+              };
+              outgoing = {
+                request_timeout = 5.0;
+              };
               engines = mapAttrsToList (name: value: { inherit name; } // value) {
                 "1337x".disabled = false;
                 "1x".disabled = false;
@@ -149,13 +162,11 @@ in
           };
 
           networking = {
-            enableIPv6 = true; # automatically get IPv6 and default route6
+            enableIPv6 = true;
             useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
             nameservers = [ hostConfig.schallernetz.servers.unbound.ip6Address ];
 
-            firewall.interfaces."eth0" = {
-              allowedTCPPorts = [ 80 ];
-            };
+            firewall.interfaces."eth0".allowedTCPPorts = [ 80 ];
           };
 
           system.stateVersion = hostConfig.system.stateVersion;
@@ -163,7 +174,7 @@ in
       };
     })
     {
-      schallernetz.servers.haproxy-server = {
+      schallernetz.servers.haproxy-dmz = {
         frontends.www.extraConfig = [
           "use_backend ${cfg.name} if { req.hdr(host) -i ${cfg.name}.${config.networking.domain} }"
           "use_backend ${cfg.name} if { req.hdr(host) -i ${cfg.name}.lan.${config.networking.domain} }"
@@ -176,12 +187,8 @@ in
           ''
         ];
       };
-      schallernetz.networking.subnets.${cfg.subnet}.nfrules_in = [
-        # Don't allow access to connection between server and main reverse proxy from other subnets.
-        "ip6 daddr ${cfg.ip6Address} tcp dport 80 drop"
-      ];
       schallernetz.servers.unbound.extraAuthZoneRecords = [
-        "${cfg.name} IN CNAME ${config.schallernetz.servers.haproxy-server.name}"
+        "${cfg.name} IN CNAME ${config.schallernetz.servers.haproxy-dmz.name}"
       ];
     }
   ];

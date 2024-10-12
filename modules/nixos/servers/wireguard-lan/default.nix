@@ -26,7 +26,7 @@ in
         privateNetwork = true;
         hostBridge = cfg.subnet;
 
-        bindMounts."/etc/ssh/ssh_host_ed25519_key".isReadOnly = true;
+        bindMounts."/etc/ssh/ssh_host_ed25519_key".isReadOnly = true; # for agenix
 
         specialArgs = { hostConfig = config; };
         config = { hostConfig, config, lib, pkgs, ... }: {
@@ -35,9 +35,15 @@ in
             self.nixosModules."ntfy-systemd"
           ];
 
-          age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-
-          age.secrets."private.key" = { file = ./private.key.age; };
+          age = {
+            identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+            secrets."private.key" = { file = ./private.key.age; };
+            secrets."DDNS-K57174-49283" = {
+              file = ./DDNS-K57174-49283.age;
+              owner = config.services.inadyn.user;
+              group = config.services.inadyn.group;
+            };
+          };
 
           environment.systemPackages = with pkgs; [
             wireguard-tools
@@ -121,13 +127,7 @@ in
             OnSuccess = [ "ntfy-success@%i.service" ];
           };
 
-          # DDNS
-          age.secrets."DDNS-K57174-49283" = {
-            file = ./DDNS-K57174-49283.age;
-            owner = config.services.inadyn.user;
-            group = config.services.inadyn.group;
-          };
-          # tell my domain my dynamic ipv6
+          # DDNS: tell my domain my dynamic ipv6
           services.inadyn = {
             enable = true;
 

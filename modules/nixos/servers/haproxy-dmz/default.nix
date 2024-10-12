@@ -47,7 +47,15 @@ in
             self.nixosModules."ntfy-systemd"
           ];
 
-          age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+          age = {
+            identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+            secrets."ACME_DODE" = { file = ../ACME_DODE.age; };
+            secrets."DDNS-K57174-51715" = {
+              file = ../DDNS-K57174-51715.age;
+              owner = config.services.inadyn.user;
+              group = config.services.inadyn.group;
+            };
+          };
 
           # Reverse Proxy before the application servers
           # [HAProxy config tutorials](https://www.haproxy.com/documentation/haproxy-configuration-tutorials/core-concepts/overview/)
@@ -86,7 +94,6 @@ in
             OnSuccess = [ "ntfy-success@%i.service" ];
           };
 
-          age.secrets."ACME_DODE" = { file = ../ACME_DODE.age; };
           # https://wiki.nixos.org/wiki/ACME
           security.acme = {
             acceptTerms = true;
@@ -106,14 +113,38 @@ in
             OnSuccess = [ "ntfy-success@%i.service" ];
           };
 
+          # DDNS: tell my domain my dynamic ipv6
+          services.inadyn = {
+            enable = true;
+
+            interval = "*-*-* *:0/***REMOVED_IPv6***";
+            logLevel = "info";
+            settings = {
+              allow-ipv6 = true;
+              custom."do.de" = {
+                username = "DDNS-K57174-51715";
+                include = config.age.secrets."DDNS-K57174-51715".path; #`password = `
+                hostname = "lan.wireguard.***REMOVED_DOMAIN***";
+                ddns-server = "ddns.do.de";
+                ddns-path = "/?myip=%i";
+                checkip-command = "${pkgs.iproute2}/bin/ip -6 addr show dev eth0 scope global -temporary | ${pkgs.gnugrep}/bin/grep -G 'inet6 [2-3]' "; # get the non-temporary global unicast address
+              };
+            };
+          };
+          systemd.services.inadyn.unitConfig = {
+            OnFailure = [ "ntfy-failure@%i.service" ];
+          };
+
+          systemd.network.networks."30-eth0" = {
+            matchConfig.Name = "eth0";
+            ipv6AcceptRAConfig.Token = ":${cfg.ip6HostAddress}";
+          };
           networking = {
-            enableIPv6 = true;
+            useNetworkd = true;
             useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
             nameservers = [ hostConfig.schallernetz.servers.unbound.ip6Address ];
 
-            firewall.interfaces."eth0" = {
-              allowedTCPPorts = [ 80 443 ];
-            };
+            firewall.interfaces."eth0".allowedTCPPorts = [ 80 443 ];
           };
 
           system.stateVersion = hostConfig.system.stateVersion;
@@ -122,7 +153,7 @@ in
     })
     {
       schallernetz.networking.subnets.${cfg.subnet}.nfrules_in = [
-        "ip6 daddr & ***REMOVED_IPv6*** == :${cfg.ip6HostAddress} tcp dport { 80, 443 } accpet"
+        "ip6 daddr & ***REMOVED_IPv6*** == :${cfg.ip6HostAddress} tcp dport { 80, 443 } accept"
       ];
       schallernetz.servers.unbound.extraAuthZoneRecords = [
         "${cfg.name} IN AAAA ${cfg.ip6Address}"
