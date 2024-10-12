@@ -52,7 +52,7 @@ in
             settings = {
               general = {
                 debug = false;
-                instance_name = "searx";
+                instance_name = "SchallerSEARX";
               };
               server = {
                 base_url = "https://${cfg.name}.${hostConfig.networking.domain}";
@@ -66,7 +66,6 @@ in
                 query_in_title = true;
               };
               search = {
-                autocomplete = "qwant";
                 default_lang = "all"; # de-DE
               };
               outgoing = {
