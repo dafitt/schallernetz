@@ -79,7 +79,6 @@ in
                 "annas archive".disabled = false;
                 "bing".disabled = false;
                 "bitbucket".disabled = false;
-                "ccc-tv".disabled = false;
                 "codeberg".disabled = false;
                 "crowdview".disabled = false;
                 "ddg definitions".disabled = false;
@@ -89,13 +88,10 @@ in
                 "duden".disabled = false;
                 "emojipedia".disabled = false;
                 "erowid".disabled = false;
-                "framalibre".disabled = false;
                 "free software directory".disabled = false;
                 "gitlab".disabled = false;
                 "habrahabr".disabled = false;
                 "hackernews".disabled = false;
-                "hoodle".disabled = true;
-                "imigur".disabled = false;
                 "lib.rs".disabled = false;
                 "library genesis".disabled = false;
                 "lobste.rs".disabled = false;
