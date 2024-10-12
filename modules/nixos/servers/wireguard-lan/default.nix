@@ -84,6 +84,18 @@ in
 
               peers = [
                 {
+                  # MichiWORK
+                  publicKey = "***REMOVED_WIREGUARD-KEY***";
+                  presharedKey = "***REMOVED_WIREGUARD-KEY***";
+                  allowedIPs = [ "***REMOVED_IPv6***/128" "***REMOVED_IPv4***/32" ];
+                }
+                {
+                  # MichiDESKTOP
+                  publicKey = "***REMOVED_WIREGUARD-KEY***";
+                  presharedKey = "***REMOVED_WIREGUARD-KEY***";
+                  allowedIPs = [ "***REMOVED_IPv6***/128" "***REMOVED_IPv4***/32" ];
+                }
+                {
                   # MichiIPAD
                   publicKey = "***REMOVED_WIREGUARD-KEY***";
                   presharedKey = "***REMOVED_WIREGUARD-KEY***";
