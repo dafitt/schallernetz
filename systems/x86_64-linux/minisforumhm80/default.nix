@@ -1,4 +1,7 @@
-#$ nixos-rebuild --fast --flake .#minisforumhm80 --use-remote-sudo --target-host rebuild@minisforumhm80.lan.***REMOVED_DOMAIN*** <test|boot|switch>
+# Installation with install-iso anywhere
+#$ nix run github:nix-community/nixos-anywhere -- --flake .#minisforumhm80 root@***REMOVED_IPv6***%<enp?s0>
+# Rebuild
+#$ nixos-rebuild --flake .#minisforumhm80 --use-remote-sudo --target-host rebuild@minisforumhm80.lan.***REMOVED_DOMAIN*** <test|boot|switch>
 
 { config, lib, pkgs, inputs, ... }:
 
