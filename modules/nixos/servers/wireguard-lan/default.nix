@@ -96,12 +96,6 @@ in
                   allowedIPs = [ "***REMOVED_IPv6***/128" "***REMOVED_IPv4***/32" ];
                 }
                 {
-                  # MichiWORK
-                  publicKey = "***REMOVED_WIREGUARD-KEY***";
-                  presharedKey = "***REMOVED_WIREGUARD-KEY***";
-                  allowedIPs = [ "***REMOVED_IPv6***/128" "***REMOVED_IPv4***/32" ];
-                }
-                {
                   # DavidDESKTOP
                   publicKey = "***REMOVED_WIREGUARD-KEY***";
                   presharedKey = "***REMOVED_WIREGUARD-KEY***";

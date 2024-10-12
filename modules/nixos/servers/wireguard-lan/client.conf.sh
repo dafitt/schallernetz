@@ -17,7 +17,7 @@ echo -ne "$ACTION Hostname/FQDN/Identifier of the device [client]> " && read nam
 filepath="$(dirname $0)/$name.conf"
 
 if [ ! -f "$filepath" ]; then
-  ipAddress="172.28.$((RANDOM % 128)).$((RANDOM % 256))"
+  ipAddress="10.1.$((128 + (RANDOM % 127))).$((1 + (RANDOM % 254)))"
   ip6Address="***REMOVED_IPv6***::$(hexdump --length 2 --format '"%03x"' /dev/urandom | cut -c1-3)"
   privateKey="$(wg genkey)"
   publicKey="$(echo $privateKey | wg pubkey)"
