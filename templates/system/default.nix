@@ -42,8 +42,8 @@ with lib.schallernetz; {
     servers.DavidVPN.name = "DavidVPN";
     servers.forgejo.enable = false;
     servers.forgejo.name = "forgejo";
-    servers.haproxy.enable = false;
-    servers.haproxy.name = "haproxy";
+    servers.haproxy-server.enable = false;
+    servers.haproxy-server.name = "haproxy-server";
     servers.MichiSHARE.enable = false;
     servers.MichiSHARE.name = "MichiSHARE";
     servers.ntfy.enable = false;

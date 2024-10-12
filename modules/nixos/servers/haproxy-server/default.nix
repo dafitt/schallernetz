@@ -3,15 +3,15 @@
 with lib;
 with lib.schallernetz;
 let
-  cfg = config.schallernetz.servers.haproxy;
+  cfg = config.schallernetz.servers.haproxy-server;
 in
 {
-  options.schallernetz.servers.haproxy = with types; {
-    enable = mkBoolOpt false "Enable server haproxy.";
-    name = mkOpt str "haproxy" "The name of the server.";
+  options.schallernetz.servers.haproxy-server = with types; {
+    enable = mkBoolOpt false "Enable server haproxy-server.";
+    name = mkOpt str "haproxy-server" "The name of the server.";
 
     subnet = mkOpt str "server" "The name of the subnet which the container should be part of.";
-    ip6HostAddress = mkOpt str ":7f1" "The ipv6's host part.";
+    ip6HostAddress = mkOpt str ":7fc" "The ipv6's host part.";
     ip6Address = mkOpt str "${config.schallernetz.networking.subnets.${cfg.subnet}.uniqueLocal.prefix}:${cfg.ip6HostAddress}" "Full IPv6 address of the container.";
 
     frontends.extraConfig = mkOpt (listOf str) [ ] "List of additional frontends (config).";
@@ -107,8 +107,7 @@ in
           };
 
           networking = {
-            # for acme
-            enableIPv6 = true; # automatically get IPv6 and default route6
+            enableIPv6 = true;
             useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
             nameservers = [ hostConfig.schallernetz.servers.unbound.ip6Address ];
 

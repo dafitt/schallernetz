@@ -43,7 +43,7 @@ in
     # This has the advantage that you can distribute your servers across several hosts.
     {
       # An entry in the main reverse proxy?
-      schallernetz.servers.haproxy = {
+      schallernetz.servers.haproxy-server = {
         frontends.www.extraConfig = [
           "use_backend ${cfg.name} if { req.hdr(host) -i ${cfg.name}.${config.networking.domain} }"
           "use_backend ${cfg.name} if { req.hdr(host) -i ${cfg.name}.lan.${config.networking.domain} }"
@@ -64,7 +64,7 @@ in
       # Mabe also dns entries?
       schallernetz.servers.unbound.extraAuthZoneRecords = [
         "${cfg.name} IN AAAA ${cfg.ip6Address}"
-        "${cfg.name} IN CNAME ${config.schallernetz.servers.haproxy.name}"
+        "${cfg.name} IN CNAME ${config.schallernetz.servers.haproxy-server.name}"
       ];
     }
   ];

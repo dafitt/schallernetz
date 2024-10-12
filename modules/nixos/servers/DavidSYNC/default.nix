@@ -107,7 +107,7 @@ in
       };
     })
     {
-      schallernetz.servers.haproxy = {
+      schallernetz.servers.haproxy-server = {
         frontends.www.extraConfig = [
           "use_backend ${cfg.name} if { req.hdr(host) -i ${cfg.name}.${config.networking.domain} }"
           "use_backend ${cfg.name} if { req.hdr(host) -i ${cfg.name}.lan.${config.networking.domain} }"
@@ -125,7 +125,7 @@ in
         "ip6 daddr ${cfg.ip6Address} tcp dport 8384 drop"
       ];
       schallernetz.servers.unbound.extraAuthZoneRecords = [
-        "${cfg.name} IN CNAME ${config.schallernetz.servers.haproxy.name}"
+        "${cfg.name} IN CNAME ${config.schallernetz.servers.haproxy-server.name}"
       ];
     }
   ];

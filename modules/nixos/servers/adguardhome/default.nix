@@ -67,7 +67,7 @@ in
       };
     })
     {
-      schallernetz.servers.haproxy = {
+      schallernetz.servers.haproxy-server = {
         frontends.www.extraConfig = [
           "use_backend ${cfg.name} if { req.hdr(host) -i ${cfg.name}.${config.networking.domain} }"
           "use_backend ${cfg.name} if { req.hdr(host) -i ${cfg.name}.lan.${config.networking.domain} }"
@@ -82,7 +82,7 @@ in
       };
       schallernetz.servers.unbound.extraAuthZoneRecords = [
         "adguard IN AAAA ${cfg.ip6Address}"
-        "${cfg.name} IN CNAME ${config.schallernetz.servers.haproxy.name}"
+        "${cfg.name} IN CNAME ${config.schallernetz.servers.haproxy-server.name}"
       ];
       schallernetz.networking.subnets.${cfg.subnet}.nfrules_in = [
         # Allow access to dns from all other subnets.
