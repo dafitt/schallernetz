@@ -27,6 +27,7 @@ with lib.schallernetz; {
       DavidCAL.enable = true;
       DavidSYNC.enable = true;
       forgejo.enable = true;
+      haproxy-dmz.enable = true;
       haproxy-server.enable = true;
       MichiSHARE.enable = true;
       ntfy.enable = true;
