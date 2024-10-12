@@ -159,7 +159,7 @@ in
         "iifname wan ip6 daddr & ***REMOVED_IPv6*** == :${cfg.ip6HostAddress} udp dport 123 accept"
       ];
       systemd.network.networks."60-${cfg.subnet}".routes = [
-        { routeConfig = { Destination = "***REMOVED_IPv6***::/80"; Gateway = cfg.ip6Address; }; }
+        { routeConfig = { Destination = "***REMOVED_IPv6***::/80"; Gateway = cfg.ip6Address; IPv6Preference = "low"; }; }
       ];
     }
   ];
