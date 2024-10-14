@@ -81,7 +81,7 @@ systemd.network.networks = {
 }
 ```
 
-The router has of course a more complex bridge configuration. See [systems/x86_64-linux/barebonej3160/default.nix](https://github.com/dafitt/schallernetz/blob/main/systems/x86_64-linux/barebonej3160/default.nix) for an example.
+The router has of course slightly more bridge configuration than a normal host. See [systems/x86_64-linux/barebonej3160/default.nix](https://github.com/dafitt/schallernetz/blob/main/systems/x86_64-linux/barebonej3160/default.nix) for an example.
 
 ## Usage
 
