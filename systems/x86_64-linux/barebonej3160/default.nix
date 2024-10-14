@@ -64,15 +64,11 @@ with lib.schallernetz; {
       };
     };
 
-    "10-wan" = {
-      matchConfig.Name = cfg.wan;
-      linkConfig.RequiredForOnline = "routable";
-
+    "60-wan" = {
+      # NOTE completion of bridge
       networkConfig = {
         DHCP = "yes";
         IPv6AcceptRA = true;
-        #IPMasquerade  = "ipv4";
-        IPForward = true; # TODO 24.11: IPv4Forwarding = true;
         IPv6PrivacyExtensions = true;
       };
       ipv6AcceptRAConfig = {
@@ -82,11 +78,11 @@ with lib.schallernetz; {
         PrefixDelegationHint = "::/60"; # Ask for prefix delegation.
         UseAddress = false; # Generate my own IPv6.
         UseDNS = false; # I handle DNS myself.
-        WithoutRA = "solicit"; # information-request
+        WithoutRA = "solicit";
       };
     };
 
-    "60-untrusted" = with subnetsCfg.untrusted; {
+    "60-untrusted" = with config.schallernetz.networking.subnets.untrusted; {
       # NOTE completion of bridge
       networkConfig = {
         ConfigureWithoutCarrier = true;
@@ -101,7 +97,7 @@ with lib.schallernetz; {
       };
     };
 
-    "60-lan" = with subnetsCfg.lan; {
+    "60-lan" = with config.schallernetz.networking.subnets.lan; {
       # NOTE completion of bridge
       address = [
         "${uniqueLocal.prefix}***REMOVED_IPv6***/64"
@@ -123,7 +119,7 @@ with lib.schallernetz; {
       }];
     };
 
-    "60-server" = with subnetsCfg.server; {
+    "60-server" = with config.schallernetz.networking.subnets.server; {
       # NOTE completion of bridge
       address = [
         "${uniqueLocal.prefix}***REMOVED_IPv6***/64"
@@ -146,7 +142,7 @@ with lib.schallernetz; {
       }];
     };
 
-    "60-dmz" = with subnetsCfg.dmz; {
+    "60-dmz" = with config.schallernetz.networking.subnets.dmz; {
       # NOTE completion of bridge
       address = [
         "${uniqueLocal.prefix}***REMOVED_IPv6***/64"
@@ -167,7 +163,7 @@ with lib.schallernetz; {
       }];
     };
 
-    "60-management" = with subnetsCfg.management; {
+    "60-management" = with config.schallernetz.networking.subnets.management; {
       # NOTE completion of bridge
       address = [
         "${uniqueLocal.prefix}***REMOVED_IPv6***/64"

@@ -4,16 +4,19 @@ with lib;
 with lib.schallernetz;
 let
   cfg = config.schallernetz.networking.router;
-  subnetsCfg = config.schallernetz.networking.subnets;
 in
 {
   options.schallernetz.networking.router = with types; {
     enable = mkBoolOpt false "Enable the schallernetz router configuration.";
 
-    wan = mkOption {
+    wanInterface = mkOption {
       type = str;
       default = "wan";
-      description = "The name of the wan network (interface or bridge).";
+      description = ''
+        The name of the wan network. Either
+        - a interface name, if wan is configured directly on a physical interface
+        - the subnet name, if wan is configured with my `schallernetz.networking.subnets`-option.
+      '';
       example = "eth0";
     };
 
@@ -64,7 +67,7 @@ in
               ct state invalid drop # Drop invalid connections.
               ct state { established, related } accept # Allow established traffic.
 
-              iifname ${cfg.wan} udp dport 546 accept # dhcpv6-client
+              iifname ${cfg.wanInterface} udp dport 546 accept # dhcpv6-client
 
               icmp type echo-request accept # Allow ping.
               icmpv6 type != { nd-redirect, 139 } accept # Accept all ICMPv6 messages except redirects and node information queries (type 139).  See RFC 4890, section 4.4.
