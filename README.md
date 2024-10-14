@@ -100,8 +100,6 @@ The router has of course a more complex bridge configuration. See [systems/x86_6
 These modules are tested to be imported elsewhere:
 
 ```nix
-inputs.schallernetz.url = "git+file:../schallernetz?shallow=1";
-
 inputs.schallernetz.nixosModules."systemd/ntfy"
 ```
 
