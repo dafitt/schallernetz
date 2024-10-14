@@ -4,6 +4,7 @@ with lib;
 with lib.schallernetz;
 let
   cfg = config.schallernetz.servers.searx;
+  containerConfig = config.containers.${cfg.name}.config;
 in
 {
   options.schallernetz.servers.searx = with types; {
@@ -31,10 +32,7 @@ in
 
         specialArgs = { hostConfig = config; };
         config = { hostConfig, config, lib, pkgs, ... }: {
-          imports = with inputs; [
-            agenix.nixosModules.default
-            self.nixosModules."ntfy-systemd"
-          ];
+          imports = with inputs; [ agenix.nixosModules.default ];
 
           age = {
             identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
@@ -43,9 +41,9 @@ in
 
           # SearXNG is a free internet metasearch engine which aggregates results from various search services and databases. Users are neither tracked nor profiled.
           # https://github.com/searxng/searxng
+          # https://wiki.nixos.org/wiki/SearXNG
           services.searx = {
             enable = true;
-            environmentFile = config.age.secrets."searx".path; # SEARX_SECRET_KEY=...
 
             # https://docs.searxng.org/admin/settings/index.html
             # https://github.com/searxng/searxng/blob/master/searx/settings.yml
@@ -55,21 +53,22 @@ in
                 instance_name = "SchallerSEARX";
               };
               server = {
+                port = 8888;
                 base_url = "https://${cfg.name}.${hostConfig.networking.domain}";
-                secret_key = "@SEARX_SECRET_KEY@";
-                method = "GET";
+                secret_key = config.age.secrets."searx".path; # SEARX_SECRET_KEY=...
+                limiter = true;
+                public_instance = true;
                 image_proxy = false;
+                method = "GET";
               };
               ui = {
+                static_use_hash = true;
                 default_theme = "simple";
                 infinite_scroll = true;
                 query_in_title = true;
               };
               search = {
                 default_lang = "all"; # de-DE
-              };
-              outgoing = {
-                request_timeout = 5.0;
               };
               engines = mapAttrsToList (name: value: { inherit name; } // value) {
                 "1337x".disabled = false;
@@ -123,45 +122,50 @@ in
                 "wikivoyage".disabled = false;
                 "wiktionary".disabled = false;
                 "yahoo".disabled = false;
-                "yep".disabled = false;
+              };
+
+              enabled_plugins = [
+                "Basic Calculator"
+                "Hash plugin"
+                #"Tor check plugin"
+                "Open Access DOI rewrite"
+                "Hostnames plugin"
+                "Unit converter plugin"
+                "Tracker URL remover"
+              ];
+            };
+
+            redisCreateLocally = true;
+            limiterSettings = {
+              real_ip = {
+                x_for = 1;
+                ipv6_prefix = 56;
+              };
+              botdetection = {
+                ip_limit = {
+                  filter_link_local = true;
+                  link_token = true;
+                };
               };
             };
+
+            runInUwsgi = true;
+            uwsgiConfig = {
+              http = "[${cfg.ip6Address}]:${toString config.services.searx.settings.server.port}";
+            };
           };
-          systemd.services.searx.unitConfig = {
-            OnFailure = [ "ntfy-failure@%i.service" ];
-            OnSuccess = [ "ntfy-success@%i.service" ];
-          };
 
-          # Local reverse proxy for IPv6
-          # TODO security: https & secret_key
-          services.haproxy = {
-            enable = true;
-            config = ''
-              global
-                daemon
-
-              defaults
-                timeout connect 5s
-                timeout client 50s
-                timeout server 50s
-
-              frontend searx
-                mode http
-                bind [::]:80 v4v6
-                default_backend searx
-
-              backend searx
-                mode http
-                server searx 127.0.0.***REMOVED_IPv6*** maxconn 32 check
-            '';
-          };
 
           networking = {
-            enableIPv6 = true;
+            useNetworkd = true;
             useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
             nameservers = [ hostConfig.schallernetz.servers.unbound.ip6Address ];
 
-            firewall.interfaces."eth0".allowedTCPPorts = [ 80 ];
+            firewall.interfaces."eth0".allowedTCPPorts = [ config.services.searx.settings.server.port ];
+          };
+          systemd.network.networks."30-eth0" = {
+            matchConfig.Name = "eth0";
+            networkConfig.IPv6PrivacyExtensions = true;
           };
 
           system.stateVersion = hostConfig.system.stateVersion;
@@ -178,7 +182,8 @@ in
           ''
             backend ${cfg.name}
               mode http
-              server _0 [${cfg.ip6Address}]:80 maxconn 32 check
+              option http-server-close
+              server _0 [${cfg.ip6Address}]:${toString containerConfig.services.searx.settings.server.port} maxconn 32 check
           ''
         ];
       };
