@@ -6,35 +6,36 @@ let
   cfg = config.schallernetz.backups;
 in
 {
-  options.schallernetz.backups = with types;
-    {
-      localhost = mkBoolOpt false "Enable backups to localhost.";
-      NAS4 = mkBoolOpt false "Enable backups to NAS4.";
+  options.schallernetz.backups = with types; {
+    localhost = mkBoolOpt false "Enable backups to localhost.";
+    NAS4 = mkBoolOpt false "Enable backups to NAS4.";
 
-      paths = mkOption {
-        description = "Which paths to backup.";
-        type = listOf str;
-        default = [ ];
-        example = [
-          "/var/lib/nixos-containers/<name>/etc/group"
-          "/var/lib/nixos-containers/<name>/etc/machine-id"
-          "/var/lib/nixos-containers/<name>/etc/passwd"
-          "/var/lib/nixos-containers/<name>/etc/subgid"
-          "/var/lib/nixos-containers/<name>/root"
-          "/var/lib/nixos-containers/<name>/var/lib"
-        ];
-      };
+    paths = mkOption {
+      description = "Which paths to backup.";
+      type = listOf str;
+      default = [ ];
+      example = [
+        "/var/lib/nixos-containers/<name>/etc/group"
+        "/var/lib/nixos-containers/<name>/etc/machine-id"
+        "/var/lib/nixos-containers/<name>/etc/passwd"
+        "/var/lib/nixos-containers/<name>/etc/subgid"
+        "/var/lib/nixos-containers/<name>/root"
+        "/var/lib/nixos-containers/<name>/var/lib"
+      ];
     };
+  };
 
   config = mkMerge [
     (mkIf (cfg.localhost || cfg.NAS4) {
       schallernetz.ntfy-systemd = {
         enable = true;
-        url = "http://[***REMOVED_IPv6***]";
+        url = "http://[${config.schallernetz.servers.ntfy.name}.${config.networking.domain}]";
       };
     })
     (mkIf cfg.localhost {
-      age.secrets."borgbackup-job-localhost" = { file = ./${host}.age; };
+      age.secrets."borgbackup-job-localhost" = {
+        file = ./${host}.age;
+      };
 
       systemd.services."borgbackup-job-localhost" = {
         unitConfig = {
