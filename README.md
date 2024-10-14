@@ -8,7 +8,7 @@
         -   [Network](#network)
     -   [Usage](#usage)
         -   [Upgrading](#upgrading)
-        -   [Modules](#modules)
+        -   [Importable modules](#importable-modules)
     -   [Structure](#structure)
         -   [Servers](#servers)
 
@@ -96,12 +96,19 @@ The router has of course slightly more bridge configuration than a normal host. 
 
 4. After that `rebuild test` first and then `switch` for every host.
 
-### Modules
+### Importable modules
 
 These modules are tested to be imported elsewhere:
 
 ```nix
-inputs.schallernetz.nixosModules."systemd/ntfy"
+inputs.schallernetz.nixosModules."ntfy-systemd"
+```
+
+These modules are designed to be imported, not tested though:
+
+```nix
+inputs.schallernetz.nixosModules."networking"
+inputs.schallernetz.nixosModules."networking/router"
 ```
 
 ## Structure
