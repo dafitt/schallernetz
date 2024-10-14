@@ -9,13 +9,6 @@
       suffix = 60;
     };
 
-    router.extraNfrules_in = [
-      "iifname management accept"
-      "iifname lan tcp dport 22 accept"
-      # allow ssh from my old network
-      "iifname wan ip6 saddr ***REMOVED_IPv6***::/60 tcp dport 22 accept"
-    ];
-
     subnets = {
       "untrusted" = {
         prefixId = "1";
@@ -51,6 +44,13 @@
         ];
       };
     };
+
+    router.extraNfrules_in = [
+      "iifname management accept"
+      "iifname lan tcp dport 22 accept"
+      # allow ssh from my old network
+      "iifname wan ip6 saddr ***REMOVED_IPv6***::/60 tcp dport 22 accept"
+    ];
   };
 
   schallernetz.servers.unbound.extraAuthZoneRecords = with config.schallernetz.networking.subnets; [

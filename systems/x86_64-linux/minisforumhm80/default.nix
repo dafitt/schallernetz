@@ -12,8 +12,7 @@ with lib;
 with lib.schallernetz; {
   imports = with inputs; [
     ./hardware-configuration.nix
-
-    ../../network-configuration.nix
+    ../../global-configuration.nix
   ];
 
   schallernetz = {

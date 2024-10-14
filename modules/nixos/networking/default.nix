@@ -10,7 +10,7 @@ in
     enable = mkBoolOpt true ''Enable network configuration.
       All of my networking options should be set equally for each systems/.
       Recommendation:
-        1. Define all my networking options in _`systems/network-configuration.nix`_ and
+        1. Define all my networking options in a file like e.g. _`systems/network-configuration.nix`_ and
         2. import this file to each system with `imports = [ ../../network-configuration.nix ];`.
     '';
 
@@ -36,7 +36,7 @@ in
           The complete IPv6 Unique Local Address prefix (ULA prefix).
           Something from fc00::/7.
         '';
-        example = "${prefix_}0";
+        example = "${prefix_}cd";
       };
       suffix = mkOption {
         type = ints.between 7 64;
@@ -98,6 +98,7 @@ in
                 A list of nftables rules of what to allow into the subnet.
                 Rules are applied to every packet that is beeing forwarded to `oifname ${name}`.
               '';
+              example = [ "iifname lan accept" ];
             };
           };
         }));

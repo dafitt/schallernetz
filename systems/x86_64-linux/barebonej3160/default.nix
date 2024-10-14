@@ -9,11 +9,10 @@ with lib;
 with lib.schallernetz; {
   imports = with inputs; [
     ./hardware-configuration.nix
+    ../../global-configuration.nix
 
     disko.nixosModules.disko
     ./disk-configuration.nix
-
-    ../../network-configuration.nix
   ];
 
   schallernetz = {
