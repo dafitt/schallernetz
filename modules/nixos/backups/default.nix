@@ -9,6 +9,7 @@ in
   options.schallernetz.backups = with types; {
     localhost = mkBoolOpt false "Enable backups to localhost.";
     NAS4 = mkBoolOpt false "Enable backups to NAS4.";
+    magentacloudMICHI = mkBoolOpt false "Enable backups to magentacloudMICHI.";
 
     paths = mkOption {
       description = "Which paths to backup.";
@@ -43,9 +44,9 @@ in
           OnSuccess = [ "ntfy-success@%i.service" ];
         };
       };
-      services.borgbackup.jobs."localhost" = {
-        repo = "/backups/${host}";
-        preHook = "mkdir -p /backups/${host}";
+      services.borgbackup.jobs."localhost" = rec {
+        repo = "/SchallernetzBACKUPS/${host}";
+        preHook = "mkdir -p ${repo}";
         encryption.mode = "repokey-blake2";
         encryption.passCommand = "cat ${config.age.secrets."borgbackup-job-localhost".path}";
         compression = "auto,zstd";
@@ -60,11 +61,11 @@ in
       };
       systemd.timers."borgbackup-job-localhost" = {
         timerConfig = {
-          AccuracySec = "1us";
-          RandomizedDelaySec = "15min";
+          RandomizedDelaySec = "60min";
         };
       };
     })
+
     (mkIf cfg.NAS4 {
       age.secrets."borgbackup-job-NAS4" = { file = ./${host}.age; };
 
@@ -84,7 +85,7 @@ in
       }];
       systemd.services."borgbackup-job-NAS4" = {
         unitConfig = {
-          RequiresMountsFor = [ "mnt-NAS4.mount" ]; # autostart
+          RequiresMountsFor = [ "/mnt/NAS4" ]; # autostart
           OnFailure = [ "ntfy-failure@%i.service" ];
           OnSuccess = [ "ntfy-success@%i.service" ];
         };
@@ -92,9 +93,9 @@ in
           ReadWritePaths = [ "/mnt/NAS4" ];
         };
       };
-      services.borgbackup.jobs."NAS4" = {
-        repo = "/mnt/NAS4/${host}";
-        preHook = "mkdir -p /mnt/NAS4/${host}";
+      services.borgbackup.jobs."NAS4" = rec {
+        repo = "/mnt/NAS4/SchallernetzBACKUPS/${host}";
+        preHook = "mkdir -p ${repo}";
         removableDevice = true;
         encryption.mode = "repokey-blake2";
         encryption.passCommand = "cat ${config.age.secrets."borgbackup-job-NAS4".path}";
@@ -109,10 +110,61 @@ in
         };
       };
       systemd.timers."borgbackup-job-NAS4" = {
-        timerConfig = {
-          AccuracySec = "1us";
-          RandomizedDelaySec = "15min";
+        timerConfig.RandomizedDelaySec = "15min";
+      };
+    })
+
+    # https://magentacloud.de/
+    (mkIf cfg.magentacloudMICHI {
+      age.secrets."borgbackup-job-magentacloudMICHI" = { file = ./${host}.age; };
+      age.secrets."davfs-secrets" = { file = ./davfs-secrets.age; };
+
+      # davfs2.conf (5)
+      # https://sleeplessbeastie.eu/2017/09/25/how-to-mount-webdav-share-using-systemd/
+      services.davfs2.enable = true;
+      environment.etc."davfs2/secrets".source = config.age.secrets."davfs-secrets".path;
+      # https://cloud.domain/remote.php/webdav/ username password
+      systemd.mounts = [{
+        unitConfig = {
+          PartOf = [ "borgbackup-job-magentacloudMICHI.service" ];
+          StopWhenUnneeded = true;
         };
+        what = "https://magentacloud.de/remote.php/webdav";
+        where = "/mnt/magentacloudMICHI";
+        type = "davfs";
+        mountConfig = {
+          Options = "noatime";
+          TimeoutSec = 60;
+        };
+      }];
+      systemd.services."borgbackup-job-magentacloudMICHI" = {
+        unitConfig = {
+          RequiresMountsFor = [ "/mnt/magentacloudMICHI" ]; # autostart
+          OnFailure = [ "ntfy-failure@%i.service" ];
+          OnSuccess = [ "ntfy-success@%i.service" ];
+        };
+        serviceConfig = {
+          ReadWritePaths = [ "/mnt/magentacloudMICHI" ];
+        };
+      };
+      services.borgbackup.jobs."magentacloudMICHI" = rec {
+        repo = "/mnt/magentacloudMICHI/SchallernetzBACKUPS/${host}";
+        preHook = "mkdir -p ${repo}";
+        removableDevice = true;
+        encryption.mode = "repokey-blake2";
+        encryption.passCommand = "cat ${config.age.secrets."borgbackup-job-magentacloudMICHI".path}";
+        compression = "auto,zstd";
+        paths = cfg.paths;
+
+        startAt = "*-*-01/2 ***REMOVED_IPv6***"; # every second day 2 o'clock
+        prune.keep = {
+          within = "1m"; # everything
+          monthly = 12;
+          yearly = 2;
+        };
+      };
+      systemd.timers."borgbackup-job-magentacloudMICHI" = {
+        timerConfig.RandomizedDelaySec = "3h";
       };
     })
   ];

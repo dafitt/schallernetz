@@ -23,6 +23,7 @@ in
   # 4. Use it with: `config.age.secrets."FILE".path;`
 
   "modules/nixos/backups/minisforumhm80.age".publicKeys = [ minisforumhm80 ] ++ david;
+  "modules/nixos/backups/davfs-secrets.age".publicKeys = [ minisforumhm80 ] ++ david;
 
   "modules/nixos/servers/DavidCAL/DavidCAL-backup.age".publicKeys = [ minisforumhm80 ] ++ david;
   "modules/nixos/servers/DavidCAL/DavidCAL-users.age".publicKeys = [ minisforumhm80 ] ++ david;

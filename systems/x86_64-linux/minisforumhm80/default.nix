@@ -19,6 +19,7 @@ with lib.schallernetz; {
     backups = {
       localhost = true;
       NAS4 = true;
+      magentacloudMICHI = true;
     };
 
     servers = {
