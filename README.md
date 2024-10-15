@@ -11,6 +11,7 @@
         -   [Importable modules](#importable-modules)
     -   [Structure](#structure)
         -   [Servers](#servers)
+    -   [👀, 🏆 and ❤️](#--and-️)
 
 ## Overview
 
@@ -118,3 +119,7 @@ The flakes structure is similar to my [dotfiles](https://github.com/dafitt/dotfi
 ### Servers
 
 Every service is beeing executed in a seperate [NixOS Container](https://wiki.nixos.org/wiki/NixOS_Containers).
+
+## 👀, 🏆 and ❤️
+
+-   [tlaternet/tlaternet-server](https://gitea.tlater.net/tlaternet/tlaternet-server)
