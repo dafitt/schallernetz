@@ -4,6 +4,19 @@ with lib;
 with lib.schallernetz;
 let
   cfg = config.schallernetz.backups;
+
+  mkShutdownCommand = service: ''
+    if systemctl is-active --quiet '${service}'; then
+      touch '/tmp/${service}-was-active'
+      systemctl stop '${service}'
+    fi
+  '';
+  mkRestartCommand = service: ''
+    if [ -f '/tmp/${service}-was-active' ]; then
+      rm '/tmp/${service}-was-active'
+      systemctl start '${service}'
+    fi
+  '';
 in
 {
   options.schallernetz.backups = with types; {
@@ -24,10 +37,26 @@ in
         "/var/lib/nixos-containers/<name>/var/lib"
       ];
     };
+
+    # thank you @tlater
+    # https://gitea.tlater.net/tlaternet/tlaternet-server/src/branch/master/configuration/services/backups.nix
+    pauseServices = lib.mkOption {
+      type = types.listOf types.str;
+      default = [ "container@DavidCAL.service" ];
+      description = ''
+        The systemd services that need to be shut down before
+        the backup can run. Services will be restarted after the
+        backup is complete.
+
+        This is intended to be used for services that do not
+        support hot backups.
+      '';
+    };
+
   };
 
   config = mkMerge [
-    (mkIf (cfg.localhost || cfg.NAS4) {
+    (mkIf (cfg.localhost || cfg.NAS4 || cfg.magentacloudMICHI) {
       schallernetz.ntfy-systemd = {
         enable = true;
         url = "http://[${config.schallernetz.servers.ntfy.name}.lan.${config.networking.domain}]";
@@ -44,9 +73,8 @@ in
           OnSuccess = [ "ntfy-success@%i.service" ];
         };
       };
-      services.borgbackup.jobs."localhost" = rec {
+      services.borgbackup.jobs."localhost" = {
         repo = "/SchallernetzBACKUPS/${host}";
-        preHook = "mkdir -p ${repo}";
         encryption.mode = "repokey-blake2";
         encryption.passCommand = "cat ${config.age.secrets."borgbackup-job-localhost".path}";
         compression = "auto,zstd";
@@ -58,6 +86,9 @@ in
           weekly = 4;
           monthly = 2;
         };
+
+        preHook = concatStringsSep "\n" (forEach cfg.pauseServices (service: mkShutdownCommand service));
+        postHook = concatStringsSep "\n" (forEach cfg.pauseServices (service: mkRestartCommand service));
       };
       systemd.timers."borgbackup-job-localhost" = {
         timerConfig = {
@@ -93,9 +124,8 @@ in
           ReadWritePaths = [ "/mnt/NAS4" ];
         };
       };
-      services.borgbackup.jobs."NAS4" = rec {
+      services.borgbackup.jobs."NAS4" = {
         repo = "/mnt/NAS4/SchallernetzBACKUPS/${host}";
-        preHook = "mkdir -p ${repo}";
         removableDevice = true;
         encryption.mode = "repokey-blake2";
         encryption.passCommand = "cat ${config.age.secrets."borgbackup-job-NAS4".path}";
@@ -108,6 +138,9 @@ in
           monthly = 12;
           yearly = 2;
         };
+
+        preHook = concatStringsSep "\n" (forEach cfg.pauseServices (service: mkShutdownCommand service));
+        postHook = concatStringsSep "\n" (forEach cfg.pauseServices (service: mkRestartCommand service));
       };
       systemd.timers."borgbackup-job-NAS4" = {
         timerConfig.RandomizedDelaySec = "15min";
@@ -147,9 +180,8 @@ in
           ReadWritePaths = [ "/mnt/magentacloudMICHI" ];
         };
       };
-      services.borgbackup.jobs."magentacloudMICHI" = rec {
+      services.borgbackup.jobs."magentacloudMICHI" = {
         repo = "/mnt/magentacloudMICHI/SchallernetzBACKUPS/${host}";
-        preHook = "mkdir -p ${repo}";
         removableDevice = true;
         encryption.mode = "repokey-blake2";
         encryption.passCommand = "cat ${config.age.secrets."borgbackup-job-magentacloudMICHI".path}";
@@ -162,6 +194,9 @@ in
           monthly = 12;
           yearly = 2;
         };
+
+        preHook = concatStringsSep "\n" (forEach cfg.pauseServices (service: mkShutdownCommand service));
+        postHook = concatStringsSep "\n" (forEach cfg.pauseServices (service: mkRestartCommand service));
       };
       systemd.timers."borgbackup-job-magentacloudMICHI" = {
         timerConfig.RandomizedDelaySec = "3h";
