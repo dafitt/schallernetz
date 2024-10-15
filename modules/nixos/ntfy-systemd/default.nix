@@ -34,7 +34,7 @@ in
             --priority 4 \
             --tags red_circle \
             ${cfg.url}/${cfg.topic} \
-            "$(${pkgs.systemd}/bin/journalctl --unit %i --lines 10 --reverse --no-pager --boot | ${pkgs.coreutils}/bin/head -c 4096)"'
+            "$(${pkgs.systemd}/bin/journalctl --unit %i --lines 5 --reverse --no-pager --boot | ${pkgs.coreutils}/bin/head -c 4096)"'
         '';
         };
       };
