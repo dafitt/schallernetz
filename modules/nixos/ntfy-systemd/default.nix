@@ -13,7 +13,7 @@ in
     enable = mkBoolOpt true "Whether or not to provide systemd units ['ntfy-failure@' 'ntfy-success@']";
     url = mkOption {
       type = str;
-      default = "https://ntfy.***REMOVED_DOMAIN***";
+      default = "https://ntfy.lan.***REMOVED_DOMAIN***";
       description = "URL to the ntfy server.";
       example = "https://ntfy.sh";
     };

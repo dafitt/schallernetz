@@ -30,7 +30,7 @@ in
     (mkIf (cfg.localhost || cfg.NAS4) {
       schallernetz.ntfy-systemd = {
         enable = true;
-        url = "http://[${config.schallernetz.servers.ntfy.name}.${config.networking.domain}]";
+        url = "http://[${config.schallernetz.servers.ntfy.name}.lan.${config.networking.domain}]";
       };
     })
     (mkIf cfg.localhost {
