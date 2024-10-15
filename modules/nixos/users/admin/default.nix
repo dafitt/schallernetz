@@ -27,5 +27,7 @@ in
         "***REMOVED_SSH-PUBLICKEY*** david@DavidLEGION"
       ];
     };
+
+    security.sudo.extraConfig = "Defaults:admin timestamp_timeout=30"; # increased password retype timeout
   };
 }
