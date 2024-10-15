@@ -63,9 +63,7 @@ in
       };
     })
     (mkIf cfg.localhost {
-      age.secrets."borgbackup-job-localhost" = {
-        file = ./${host}.age;
-      };
+      age.secrets."borgbackup-secret-localhost" = { file = ./${host}.age; };
 
       systemd.services."borgbackup-job-localhost" = {
         unitConfig = {
@@ -76,7 +74,7 @@ in
       services.borgbackup.jobs."localhost" = {
         repo = "/SchallernetzBACKUPS/${host}";
         encryption.mode = "repokey-blake2";
-        encryption.passCommand = "cat ${config.age.secrets."borgbackup-job-localhost".path}";
+        encryption.passCommand = "cat ${config.age.secrets."borgbackup-secret-localhost".path}";
         compression = "auto,zstd";
         paths = cfg.paths;
 
@@ -98,7 +96,7 @@ in
     })
 
     (mkIf cfg.NAS4 {
-      age.secrets."borgbackup-job-NAS4" = { file = ./${host}.age; };
+      age.secrets."borgbackup-secret-NAS4" = { file = ./${host}.age; };
 
       environment.systemPackages = [ pkgs.nfs-utils ]; # needed for NFS
       services.rpcbind.enable = true; # needed for NFS
@@ -128,7 +126,7 @@ in
         repo = "/mnt/NAS4/SchallernetzBACKUPS/${host}";
         removableDevice = true;
         encryption.mode = "repokey-blake2";
-        encryption.passCommand = "cat ${config.age.secrets."borgbackup-job-NAS4".path}";
+        encryption.passCommand = "cat ${config.age.secrets."borgbackup-secret-NAS4".path}";
         compression = "auto,zstd";
         paths = cfg.paths;
 
@@ -149,7 +147,7 @@ in
 
     # https://magentacloud.de/
     (mkIf cfg.magentacloudMICHI {
-      age.secrets."borgbackup-job-magentacloudMICHI" = { file = ./${host}.age; };
+      age.secrets."borgbackup-secret-magentacloudMICHI" = { file = ./${host}.age; };
       age.secrets."davfs-secrets" = { file = ./davfs-secrets.age; };
 
       # davfs2.conf (5)
@@ -184,7 +182,7 @@ in
         repo = "/mnt/magentacloudMICHI/SchallernetzBACKUPS/${host}";
         removableDevice = true;
         encryption.mode = "repokey-blake2";
-        encryption.passCommand = "cat ${config.age.secrets."borgbackup-job-magentacloudMICHI".path}";
+        encryption.passCommand = "cat ${config.age.secrets."borgbackup-secret-magentacloudMICHI".path}";
         compression = "auto,zstd";
         paths = cfg.paths;
 
