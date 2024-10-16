@@ -26,6 +26,7 @@ in
       #$ sudo nixos-container root-login MYSERVER
       containers.${cfg.name} = {
         autoStart = true;
+        ephemeral = true; # ?
 
         privateNetwork = true;
         hostBridge = cfg.subnet;
@@ -33,7 +34,24 @@ in
 
         specialArgs = { hostConfig = config; };
         config = { hostConfig, config, lib, pkgs, ... }: {
-          # here comes the server's configuration
+
+          # <<< here comes the server's configuration
+
+          networking = {
+            useNetworkd = true;
+            useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
+
+            firewall.interfaces."eth0" = {
+              allowedTCPPorts = [ ];
+              allowedUDPPorts = [ ];
+            };
+          };
+          systemd.network.networks."30-eth0" = {
+            matchConfig.Name = "eth0";
+            #dns = [ hostConfig.schallernetz.servers.unbound.ip6Address ];
+            #networkConfig.IPv6PrivacyExtensions = true;
+            ipv6AcceptRAConfig.Token = ":${cfg.ip6HostAddress}";
+          };
 
           system.stateVersion = hostConfig.system.stateVersion;
         };
