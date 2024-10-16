@@ -59,7 +59,7 @@ in
     (mkIf (cfg.localhost || cfg.NAS4 || cfg.magentacloudMICHI) {
       schallernetz.ntfy-systemd = {
         enable = true;
-        url = "http://[${config.schallernetz.servers.ntfy.name}.lan.${config.networking.domain}]";
+        url = "https://${config.schallernetz.servers.ntfy.name}.lan.${config.networking.domain}";
       };
     })
     (mkIf cfg.localhost {
