@@ -50,6 +50,10 @@ with lib.schallernetz; {
     servers.ntfy.name = "ntfy";
     servers.searx.enable = false;
     servers.searx.name = "searx";
+    servers.torRelay.enable = false;
+    servers.torRelay.name = "torRelay";
+    servers.torRelay.subnet = "dmz";
+    servers.torRelay.ip6HostAddress = ":58b";
     servers.unbound.enable = false;
     servers.unbound.name = "unbound";
 

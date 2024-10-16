@@ -32,6 +32,7 @@ with lib.schallernetz; {
       MichiSHARE.enable = true;
       ntfy.enable = true;
       searx.enable = true;
+      torRelay.enable = true;
     };
   };
 
