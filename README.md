@@ -27,6 +27,7 @@
 | ntfy[🔗](https://ntfy.lan.***REMOVED_DOMAIN***/)               | Push Notifications            | [ntfy.sh](https://github.com/binwiederhier/ntfy)           |
 | searx[🔗](https://searx.***REMOVED_DOMAIN***/)                 | Recursive Web Search Engine   | [SearXNG](https://github.com/searxng/searxng)              |
 | unbound                                                   | Recursive & authoritative DNS | [Unbound](https://github.com/NLnetLabs/unbound)            |
+| uptimekuma[🔗](https://uptimekuma.lan.***REMOVED_DOMAIN***/)   | Recursive Web Search Engine   | [Uptime Kuma](https://github.com/louislam/uptime-kuma)     |
 | wireguard-\*                                              | VPN                           | [WireGuard](https://www.wireguard.com/)                    |
 
 | Hosts          | Used for/as                                                 |
