@@ -17,14 +17,6 @@ in
 
   config = mkMerge [
     (mkIf cfg.enable {
-      schallernetz.backups.paths = [
-        "/var/lib/nixos-containers/${cfg.name}/etc/group"
-        "/var/lib/nixos-containers/${cfg.name}/etc/machine-id"
-        "/var/lib/nixos-containers/${cfg.name}/etc/passwd"
-        "/var/lib/nixos-containers/${cfg.name}/etc/subgid"
-        "/var/lib/nixos-containers/${cfg.name}${toString config.containers.${cfg.name}.config.services.radicale.settings.storage.filesystem_folder}"
-      ];
-
       #$ sudo nixos-container start DavidCAL
       #$ sudo nixos-container root-login DavidCAL
       containers.${cfg.name} = {
@@ -104,9 +96,16 @@ in
           system.stateVersion = hostConfig.system.stateVersion;
         };
       };
+
+      schallernetz.backups.paths = [
+        "/var/lib/nixos-containers/${cfg.name}/etc/group"
+        "/var/lib/nixos-containers/${cfg.name}/etc/machine-id"
+        "/var/lib/nixos-containers/${cfg.name}/etc/passwd"
+        "/var/lib/nixos-containers/${cfg.name}/etc/subgid"
+        "/var/lib/nixos-containers/${cfg.name}${toString config.containers.${cfg.name}.config.services.radicale.settings.storage.filesystem_folder}"
+      ];
     })
     {
-      # entry in main reverse proxy
       schallernetz.servers.haproxy-server = {
         frontends.www.extraConfig = [
           "use_backend ${cfg.name} if { req.hdr(host) -i ${cfg.name}.${config.networking.domain} }"

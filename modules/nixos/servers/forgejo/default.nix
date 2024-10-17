@@ -17,14 +17,6 @@ in
 
   config = mkMerge [
     (mkIf cfg.enable {
-      schallernetz.backups.paths = [
-        "/var/lib/nixos-containers/${cfg.name}/etc/group"
-        "/var/lib/nixos-containers/${cfg.name}/etc/machine-id"
-        "/var/lib/nixos-containers/${cfg.name}/etc/passwd"
-        "/var/lib/nixos-containers/${cfg.name}/etc/subgid"
-        "/var/lib/nixos-containers/${cfg.name}${config.containers.${cfg.name}.config.services.forgejo.stateDir}"
-      ];
-
       age.secrets."ACME_DODE" = { file = ../ACME_DODE.age; };
 
       #$ sudo nixos-container start forgejo
@@ -122,6 +114,14 @@ in
           system.stateVersion = hostConfig.system.stateVersion;
         };
       };
+
+      schallernetz.backups.paths = [
+        "/var/lib/nixos-containers/${cfg.name}/etc/group"
+        "/var/lib/nixos-containers/${cfg.name}/etc/machine-id"
+        "/var/lib/nixos-containers/${cfg.name}/etc/passwd"
+        "/var/lib/nixos-containers/${cfg.name}/etc/subgid"
+        "/var/lib/nixos-containers/${cfg.name}${config.containers.${cfg.name}.config.services.forgejo.stateDir}"
+      ];
     })
     {
       schallernetz.servers.unbound.extraAuthZoneRecords = [
