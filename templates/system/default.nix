@@ -79,6 +79,10 @@ with lib.schallernetz; {
     servers.unbound.name = "unbound";
     servers.unbound.subnet = "server";
     servers.unbound.ip6HostAddress = ":9";
+    servers.uptimekuma.enable = false;
+    servers.uptimekuma.name = "uptimekuma";
+    servers.uptimekuma.subnet = "server";
+    servers.uptimekuma.ip6HostAddress = ":711";
     servers.wireguard-lan.enable = false;
     servers.wireguard-lan.name = "wireguard-lan";
     servers.wireguard-lan.subnet = "lan";

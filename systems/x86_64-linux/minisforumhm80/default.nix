@@ -33,6 +33,7 @@ with lib.schallernetz; {
       ntfy.enable = true;
       searx.enable = true;
       torRelay.enable = true;
+      uptimekuma.enable = true;
     };
   };
 
