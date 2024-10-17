@@ -127,7 +127,7 @@ in
       enable = true;
       wait-online.anyInterface = true; # don't wait for all managed interfaces to come online and reach timeout
 
-      # Priority:
+      # My priority:
       # 10 = wan-interface
       # 20 = netdevs: bond, vlan, bridge
       # 30 = interfaces
@@ -171,17 +171,17 @@ in
         }))
       );
 
-      #networks."50-${s.name}-vlan" = {
-      #  matchConfig.Name = "${s.name}-vlan";
+      #networks."50-${subnet.name}-vlan" = {
+      #  matchConfig.Name = "${subnet.name}-vlan";
       #  linkConfig.RequiredForOnline = "carrier";
       #  networkConfig = {
       #    ConfigureWithoutCarrier = true;
-      #    Bridge = "${s.bridge}";
+      #    Bridge = "${subnet.bridge}";
       #    LinkLocalAddressing = "no";
       #  };
       #};
-      #networks."60-${s.bridge}" = {
-      #  matchConfig.Name = "${s.bridge}";
+      #networks."60-${subnet.bridge}" = {
+      #  matchConfig.Name = "${subnet.bridge}";
       #  linkConfig.RequiredForOnline = "routable";
       #
       #  # NOTE completion of bridge per host in systems/ required:
