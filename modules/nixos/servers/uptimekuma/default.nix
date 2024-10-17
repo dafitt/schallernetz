@@ -29,8 +29,10 @@ in
         specialArgs = { hostConfig = config; };
         config = { hostConfig, config, lib, pkgs, ... }: {
 
+          # https://github.com/louislam/uptime-kuma/wiki
           services.uptime-kuma = {
             enable = true;
+            # https://github.com/louislam/uptime-kuma/wiki/Environment-Variables
             settings = {
               HOST = cfg.ip6Address;
               PORT = "3001";
