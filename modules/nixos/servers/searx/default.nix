@@ -4,7 +4,6 @@ with lib;
 with lib.schallernetz;
 let
   cfg = config.schallernetz.servers.searx;
-  containerConfig = config.containers.${cfg.name}.config;
 in
 {
   options.schallernetz.servers.searx = with types; {
@@ -183,7 +182,7 @@ in
             backend ${cfg.name}
               mode http
               option http-server-close
-              server _0 [${cfg.ip6Address}]:${toString containerConfig.services.searx.settings.server.port} maxconn 32 check
+              server _0 [${cfg.ip6Address}]:8888 maxconn 32 check
           ''
         ];
       };
