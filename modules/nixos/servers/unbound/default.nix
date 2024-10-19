@@ -75,6 +75,16 @@ in
                 ${concatStringsSep "\n" cfg.extraAuthZoneRecords}
               ''}";
             }];
+
+              forward-zone = [{
+                name = ".";
+                forward-addr = [
+                  "***REMOVED_IPv6***#dns.quad9.net"
+                  "***REMOVED_IPv6***#dns.quad9.net"
+                ];
+                forward-tls-upstream = true;
+              }];
+            };
           };
           systemd.services.unbound.unitConfig = {
             OnFailure = [ "ntfy-failure@%i.service" ];
