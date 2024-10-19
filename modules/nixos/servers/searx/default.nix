@@ -154,7 +154,6 @@ in
             };
           };
 
-
           networking = {
             useNetworkd = true;
             useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
@@ -175,7 +174,6 @@ in
       schallernetz.servers.haproxy-dmz = {
         frontends.www.extraConfig = [
           "use_backend ${cfg.name} if { req.hdr(host) -i ${cfg.name}.${config.networking.domain} }"
-          "use_backend ${cfg.name} if { req.hdr(host) -i ${cfg.name}.lan.${config.networking.domain} }"
         ];
         backends.extraConfig = [
           ''
