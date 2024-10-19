@@ -47,18 +47,28 @@ in
             enable = true;
 
             # https://unbound.docs.nlnetlabs.nl/en/latest/manpages/unbound.conf.html
-            settings.server = {
-              # the interface ip's that is used to connect to the network
-              interface = [ "${cfg.ip6Address}" "***REMOVED_IPv6***" ];
-              access-control = [ "${hostConfig.schallernetz.networking.uniqueLocal.prefix}::/56 allow" ];
+            settings = {
+              server = {
+                # the interface ip's that is used to connect to the network
+                interface = [ "${cfg.ip6Address}" "***REMOVED_IPv6***" ];
+                access-control = [ "${hostConfig.schallernetz.networking.uniqueLocal.prefix}::/56 allow" ];
 
-              module-config = "'dns64 validator iterator'";
-              qname-minimisation = true;
-            };
+                module-config = "'dns64 validator iterator'";
 
-            settings.auth-zone = [{
-              name = "lan.${hostConfig.networking.domain}";
-              zonefile = "${pkgs.writeText "lan.${hostConfig.networking.domain}.zone" ''
+                # recommended privacy settings
+                qname-minimisation = true;
+                harden-glue = true;
+                harden-dnssec-stripped = true;
+                use-caps-for-id = false;
+                prefetch = true;
+                edns-buffer-size = 1232;
+                hide-identity = true;
+                hide-version = true;
+              };
+
+              auth-zone = [{
+                name = "lan.${hostConfig.networking.domain}";
+                zonefile = "${pkgs.writeText "lan.${hostConfig.networking.domain}.zone" ''
                 $ORIGIN lan.${hostConfig.networking.domain}.
                 $TTL 6h
 
@@ -74,7 +84,7 @@ in
 
                 ${concatStringsSep "\n" cfg.extraAuthZoneRecords}
               ''}";
-            }];
+              }];
 
               forward-zone = [{
                 name = ".";
