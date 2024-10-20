@@ -100,15 +100,19 @@ in
             };
           };
 
-          networking = {
-            # for acme
-            enableIPv6 = true; # automatically get IPv6 and default route6
-            useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
-            nameservers = [ hostConfig.schallernetz.servers.unbound.ip6Address ];
+          systemd.network = {
+            enable = true;
+            wait-online.enable = false;
 
-            firewall.interfaces."eth0" = {
-              allowedTCPPorts = [ 443 ];
+            networks."30-eth0" = {
+              matchConfig.Name = "eth0";
+              networkConfig.DNS = [ hostConfig.schallernetz.servers.unbound.ip6Address ];
             };
+          };
+          networking.useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
+
+          networking.firewall.interfaces."eth0" = {
+            allowedTCPPorts = [ 443 ];
           };
 
           system.stateVersion = hostConfig.system.stateVersion;

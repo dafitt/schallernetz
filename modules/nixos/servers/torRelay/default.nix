@@ -74,14 +74,16 @@ in
             capacity = 100;
           };
 
-          networking = {
-            useNetworkd = true;
-            useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
+          systemd.network = {
+            enable = true;
+            wait-online.enable = false;
+
+            networks."30-eth0" = {
+              matchConfig.Name = "eth0";
+              ipv6AcceptRAConfig.Token = ":${cfg.ip6HostAddress}";
+            };
           };
-          systemd.network.networks."30-eth0" = {
-            matchConfig.Name = "eth0";
-            ipv6AcceptRAConfig.Token = ":${cfg.ip6HostAddress}";
-          };
+          networking.useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
 
           system.stateVersion = hostConfig.system.stateVersion;
         };

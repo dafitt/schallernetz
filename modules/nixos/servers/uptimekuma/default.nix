@@ -39,17 +39,20 @@ in
             };
           };
 
-          networking = {
-            useNetworkd = true;
-            useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
+          systemd.network = {
+            enable = true;
+            wait-online.enable = false;
 
-            firewall.interfaces."eth0" = {
-              allowedTCPPorts = [ 3001 ];
+            networks."30-eth0" = {
+              matchConfig.Name = "eth0";
+              networkConfig.DNS = [ hostConfig.schallernetz.servers.unbound.ip6Address ];
+              ipv6AcceptRAConfig.Token = ":${cfg.ip6HostAddress}";
             };
           };
-          systemd.network.networks."30-eth0" = {
-            matchConfig.Name = "eth0";
-            ipv6AcceptRAConfig.Token = ":${cfg.ip6HostAddress}";
+          networking.useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
+
+          networking.firewall.interfaces."eth0" = {
+            allowedTCPPorts = [ 3001 ];
           };
 
           system.stateVersion = hostConfig.system.stateVersion;

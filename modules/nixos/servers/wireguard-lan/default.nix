@@ -30,10 +30,7 @@ in
 
         specialArgs = { hostConfig = config; };
         config = { hostConfig, config, lib, pkgs, ... }: {
-          imports = with inputs; [
-            agenix.nixosModules.default
-            self.nixosModules."ntfy-systemd"
-          ];
+          imports = with inputs; [ agenix.nixosModules.default ];
 
           age = {
             identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
@@ -55,17 +52,21 @@ in
             "net.ipv6.conf.all.forwarding" = true;
           };
 
-          systemd.network.networks."30-eth0" = {
-            matchConfig.Name = "eth0";
-            #networkConfig.IPv6PrivacyExtensions = true;
-            ipv6AcceptRAConfig.Token = ":${cfg.ip6HostAddress}";
-          };
+          systemd.network = {
+            enable = true;
+            wait-online.enable = false;
 
+            networks."30-eth0" = {
+              matchConfig.Name = "eth0";
+              #networkConfig.IPv6PrivacyExtensions = true;
+              ipv6AcceptRAConfig.Token = ":${cfg.ip6HostAddress}";
+            };
+          };
+          networking.useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
+
+          networking.firewall.interfaces."eth0".allowedUDPPorts = [ 123 ];
           networking = {
             useNetworkd = true;
-            useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
-
-            firewall.interfaces."eth0".allowedUDPPorts = [ 123 ];
 
             #nat = {
             #  # required for internet (IPv6 GUA Address)
@@ -85,10 +86,6 @@ in
               peers = (import ./clients.nix);
             };
           };
-          systemd.services."wireguard-wg0".unitConfig = {
-            OnFailure = [ "ntfy-failure@%i.service" ];
-            OnSuccess = [ "ntfy-success@%i.service" ];
-          };
 
           # DDNS: tell my domain my dynamic ipv6
           services.inadyn = {
@@ -107,9 +104,6 @@ in
                 checkip-command = "${pkgs.iproute2}/bin/ip -6 addr show dev eth0 scope global -temporary | ${pkgs.gnugrep}/bin/grep -G 'inet6 [2-3]' "; # get the non-temporary global unicast address
               };
             };
-          };
-          systemd.services.inadyn.unitConfig = {
-            OnFailure = [ "ntfy-failure@%i.service" ];
           };
 
           system.stateVersion = hostConfig.system.stateVersion;

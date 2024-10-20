@@ -67,21 +67,21 @@ in
               auth-zone = [{
                 name = "lan.${hostConfig.networking.domain}";
                 zonefile = "${pkgs.writeText "lan.${hostConfig.networking.domain}.zone" ''
-                $ORIGIN lan.${hostConfig.networking.domain}.
-                $TTL 6h
+                  $ORIGIN lan.${hostConfig.networking.domain}.
+                  $TTL 6h
 
-                @ IN SOA ${cfg.name} admin.***REMOVED_DOMAIN***. (
-                  2024092301 ; serial number YYMMDDNN
-                  12h        ; refresh
-                  2h         ; update retry
-                  1w         ; expire
-                  2h         ; minimum TTL
-                )
-                @ IN NS ${cfg.name}
-                ${cfg.name} IN AAAA ${cfg.ip6Address}
+                  @ IN SOA ${cfg.name} admin.***REMOVED_DOMAIN***. (
+                    2024092301 ; serial number YYMMDDNN
+                    12h        ; refresh
+                    2h         ; update retry
+                    1w         ; expire
+                    2h         ; minimum TTL
+                  )
+                  @ IN NS ${cfg.name}
+                  ${cfg.name} IN AAAA ${cfg.ip6Address}
 
-                ${concatStringsSep "\n" cfg.extraAuthZoneRecords}
-              ''}";
+                  ${concatStringsSep "\n" cfg.extraAuthZoneRecords}
+                ''}";
               }];
 
               forward-zone = [{
@@ -95,15 +95,21 @@ in
             };
           };
 
-          networking = {
-            enableIPv6 = true; # automatically get IP6 and default route6
-            interfaces."eth0".tempAddress = "default"; # IPv6 temporary address (aka privacy extensions)
-            useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
+          systemd.network = {
+            enable = true;
+            wait-online.enable = false;
 
-            firewall.interfaces."eth0" = {
-              allowedTCPPorts = [ 53 ];
-              allowedUDPPorts = [ 53 ];
+            networks."30-eth0" = {
+              matchConfig.Name = "eth0";
+              networkConfig.IPv6PrivacyExtensions = true;
+              networkConfig.DNS = [ "***REMOVED_IPv6***" ];
             };
+          };
+          networking.useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
+
+          networking.firewall.interfaces."eth0" = {
+            allowedTCPPorts = [ 53 ];
+            allowedUDPPorts = [ 53 ];
           };
 
           system.stateVersion = hostConfig.system.stateVersion;

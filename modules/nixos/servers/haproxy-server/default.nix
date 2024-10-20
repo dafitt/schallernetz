@@ -83,7 +83,6 @@ in
           };
           systemd.services.haproxy.unitConfig = {
             OnFailure = [ "ntfy-failure@%i.service" ];
-            OnSuccess = [ "ntfy-success@%i.service" ];
           };
 
           age.secrets."ACME_DODE" = { file = ../ACME_DODE.age; };
@@ -103,17 +102,21 @@ in
           };
           systemd.services."acme-***REMOVED_DOMAIN***".unitConfig = {
             OnFailure = [ "ntfy-failure@%i.service" ];
-            OnSuccess = [ "ntfy-success@%i.service" ];
           };
 
-          networking = {
-            enableIPv6 = true;
-            useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
-            nameservers = [ hostConfig.schallernetz.servers.unbound.ip6Address ];
+          systemd.network = {
+            enable = true;
+            wait-online.enable = false;
 
-            firewall.interfaces."eth0" = {
-              allowedTCPPorts = [ 80 443 ];
+            networks."30-eth0" = {
+              matchConfig.Name = "eth0";
+              networkConfig.DNS = [ hostConfig.schallernetz.servers.unbound.ip6Address ];
             };
+          };
+          networking.useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
+
+          networking.firewall.interfaces."eth0" = {
+            allowedTCPPorts = [ 80 443 ];
           };
 
           system.stateVersion = hostConfig.system.stateVersion;

@@ -154,16 +154,20 @@ in
             };
           };
 
-          networking = {
-            useNetworkd = true;
-            useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
-            nameservers = [ hostConfig.schallernetz.servers.unbound.ip6Address ];
+          systemd.network = {
+            enable = true;
+            wait-online.enable = false;
 
-            firewall.interfaces."eth0".allowedTCPPorts = [ config.services.searx.settings.server.port ];
+            networks."30-eth0" = {
+              matchConfig.Name = "eth0";
+              networkConfig.IPv6PrivacyExtensions = true;
+              networkConfig.DNS = [ hostConfig.schallernetz.servers.unbound.ip6Address ];
+            };
           };
-          systemd.network.networks."30-eth0" = {
-            matchConfig.Name = "eth0";
-            networkConfig.IPv6PrivacyExtensions = true;
+          networking.useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
+
+          networking.firewall.interfaces."eth0" = {
+            allowedTCPPorts = [ config.services.searx.settings.server.port ];
           };
 
           system.stateVersion = hostConfig.system.stateVersion;

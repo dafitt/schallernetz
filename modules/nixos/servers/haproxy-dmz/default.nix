@@ -91,7 +91,6 @@ in
           };
           systemd.services.haproxy.unitConfig = {
             OnFailure = [ "ntfy-failure@%i.service" ];
-            OnSuccess = [ "ntfy-success@%i.service" ];
           };
 
           # https://wiki.nixos.org/wiki/ACME
@@ -110,7 +109,22 @@ in
           };
           systemd.services."acme-***REMOVED_DOMAIN***".unitConfig = {
             OnFailure = [ "ntfy-failure@%i.service" ];
-            OnSuccess = [ "ntfy-success@%i.service" ];
+          };
+
+          systemd.network = {
+            enable = true;
+            wait-online.enable = false;
+
+            networks."30-eth0" = {
+              matchConfig.Name = "eth0";
+              networkConfig.DNS = [ hostConfig.schallernetz.servers.unbound.ip6Address ];
+              ipv6AcceptRAConfig.Token = ":${cfg.ip6HostAddress}";
+            };
+          };
+          networking.useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
+
+          networking.firewall.interfaces."eth0" = {
+            allowedTCPPorts = [ 80 443 ];
           };
 
           # DDNS: tell my domain my dynamic ipv6
@@ -133,18 +147,6 @@ in
           };
           systemd.services.inadyn.unitConfig = {
             OnFailure = [ "ntfy-failure@%i.service" ];
-          };
-
-          systemd.network.networks."30-eth0" = {
-            matchConfig.Name = "eth0";
-            ipv6AcceptRAConfig.Token = ":${cfg.ip6HostAddress}";
-          };
-          networking = {
-            useNetworkd = true;
-            useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
-            nameservers = [ hostConfig.schallernetz.servers.unbound.ip6Address ];
-
-            firewall.interfaces."eth0".allowedTCPPorts = [ 80 443 ];
           };
 
           system.stateVersion = hostConfig.system.stateVersion;

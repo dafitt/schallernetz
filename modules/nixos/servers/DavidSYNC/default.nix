@@ -93,13 +93,14 @@ in
             OnSuccess = [ "ntfy-success@%i.service" ];
           };
 
-          networking = {
-            enableIPv6 = true; # automatically get IPv6 and default route6
-            useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
+          systemd.network = {
+            enable = true;
+            wait-online.enable = false;
+          };
+          networking.useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
 
-            firewall.interfaces."eth0" = {
-              allowedTCPPorts = [ 8384 ];
-            };
+          networking.firewall.interfaces."eth0" = {
+            allowedTCPPorts = [ 8384 ];
           };
 
           system.stateVersion = hostConfig.system.stateVersion;
