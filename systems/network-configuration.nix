@@ -32,6 +32,9 @@
       "dmz" = {
         prefixId = "d";
         vlan = 13;
+        nfrules_in = mkBefore [
+          "iifname { lan, server } icmpv6 type != { nd-redirect, 139 } accept" # allow ping from lan and server
+        ];
       };
       "management" = {
         prefixId = "f";
