@@ -41,7 +41,7 @@
         prefixId = "0";
         vlan = 16;
         nfrules_in = mkBefore [
-          "iifname != management accept"
+          "iifname { untrusted, lan, dmz } accept"
         ];
       };
     };

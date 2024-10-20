@@ -10,7 +10,7 @@ in
     enable = mkBoolOpt false "Enable server unbound.";
     name = mkOpt str "unbound" "The name of the server.";
 
-    subnet = mkOpt str "server" "The name of the subnet which the container should be part of.";
+    subnet = mkOpt str "dmz" "The name of the subnet which the container should be part of.";
     ip6HostAddress = mkOpt str ":9" "The ipv6's host part.";
     ip6Address = mkOpt str "${config.schallernetz.networking.subnets.${cfg.subnet}.uniqueLocal.prefix}:${cfg.ip6HostAddress}" "Full IPv6 address of the container.";
 
@@ -38,8 +38,6 @@ in
 
         specialArgs = { hostConfig = config; };
         config = { hostConfig, config, lib, pkgs, ... }: {
-          imports = with inputs; [ self.nixosModules."ntfy-systemd" ];
-
           environment.systemPackages = with pkgs; [ dig ];
 
           # Unbound is a validating, recursive, caching DNS resolver (like ***REMOVED_IPv4***).
@@ -96,10 +94,6 @@ in
               }];
             };
           };
-          systemd.services.unbound.unitConfig = {
-            OnFailure = [ "ntfy-failure@%i.service" ];
-            OnSuccess = [ "ntfy-success@%i.service" ];
-          };
 
           networking = {
             enableIPv6 = true; # automatically get IP6 and default route6
@@ -118,8 +112,7 @@ in
     })
     {
       schallernetz.networking.subnets.${cfg.subnet}.nfrules_in = [
-        # Allow access to dns from all other subnets.
-        "ip6 daddr ${cfg.ip6Address} udp dport 53 limit rate 70/second accept"
+        "ip6 daddr ${cfg.ip6Address} udp dport 53 limit rate 70/second accept" # Allow access to dns from all other subnets.
       ];
     }
   ];
