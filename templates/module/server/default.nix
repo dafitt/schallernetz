@@ -37,20 +37,22 @@ in
 
           # <<< here comes the server's configuration
 
-          networking = {
-            useNetworkd = true;
-            useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
+          systemd.network = {
+            enable = true;
+            wait-online.enable = false;
 
-            firewall.interfaces."eth0" = {
-              allowedTCPPorts = [ ];
-              allowedUDPPorts = [ ];
+            networks."30-eth0" = {
+              matchConfig.Name = "eth0";
+              networkConfig.DNS = [ "***REMOVED_IPv6***" ];
+              networkConfig.IPv6PrivacyExtensions = true;
+              ipv6AcceptRAConfig.Token = ":${cfg.ip6HostAddress}";
             };
           };
-          systemd.network.networks."30-eth0" = {
-            matchConfig.Name = "eth0";
-            #dns = [ hostConfig.schallernetz.servers.unbound.ip6Address ];
-            #networkConfig.IPv6PrivacyExtensions = true;
-            ipv6AcceptRAConfig.Token = ":${cfg.ip6HostAddress}";
+          networking.useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
+
+          networking.firewall.interfaces."eth0" = {
+            allowedTCPPorts = [ ];
+            allowedUDPPorts = [ ];
           };
 
           system.stateVersion = hostConfig.system.stateVersion;
