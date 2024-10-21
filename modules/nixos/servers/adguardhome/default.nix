@@ -17,6 +17,7 @@ in
 
   config = mkMerge [
     (mkIf cfg.enable {
+
       #$ sudo nixos-container start adguardhome
       #$ sudo nixos-container root-login adguardhome
       containers.${cfg.name} = {
@@ -65,6 +66,8 @@ in
           system.stateVersion = hostConfig.system.stateVersion;
         };
       };
+
+      systemd.services."container@${cfg.name}".unitConfig.Requires = mkIf config.schallernetz.servers.unbound.enable [ "container@unbound.service" ];
     })
     {
       schallernetz.servers.haproxy-server = {
