@@ -35,7 +35,7 @@ in
             # https://github.com/louislam/uptime-kuma/wiki/Environment-Variables
             settings = {
               HOST = cfg.ip6Address;
-              PORT = "3001";
+              PORT = "8080";
             };
           };
 
@@ -52,7 +52,7 @@ in
           networking.useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
 
           networking.firewall.interfaces."eth0" = {
-            allowedTCPPorts = [ 3001 ];
+            allowedTCPPorts = [ 8080 ];
           };
 
           system.stateVersion = hostConfig.system.stateVersion;
@@ -78,7 +78,7 @@ in
           ''
             backend ${cfg.name}
               mode http
-              server _0 [${cfg.ip6Address}]:3001 maxconn 32 check
+              server _0 [${cfg.ip6Address}]:8080 maxconn 32 check
           ''
         ];
       };

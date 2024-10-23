@@ -37,7 +37,7 @@ in
             config = {
               DOMAIN = "https://${cfg.name}.${hostConfig.networking.domain}";
               ROCKET_ADDRESS = "***REMOVED_IPv4***";
-              ROCKET_PORT = 8222;
+              ROCKET_PORT = 8080;
             };
           };
           systemd.services.vaultwarden.unitConfig = {

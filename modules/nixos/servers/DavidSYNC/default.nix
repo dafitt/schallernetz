@@ -39,18 +39,18 @@ in
             # <https://nixos.wiki/wiki/Syncthing>
             enable = true;
 
-            # Syncthing ports: 8384 for remote access to GUI
+            # Syncthing ports: 8080 for remote access to GUI
             # 22000 TCP and/or UDP for sync traffic
             # 21027/UDP for discovery
             # https://docs.syncthing.net/users/firewall.html
             openDefaultPorts = true;
-            guiAddress = "[::]:8384"; # remote access
+            guiAddress = "[::]:8080"; # remote access
 
             overrideDevices = false; # whether to override devices, manually added or deleted through the WebUI
             overrideFolders = false; # whether to override folders, manually added or deleted through the WebUI
 
             settings = {
-              # https://<ip/fqdn>:8384/rest/config with X-API-Key
+              # https://<ip/fqdn>:8080/rest/config with X-API-Key
 
               gui = {
                 enabled = true;
@@ -100,7 +100,7 @@ in
           networking.useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
 
           networking.firewall.interfaces."eth0" = {
-            allowedTCPPorts = [ 8384 ];
+            allowedTCPPorts = [ 8080 ];
           };
 
           system.stateVersion = hostConfig.system.stateVersion;
@@ -116,12 +116,12 @@ in
           ''
             backend ${cfg.name}
               mode http
-              server _0 [${cfg.ip6Address}]:8384 maxconn 32 check
+              server _0 [${cfg.ip6Address}]:8080 maxconn 32 check
           ''
         ];
       };
       schallernetz.networking.subnets.${cfg.subnet}.nfrules_in = [
-        "ip6 daddr ${cfg.ip6Address} tcp dport 8384 drop" # Don't allow access to connection between server and main reverse proxy from other subnets.
+        "ip6 daddr ${cfg.ip6Address} tcp dport 8080 drop" # Don't allow access to connection between server and main reverse proxy from other subnets.
       ];
       schallernetz.servers.unbound.extraLanZoneRecords = [
         "${cfg.name} IN CNAME ${config.schallernetz.servers.haproxy-server.name}"

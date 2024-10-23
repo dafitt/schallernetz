@@ -51,7 +51,7 @@ in
                 instance_name = "SchallerSEARX";
               };
               server = {
-                port = 8888;
+                port = 8080;
                 base_url = "https://${cfg.name}.${hostConfig.networking.domain}";
                 secret_key = config.age.secrets."searx".path; # SEARX_SECRET_KEY=...
                 limiter = true;
@@ -183,7 +183,7 @@ in
             backend ${cfg.name}
               mode http
               option http-server-close
-              server _0 [${cfg.ip6Address}]:8888 maxconn 32 check
+              server _0 [${cfg.ip6Address}]:8080 maxconn 32 check
           ''
         ];
       };
