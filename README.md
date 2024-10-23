@@ -10,6 +10,7 @@
         -   [Upgrading](#upgrading)
         -   [Importable modules](#importable-modules)
     -   [Structure](#structure)
+        -   [Network](#network-1)
         -   [Servers](#servers)
     -   [👀, 🏆 and ❤️](#--and-️)
 
@@ -41,14 +42,7 @@
 
 Some words on networking, since networking is hard.
 
-I decided to build a IPv6 only network (for now) because
-
--   global IPv4 addresses are expensive to get nowadays
--   it was easier for me to setup (in comparison to NAT in IPv4)
--   it makes a clear subnet structure (one subnet always /64)
--   from some ISPs you don't get an IPv4 anymore.
-
-I implemented the network with systemd-networkd.
+Read the [Networkstructure](#network-1) first.
 
 We need to declare our network with the `schallernetz.networking`-option. See [modules/nixos/networking/default.nix](https://github.com/dafitt/schallernetz/blob/main/modules/nixos/networking/default.nix) for available options.
 
@@ -106,7 +100,7 @@ These modules are tested to be imported elsewhere:
 inputs.schallernetz.nixosModules."ntfy-systemd"
 ```
 
-These modules are designed to be imported, not tested though:
+These modules are designed to be imported elsewhere, not tested though:
 
 ```nix
 inputs.schallernetz.nixosModules."networking"
@@ -116,6 +110,19 @@ inputs.schallernetz.nixosModules."networking/router"
 ## Structure
 
 The flakes structure is similar to my [dotfiles](https://github.com/dafitt/dotfiles?tab=readme-ov-file#structure), but without home-manager.
+
+### Network
+
+I decided to build a IPv6 only network (for now) because
+
+-   global IPv4 addresses are expensive to get nowadays
+-   it was easier for me to setup (in comparison to NAT in IPv4)
+-   it makes a clear subnet structure (one subnet always /64)
+-   from some ISPs you don't get an IPv4 anymore.
+
+I implemented the network with systemd-networkd, because ["`systemd.network` should be preferred over `networking.interfaces`"](https://wiki.nixos.org/wiki/Systemd/networkd)
+
+I have a local nameserver within [modules/nixos/servers/unbound](https://github.com/dafitt/schallernetz/blob/main/modules/nixos/servers/unbound) which resolves all `lan.<myDomain>`. `<myDomain>` is beeing resolved trough my DNS provider. When internet is down, i can still access my services trough my local `lan.<myDomain>`.
 
 ### Servers
 
