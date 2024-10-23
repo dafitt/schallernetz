@@ -64,13 +64,13 @@ in
                 hide-version = true;
               };
 
-              auth-zone = [{
-                name = "lan.${hostConfig.networking.domain}";
-                zonefile = "${pkgs.writeText "lan.${hostConfig.networking.domain}.zone" ''
-                  $ORIGIN lan.${hostConfig.networking.domain}.
+              auth-zone = [rec {
+                name = "lan.${hostConfig.schallernetz.networking.domain}";
+                zonefile = "${pkgs.writeText "${name}.zone" ''
+                  $ORIGIN ${name}.
                   $TTL 6h
 
-                  @ IN SOA ${cfg.name} admin.***REMOVED_DOMAIN***. (
+                  @ IN SOA ${cfg.name} admin.${hostConfig.schallernetz.networking.domain}. (
                     2024092301 ; serial number YYMMDDNN
                     12h        ; refresh
                     2h         ; update retry
@@ -101,7 +101,6 @@ in
 
             networks."30-eth0" = {
               matchConfig.Name = "eth0";
-              networkConfig.IPv6PrivacyExtensions = true;
               networkConfig.DNS = [ "***REMOVED_IPv6***" ];
             };
           };
@@ -118,7 +117,10 @@ in
     })
     {
       schallernetz.networking.subnets.${cfg.subnet}.nfrules_in = [
-        "ip6 daddr ${cfg.ip6Address} udp dport 53 limit rate 70/second accept" # Allow access to dns from all other subnets.
+        "iifname != wan ip6 daddr ${cfg.ip6Address} udp dport 53 accept" # Allow access to dns from all other subnets.
+      ];
+      schallernetz.networking.subnets."wan".nfrules_in = [
+        "iifname ${cfg.subnet} ip6 saddr & ***REMOVED_IPv6*** == :${cfg.ip6HostAddress} accept" # Allow access to internet.
       ];
     }
   ];

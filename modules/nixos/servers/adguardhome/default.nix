@@ -87,8 +87,7 @@ in
         "${cfg.name} IN CNAME ${config.schallernetz.servers.haproxy-server.name}"
       ];
       schallernetz.networking.subnets.${cfg.subnet}.nfrules_in = [
-        # Allow access to dns from all other subnets.
-        "ip6 daddr ${cfg.ip6Address} udp dport 53 limit rate 70/second accept"
+        "iifname != wan ip6 daddr ${cfg.ip6Address} udp dport 53 accept" # Allow access to dns from all other subnets.
       ];
     }
   ];
