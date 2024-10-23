@@ -17,7 +17,6 @@ in
 
   config = mkMerge [
     (mkIf cfg.enable {
-
       #$ sudo nixos-container start searx
       #$ sudo nixos-container root-login searx
       containers.${cfg.name} = {

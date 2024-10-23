@@ -128,6 +128,12 @@ I have a local nameserver within [modules/nixos/servers/unbound](https://github.
 
 Every service is beeing executed in a seperate [NixOS Container](https://wiki.nixos.org/wiki/NixOS_Containers).
 
+This has some advanages:
+
+-   Every server has its own IP
+-   Processes are sealed off from the host system (more security)
+-   Can always be started and stopped
+
 ## 👀, 🏆 and ❤️
 
 -   [tlaternet/tlaternet-server](https://gitea.tlater.net/tlaternet/tlaternet-server)

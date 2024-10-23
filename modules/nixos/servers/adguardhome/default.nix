@@ -17,7 +17,6 @@ in
 
   config = mkMerge [
     (mkIf cfg.enable {
-
       #$ sudo nixos-container start adguardhome
       #$ sudo nixos-container root-login adguardhome
       containers.${cfg.name} = {

@@ -17,11 +17,6 @@ in
 
   config = mkMerge [
     (mkIf cfg.enable {
-      # Server as a container. Advanages:
-      # - Every server has its own IP
-      # - Processes are sealed off from the host system
-      # - Can always be started and stopped
-
       #$ sudo nixos-container start MYSERVER
       #$ sudo nixos-container root-login MYSERVER
       containers.${cfg.name} = {
