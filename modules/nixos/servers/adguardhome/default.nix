@@ -81,7 +81,7 @@ in
           ''
         ];
       };
-      schallernetz.servers.unbound.extraAuthZoneRecords = [
+      schallernetz.servers.unbound.extraLanZoneRecords = [
         "adguard IN AAAA ${cfg.ip6Address}"
         "${cfg.name} IN CNAME ${config.schallernetz.servers.haproxy-server.name}"
       ];

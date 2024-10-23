@@ -14,13 +14,14 @@ in
     ip6HostAddress = mkOpt str ":9" "The ipv6's host part for the server.";
     ip6Address = mkOpt str "${config.schallernetz.networking.subnets.${cfg.subnet}.uniqueLocal.prefix}:${cfg.ip6HostAddress}" "Full IPv6 address of the server.";
 
-    extraAuthZoneRecords = mkOption {
+    extraLanZoneRecords = mkOption {
       type = listOf str;
       default = [ ];
       description = "A list of dns records to add to the authoritative zone.";
       example = [
         "example IN AAAA ***REMOVED_IPv6***"
         "${cfg.name} IN AAAA ${cfg.ip6Address}"
+        "${cfg.name} IN CNAME ${config.schallernetz.servers.haproxy-server.name}"
       ];
     };
   };
@@ -80,7 +81,7 @@ in
                   @ IN NS ${cfg.name}
                   ${cfg.name} IN AAAA ${cfg.ip6Address}
 
-                  ${concatStringsSep "\n" cfg.extraAuthZoneRecords}
+                  ${concatStringsSep "\n" cfg.extraLanZoneRecords}
                 ''}";
               }];
 

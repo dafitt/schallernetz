@@ -124,7 +124,7 @@ in
       };
     })
     {
-      schallernetz.servers.unbound.extraAuthZoneRecords = [
+      schallernetz.servers.unbound.extraLanZoneRecords = [
         "${cfg.name} IN AAAA ${cfg.ip6Address}"
       ];
     }

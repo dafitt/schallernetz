@@ -157,7 +157,7 @@ in
       schallernetz.networking.subnets.${cfg.subnet}.nfrules_in = [
         "ip6 daddr & ***REMOVED_IPv6*** == :${cfg.ip6HostAddress} tcp dport { 80, 443 } accept"
       ];
-      schallernetz.servers.unbound.extraAuthZoneRecords = [
+      schallernetz.servers.unbound.extraLanZoneRecords = [
         "${cfg.name} IN AAAA ${cfg.ip6Address}"
       ];
     }

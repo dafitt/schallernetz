@@ -101,7 +101,7 @@ in
         "ip6 daddr ${cfg.ip6Address} tcp dport 80 drop" # Don't allow access to connection between server and main reverse proxy from other subnets.
         # TODO security: https & secret_key between vaultwarden and main reverse proxy
       ];
-      schallernetz.servers.unbound.extraAuthZoneRecords = [
+      schallernetz.servers.unbound.extraLanZoneRecords = [
         "${cfg.name} IN CNAME ${config.schallernetz.servers.haproxy-server.name}"
       ];
     }

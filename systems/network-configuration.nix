@@ -57,7 +57,7 @@
     ];
   };
 
-  schallernetz.servers.unbound.extraAuthZoneRecords =
+  schallernetz.servers.unbound.extraLanZoneRecords =
     with config.schallernetz.networking.subnets; [
       "barebonej3160 in AAAA ${management.uniqueLocal.prefix}***REMOVED_IPv6***"
       "minisforumhm80 in AAAA ${server.uniqueLocal.prefix}***REMOVED_IPv6***"

@@ -77,7 +77,7 @@ in
         "ip6 daddr & ***REMOVED_IPv6*** == :${cfg.ip6HostAddress} tcp dport 443 limit rate 35/second accept"
       ];
       # Mabe also dns entries?
-      schallernetz.servers.unbound.extraAuthZoneRecords = [
+      schallernetz.servers.unbound.extraLanZoneRecords = [
         "${cfg.name} IN AAAA ${cfg.ip6Address}"
         "${cfg.name} IN CNAME ${config.schallernetz.servers.haproxy-server.name}"
       ];

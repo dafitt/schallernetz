@@ -85,7 +85,7 @@ in
       schallernetz.networking.subnets.${cfg.subnet}.nfrules_in = [
         "iifname lan ip6 daddr ${cfg.ip6Address} tcp dport 443 accept"
       ];
-      schallernetz.servers.unbound.extraAuthZoneRecords = [
+      schallernetz.servers.unbound.extraLanZoneRecords = [
         "${cfg.name} IN CNAME ${config.schallernetz.servers.haproxy-server.name}"
       ];
     }
