@@ -10,9 +10,9 @@ in
     enable = mkBoolOpt false "Enable server haproxy-dmz.";
     name = mkOpt str "haproxy-dmz" "The name of the server.";
 
-    subnet = mkOpt str "dmz" "The name of the subnet which the container should be part of.";
-    ip6HostAddress = mkOpt str ":7fd" "The ipv6's host part.";
-    ip6Address = mkOpt str "${config.schallernetz.networking.subnets.${cfg.subnet}.uniqueLocal.prefix}:${cfg.ip6HostAddress}" "Full IPv6 address of the container.";
+    subnet = mkOpt str "dmz" "The name of the subnet which the server should be part of.";
+    ip6HostAddress = mkOpt str ":7fd" "The ipv6's host part for the server.";
+    ip6Address = mkOpt str "${config.schallernetz.networking.subnets.${cfg.subnet}.uniqueLocal.prefix}:${cfg.ip6HostAddress}" "Full IPv6 address of the server.";
 
     frontends.extraConfig = mkOpt (listOf str) [ ] "List of additional frontends (config).";
     frontends.www.extraConfig = mkOption {

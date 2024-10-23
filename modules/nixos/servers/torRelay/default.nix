@@ -10,8 +10,8 @@ in
     enable = mkBoolOpt false "Enable server torRelay.";
     name = mkOpt str "torRelay" "The name of the server.";
 
-    subnet = mkOpt str "dmz" "The name of the subnet which the container should be part of.";
-    ip6HostAddress = mkOpt str ":58b" "The ipv6's host part.";
+    subnet = mkOpt str "dmz" "The name of the subnet which the server should be part of.";
+    ip6HostAddress = mkOpt str ":58b" "The ipv6's host part for the server.";
   };
 
   config = mkMerge [
