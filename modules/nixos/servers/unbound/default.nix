@@ -103,6 +103,7 @@ in
             networks."30-eth0" = {
               matchConfig.Name = "eth0";
               networkConfig.DNS = [ "***REMOVED_IPv6***" ];
+              ipv6AcceptRAConfig.Token = ":${cfg.ip6HostAddress}";
             };
           };
           networking.useHostResolvConf = mkForce false; # https://github.com/NixOS/nixpkgs/issues/162686
