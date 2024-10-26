@@ -98,7 +98,7 @@ in
               custom."do.de" = {
                 username = "DDNS-K57174-49283";
                 include = config.age.secrets."DDNS-K57174-49283".path; #`password = `
-                hostname = "lan.wireguard.***REMOVED_DOMAIN***";
+                hostname = "lan.wireguard.${hostConfig.schallernetz.networking.domain}";
                 ddns-server = "ddns.do.de";
                 ddns-path = "/?myip=%i";
                 checkip-command = "${pkgs.iproute2}/bin/ip -6 addr show dev eth0 scope global -temporary | ${pkgs.gnugrep}/bin/grep -G 'inet6 [2-3]' "; # get the non-temporary global unicast address
