@@ -50,11 +50,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1727977578,
+        "lastModified": 1729281548,
         "narHash": "sha256-***REMOVED_WIREGUARD-KEY***",
         "owner": "nix-community",
         "repo": "disko",
-        "rev": "574400001b3ffe555c7a21e0ff846230759be2ed",
+        "rev": "a6a3179ddf396dfc28a078e2f169354d0c137125",
         "type": "github"
       },
       "original": {
@@ -139,11 +139,11 @@
     },
     "nixlib": {
       "locked": {
-        "lastModified": 1727571693,
+        "lastModified": 1728781282,
         "narHash": "sha256-***REMOVED_WIREGUARD-KEY***",
         "owner": "nix-community",
         "repo": "nixpkgs.lib",
-        "rev": "bb58a3bf239e03fca9d51062e2fe028a4ea5a3d1",
+        "rev": "16340f605f4e8e5cf07fd74dcbe692eee2d4f51b",
         "type": "github"
       },
       "original": {
@@ -160,11 +160,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1727917377,
+        "lastModified": 1729127034,
         "narHash": "sha256-***REMOVED_WIREGUARD-KEY***",
         "owner": "nix-community",
         "repo": "nixos-generators",
-        "rev": "9ae128172f823956e54947fe471bc6dfa670ecb4",
+        "rev": "dd28a0806e7124fe392c33c9ccaa12f21970401f",
         "type": "github"
       },
       "original": {
@@ -191,11 +191,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1727907660,
+        "lastModified": 1729181673,
         "narHash": "sha256-***REMOVED_WIREGUARD-KEY***",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "5966581aa04be7eff830b9e1457d56dc70a0b798",
+        "rev": "4eb33fe664af7b41a4c446f87d20c9a0a6321fa3",
         "type": "github"
       },
       "original": {
@@ -211,7 +211,29 @@
         "disko": "disko",
         "nixos-generators": "nixos-generators",
         "nixpkgs": "nixpkgs_2",
+        "satisfactory-server": "satisfactory-server",
         "snowfall-lib": "snowfall-lib"
+      }
+    },
+    "satisfactory-server": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "steam-fetcher": "steam-fetcher"
+      },
+      "locked": {
+        "lastModified": 1729430683,
+        "narHash": "sha256-***REMOVED_WIREGUARD-KEY***",
+        "owner": "nekowinston",
+        "repo": "satisfactory-server-flake",
+        "rev": "cf910484a0faad134559a5ed0006099c7f85b997",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nekowinston",
+        "repo": "satisfactory-server-flake",
+        "type": "github"
       }
     },
     "snowfall-lib": {
@@ -234,6 +256,27 @@
         "owner": "snowfallorg",
         "ref": "dev",
         "repo": "lib",
+        "type": "github"
+      }
+    },
+    "steam-fetcher": {
+      "inputs": {
+        "nixpkgs": [
+          "satisfactory-server",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1714795926,
+        "narHash": "sha256-***REMOVED_WIREGUARD-KEY***",
+        "owner": "nix-community",
+        "repo": "steam-fetcher",
+        "rev": "12f66eafb7862d91b3e30c14035f96a21941bd9c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "steam-fetcher",
         "type": "github"
       }
     },

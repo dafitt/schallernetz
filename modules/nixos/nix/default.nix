@@ -15,8 +15,8 @@ with lib;
 
     gc = {
       automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 2w";
+      dates = "monthly";
+      options = "--delete-older-than 2m";
     };
 
     # disable nix-channel, we use flakes instead.

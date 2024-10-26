@@ -9,6 +9,8 @@
     snowfall-lib = { url = "github:snowfallorg/lib/dev"; inputs.nixpkgs.follows = "nixpkgs"; }; # https://github.com/snowfallorg/lib
 
     agenix.url = "github:ryantm/agenix"; # https://github.com/ryantm/agenix
+
+    satisfactory-server = { url = "github:nekowinston/satisfactory-server-flake"; inputs.nixpkgs.follows = "nixpkgs"; }; # https://github.com/nekowinston/satisfactory-server-flake
   };
 
   # [Snowfall framework](https://snowfall.org/guides/lib/quickstart/)

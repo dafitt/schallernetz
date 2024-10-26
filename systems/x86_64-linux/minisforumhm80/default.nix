@@ -1,7 +1,7 @@
 # Installation with install-iso anywhere
 #$ nix run github:nix-community/nixos-anywhere -- --flake .#minisforumhm80 root@***REMOVED_IPv6***%<enp?s0>
 # Rebuild
-#$ nixos-rebuild --flake .#minisforumhm80 --use-remote-sudo --target-host rebuild@minisforumhm80.lan.***REMOVED_DOMAIN*** <test|boot|switch>
+#$ nixos-rebuild --flake .#minisforumhm80 --use-remote-sudo --target-host rebuild@minisforumhm80.lan.***REMOVED_DOMAIN*** [--build-host rebuild@minisforumhm80.lan.***REMOVED_DOMAIN***] <test|boot|switch>
 
 { config, lib, pkgs, inputs, ... }:
 
@@ -31,6 +31,7 @@ with lib.schallernetz; {
       haproxy-server.enable = true;
       MichiSHARE.enable = true;
       ntfy.enable = true;
+      satisfactory.enable = true;
       searx.enable = true;
       torRelay.enable = true;
       uptimekuma.enable = true;

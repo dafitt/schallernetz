@@ -67,6 +67,10 @@ with lib.schallernetz; {
     servers.ntfy.name = "ntfy";
     servers.ntfy.subnet = "server";
     servers.ntfy.ip6HostAddress = ":e73";
+    servers.satisfactory.enable = false;
+    servers.satisfactory.name = "satisfactory";
+    servers.satisfactory.subnet = "dmz";
+    servers.satisfactory.ip6HostAddress = ":4a5";
     servers.searx.enable = false;
     servers.searx.name = "searx";
     servers.searx.subnet = "dmz";
