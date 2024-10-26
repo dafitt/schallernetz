@@ -57,7 +57,7 @@ in
 
   config = mkMerge [
     (mkIf (cfg.localhost || cfg.NAS4 || cfg.magentacloudMICHI) {
-      schallernetz.ntfy-systemd = {
+      schallernetz.systemd.ntfy = {
         enable = true;
         url = "https://${config.schallernetz.servers.ntfy.name}.lan.${config.networking.domain}";
       };

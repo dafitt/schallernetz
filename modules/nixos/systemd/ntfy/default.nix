@@ -1,15 +1,15 @@
 # import this module with
-#` imports = [ inputs.self.nixosModules."ntfy-systemd" ];
+#` imports = [ inputs.self.nixosModules."systemd/ntfy" ];
 
 { config, lib, pkgs, ... }:
 
 with lib;
 with lib.schallernetz;
 let
-  cfg = config.schallernetz.ntfy-systemd;
+  cfg = config.schallernetz.systemd.ntfy;
 in
 {
-  options.schallernetz.ntfy-systemd = with types; {
+  options.schallernetz.systemd.ntfy = with types; {
     enable = mkBoolOpt true "Whether or not to provide systemd units ['ntfy-failure@' 'ntfy-success@']";
     url = mkOption {
       type = str;

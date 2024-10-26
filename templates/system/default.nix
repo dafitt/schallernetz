@@ -96,8 +96,8 @@ with lib.schallernetz; {
 
     nix.enable = true;
 
-    ntfy-systemd.enable = true;
-    ntfy-systemd.url = "https://ntfy.lan.***REMOVED_DOMAIN***";
+    systemd.ntfy.enable = true;
+    systemd.ntfy.url = "https://ntfy.lan.***REMOVED_DOMAIN***";
 
     ssh.enable = true;
 

@@ -44,7 +44,7 @@ in
         config = { hostConfig, config, lib, pkgs, ... }: {
           imports = with inputs; [
             agenix.nixosModules.default
-            self.nixosModules."ntfy-systemd"
+            self.nixosModules."systemd/ntfy"
           ];
 
           age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];

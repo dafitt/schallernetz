@@ -32,7 +32,7 @@ in
         config = { hostConfig, config, lib, pkgs, ... }: {
           imports = with inputs; [
             agenix.nixosModules.default
-            self.nixosModules."ntfy-systemd"
+            self.nixosModules."systemd/ntfy"
           ];
 
           # agenix secrets

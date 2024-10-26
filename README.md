@@ -97,7 +97,7 @@ The router has of course slightly more bridge configuration than a normal host. 
 These modules are tested to be imported elsewhere:
 
 ```nix
-inputs.schallernetz.nixosModules."ntfy-systemd"
+inputs.schallernetz.nixosModules."systemd/ntfy"
 ```
 
 These modules are designed to be imported elsewhere, not tested though:
